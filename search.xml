@@ -1,0 +1,1192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Hello World</title>
+    <url>/posts/4a17b156/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<h2 id="Quick-Start">Quick Start</h2>
+<h3 id="Create-a-new-post">Create a new post</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server">Run server</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files">Generate static files</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites">Deploy to remote sites</h3>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>【Hexo】typora+hexo图片路径设置</title>
+    <url>/posts/c59e83fa/</url>
+    <content><![CDATA[<p>**1. **  <strong>冲突来源</strong></p>
+<p>Hexo上对于图片在md中的引用，使用了post_asset_folder: true配置，来更好的管理图片。当一篇名为xxx.md的文章引用1.png图片时，默认让1.png保持在xxx文件夹下，那么md中即可使用来引用图片。</p>
+<p><img src="/posts/c59e83fa//image-20241028094752220.png" alt="image-20241028094752220"></p>
+<p>按照如上图所示操作，即可使typora在每次复制图片到md时将其自动放入和md文件名同名文件夹下。</p>
+<p>原文链接：<a href="https://blog.csdn.net/m0_51390969/article/details/139906818">https://blog.csdn.net/m0_51390969/article/details/139906818</a></p>
+]]></content>
+      <tags>
+        <tag>hexo</tag>
+        <tag>typora</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Hexo】typora快捷键</title>
+    <url>/posts/d6f6acd6/</url>
+    <content><![CDATA[<table>
+<thead>
+<tr>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">快捷键</th>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">快捷键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">加粗</td>
+<td style="text-align:center">Ctrl+B</td>
+<td style="text-align:center">插入图像</td>
+<td style="text-align:center">Ctrl+Shift+I</td>
+</tr>
+<tr>
+<td style="text-align:center">斜体</td>
+<td style="text-align:center">Ctrl+I</td>
+<td style="text-align:center">删除线</td>
+<td style="text-align:center">Alt+Shift+5</td>
+</tr>
+<tr>
+<td style="text-align:center">下划线</td>
+<td style="text-align:center">Ctrl+U</td>
+<td style="text-align:center">公式块</td>
+<td style="text-align:center">Ctrl+Shift+M</td>
+</tr>
+<tr>
+<td style="text-align:center">超链接</td>
+<td style="text-align:center">Ctrl+K</td>
+<td style="text-align:center">代码块</td>
+<td style="text-align:center">Ctrl+Shift+K</td>
+</tr>
+<tr>
+<td style="text-align:center">表格</td>
+<td style="text-align:center">Ctrl+T</td>
+<td style="text-align:center">代码段</td>
+<td style="text-align:center">Ctrl+Shift+`</td>
+</tr>
+<tr>
+<td style="text-align:center">引用</td>
+<td style="text-align:center">&gt;+空格</td>
+<td style="text-align:center">退出引用</td>
+<td style="text-align:center">Shift+Tab</td>
+</tr>
+<tr>
+<td style="text-align:center">段落</td>
+<td style="text-align:center">Ctrl+0</td>
+<td style="text-align:center">有序列表</td>
+<td style="text-align:center">Ctrl+Shift+[</td>
+</tr>
+<tr>
+<td style="text-align:center">标题</td>
+<td style="text-align:center">Ctrl+数字</td>
+<td style="text-align:center">无序列表</td>
+<td style="text-align:center">Ctrl+Shift+]</td>
+</tr>
+<tr>
+<td style="text-align:center">全选</td>
+<td style="text-align:center">Ctrl+A</td>
+<td style="text-align:center">选中行/句</td>
+<td style="text-align:center">Ctrl+L</td>
+</tr>
+<tr>
+<td style="text-align:center">选中段落</td>
+<td style="text-align:center">Ctrl+E</td>
+<td style="text-align:center">选中当前词</td>
+<td style="text-align:center">Ctrl+D</td>
+</tr>
+<tr>
+<td style="text-align:center">跳转所选</td>
+<td style="text-align:center">Ctrl+J</td>
+<td style="text-align:center">跳转文首/末</td>
+<td style="text-align:center">Ctrl+Home/End</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">源代码模式</td>
+<td style="text-align:center">Ctrl+/</td>
+</tr>
+</tbody>
+</table>
+<span id="more"></span>
+<p>下方背诵表</p>
+<p>  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓<br>
+  ↓</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">快捷键</th>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">快捷键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">加粗</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">插入图像</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">斜体</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">删除线</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">下划线</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">公式块</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">超链接</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">代码块</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">表格</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">代码段</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">引用</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">退出引用</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">段落</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">有序列表</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">标题</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">无序列表</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">全选</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">选中行/句</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">选中段落</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">选中当前词</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center">跳转所选</td>
+<td style="text-align:center"></td>
+<td style="text-align:center">跳转文首/末</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">源代码模式</td>
+<td style="text-align:center"></td>
+</tr>
+</tbody>
+</table>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>typora</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Hexo】typora知识总结</title>
+    <url>/posts/287bb156/</url>
+    <content><![CDATA[<h2 id="Markdown语法">Markdown语法</h2>
+<h3 id="快捷键汇总">快捷键汇总</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">快捷键</th>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">快捷键</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">加粗</td>
+<td style="text-align:center">Ctrl+B</td>
+<td style="text-align:center">插入图像</td>
+<td style="text-align:center">Ctrl+Shift+I</td>
+</tr>
+<tr>
+<td style="text-align:center">斜体</td>
+<td style="text-align:center">Ctrl+I</td>
+<td style="text-align:center">删除线</td>
+<td style="text-align:center">Alt+Shift+5</td>
+</tr>
+<tr>
+<td style="text-align:center">下划线</td>
+<td style="text-align:center">Ctrl+U</td>
+<td style="text-align:center">公式块</td>
+<td style="text-align:center">Ctrl+Shift+M</td>
+</tr>
+<tr>
+<td style="text-align:center">超链接</td>
+<td style="text-align:center">Ctrl+K</td>
+<td style="text-align:center">代码块</td>
+<td style="text-align:center">Ctrl+Shift+K</td>
+</tr>
+<tr>
+<td style="text-align:center">表格</td>
+<td style="text-align:center">Ctrl+T</td>
+<td style="text-align:center">代码段</td>
+<td style="text-align:center">Ctrl+Shift+`</td>
+</tr>
+<tr>
+<td style="text-align:center">引用</td>
+<td style="text-align:center">&gt;+空格</td>
+<td style="text-align:center">退出引用</td>
+<td style="text-align:center">Shift+Tab</td>
+</tr>
+<tr>
+<td style="text-align:center">段落</td>
+<td style="text-align:center">Ctrl+0</td>
+<td style="text-align:center">有序列表</td>
+<td style="text-align:center">Ctrl+Shift+[</td>
+</tr>
+<tr>
+<td style="text-align:center">标题</td>
+<td style="text-align:center">Ctrl+数字</td>
+<td style="text-align:center">无序列表</td>
+<td style="text-align:center">Ctrl+Shift+]</td>
+</tr>
+<tr>
+<td style="text-align:center">全选</td>
+<td style="text-align:center">Ctrl+A</td>
+<td style="text-align:center">选中行/句</td>
+<td style="text-align:center">Ctrl+L</td>
+</tr>
+<tr>
+<td style="text-align:center">选中段落</td>
+<td style="text-align:center">Ctrl+E</td>
+<td style="text-align:center">选中当前词</td>
+<td style="text-align:center">Ctrl+D</td>
+</tr>
+<tr>
+<td style="text-align:center">跳转所选</td>
+<td style="text-align:center">Ctrl+J</td>
+<td style="text-align:center">跳转文首/末</td>
+<td style="text-align:center">Ctrl+Home/End</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center"></td>
+<td style="text-align:center">源代码模式</td>
+<td style="text-align:center">Ctrl+/</td>
+</tr>
+</tbody>
+</table>
+<span id="more"></span>
+<h3 id="段落">段落</h3>
+<h4 id="标题">标题</h4>
+<p>使用 # 可以表示标题，一级标题对应一个 # ，二级标题对应两个 # 号，最多至六级标题。在Typora中，# 后要紧接着一个空格才能表示标题，否则就是普通字符。</p>
+<figure class="highlight clean"><table><tr><td class="code"><pre><span class="line"># h1   <span class="comment">//一级标题 对应 &lt;h1&gt; &lt;/h1&gt;</span></span><br><span class="line">## h2   <span class="comment">//二级标题 对应 &lt;h2&gt; &lt;/h2&gt;</span></span><br><span class="line">### h3  <span class="comment">//三级标题 对应 &lt;h3&gt; &lt;/h3&gt;</span></span><br><span class="line">#### h4  <span class="comment">//四级标题 对应 &lt;h4&gt; &lt;/h4&gt;</span></span><br><span class="line">##### h5  <span class="comment">//五级标题 对应 &lt;h5&gt; &lt;/h5&gt;</span></span><br><span class="line">###### h6  <span class="comment">//六级标题 对应 &lt;h6&gt; &lt;/h6&gt;</span></span><br></pre></td></tr></table></figure>
+<h4 id="字体">字体</h4>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">格式</th>
+<th style="text-align:center">功能</th>
+<th style="text-align:center">快捷键</th>
+<th style="text-align:center">展示</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">*这是斜体*<br>_这是斜体_</td>
+<td style="text-align:center">斜体文本</td>
+<td style="text-align:center">Ctrl+I</td>
+<td style="text-align:center"><em>这是斜体</em></td>
+</tr>
+<tr>
+<td style="text-align:center">**这是粗体**<br>__这是粗体__</td>
+<td style="text-align:center">粗体文本</td>
+<td style="text-align:center">Crtl+B</td>
+<td style="text-align:center"><strong>这是粗体</strong></td>
+</tr>
+<tr>
+<td style="text-align:center">***这是粗斜体***<br>___这是粗斜体___</td>
+<td style="text-align:center">粗斜体文本</td>
+<td style="text-align:center">无</td>
+<td style="text-align:center"><em><strong>这是粗斜体</strong></em></td>
+</tr>
+</tbody>
+</table>
+<p>在hexo中，为避免字体样式错误，最好不要让修改字体样式的标识符中紧挨别的字符，或者在两端外添加空格。以如下代码进行示范：</p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line"><span class="strong">**你好**</span>。我是全世界最帅的人</span><br><span class="line"><span class="strong">**你好。**</span>我是全世界最帅的人</span><br><span class="line"><span class="strong">**你好。**</span> 我是全世界最帅的人</span><br></pre></td></tr></table></figure>
+<p><font class="notice">注：第二行其实没有空格，因为装了auto_spacing，强制加了空格</font></p>
+<p><strong>你好</strong>。我是全世界最帅的人</p>
+<p>**你好。**我是全世界最帅的人</p>
+<p><strong>你好。</strong> 我是全世界最帅的人</p>
+<p><font size="2">注：在typora中，并不会造成错误</font></p>
+<h4 id="代码">代码</h4>
+<p>如果是一行代码，可以使用段内代码块来表示，用一对 <strong>'</strong>（数字1旁边的符号）括住代码。比如<code>printf(&quot;Hello World!&quot;)</code></p>
+<p>如果是代码段，那么可以使用<strong>三个 ` 加Enter/空格+编程语言</strong>来表示。如：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta"># <span class="keyword">include</span> <span class="string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="type">void</span> <span class="title function_">main</span><span class="params">()</span>&#123;</span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Hello world!\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以在代码块的右下角选择编程语言。</p>
+<h4 id="链接-a-id-t1p8-a">链接<a id="t1p8"></a></h4>
+<p>我们可以使用链接打开网页，也可以打开本地文件和实现页内跳转。链接的几种使用方式如下：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>.<span class="selector-attr">[链接文字]</span>(链接地址)</span><br><span class="line"><span class="number">2</span>.&lt;链接地址&gt;</span><br><span class="line"><span class="number">3</span>.<span class="selector-attr">[链接文字]</span><span class="selector-attr">[链接ID]</span></span><br><span class="line">  <span class="selector-attr">[链接ID]</span>:http:<span class="comment">//XXXXXXXX.XXX</span></span><br><span class="line"><span class="number">4</span>.<span class="selector-attr">[链接文字]</span><span class="selector-attr">[]</span></span><br><span class="line">  <span class="selector-attr">[链接文字]</span>:http:<span class="comment">//XXXXXXXX.XXX</span></span><br></pre></td></tr></table></figure>
+<p>以下列样例进行演示：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>.<span class="selector-attr">[百度]</span>(https:<span class="comment">//www.baidu.com/ &quot;百度搜索&quot;)   绝对链接</span></span><br><span class="line"><span class="number">2</span>.&lt;https:<span class="comment">//www.baidu.com/&gt;</span></span><br><span class="line"><span class="number">3</span>.<span class="selector-attr">[About]</span>(/about/ <span class="string">&quot;关于我&quot;</span>)   相对链接</span><br><span class="line"><span class="number">4</span>.<span class="selector-attr">[打开hello-word文档]</span>(../<span class="number">4</span>a17b156 <span class="string">&quot;hello-world&quot;</span>)  相对链接打开文章</span><br><span class="line"><span class="number">5</span>.<span class="selector-attr">[打开002.png照片]</span>(../../images/<span class="number">002</span><span class="selector-class">.png</span> <span class="string">&quot;002.png&quot;</span>)  相对链接打开图片</span><br><span class="line"><span class="number">6</span>.<span class="selector-attr">[My Home]</span><span class="selector-attr">[ID]</span></span><br><span class="line"><span class="selector-attr">[ID]</span>:https:<span class="comment">//www.mcorazon.top &quot;我的博客主页&quot;</span></span><br><span class="line"><span class="number">7</span>.<span class="selector-attr">[My Home]</span><span class="selector-attr">[]</span></span><br><span class="line"><span class="selector-attr">[My Home]</span>:https:<span class="comment">//www.mcorazon.top &quot;我的博客主页&quot;</span></span><br><span class="line"><span class="number">8</span>.<span class="selector-attr">[跳转到此小节首]</span>(#t1p8）</span><br></pre></td></tr></table></figure>
+<p><font size="2"><em>注：1. 引号部分表示title，可以省略。样式2不可加title<br>2. 不能使用<code>&lt;  &gt;</code>跳转本地文件，如&lt;../../images/002.png&gt; ，其并不会表示为可连接状态<br>3.同时，使用第八个样例时需要添加锚点，在1.8的标题后添加了<code>&lt;a id=&quot;t1p8&quot;&gt;&lt;/a&gt;</code></em></font></p>
+<p>以上代码的结果如下：</p>
+<p>1.<a href="https://www.baidu.com/" title="百度搜索">百度</a>      绝对链接<br>
+2.&lt;<a href="https://www.baidu.com/">https://www.baidu.com/</a> &gt;<br>
+3.<a href="/about/" title="关于我">About</a>       相对链接<br>
+4.<a href="../4a17b156" title="hello-world">打开hello-word文档</a>      相对链接打开文章<br>
+5.<a href="../../images/002.png" title="002.png">打开002.png照片</a>      相对链接打开图片<br>
+6.<a href="https://www.mcorazon.top" title="我的博客主页">My Home</a>     我的博客主页</p>
+<p>7.<a href="https://www.mcorazon.top" title="我的博客主页">My Home</a>     我的博客主页</p>
+<p>8.<a href="#t1p8">跳转到此小节首</a></p>
+<h4 id="上标下标">上标下标</h4>
+<p>上下标可以使用<code>^X^</code>，<code>~X~</code>来实现。如：</p>
+<p>上标：a<sup>X</sup>，下标：a<sub>X</sub></p>
+<p><s>如果作为上标、下标的符号不止一个，则需要用花括号{}将其括起来。如：</s></p>
+<p><s>上 标 为 12 ： a 12 , 下 标 为 34 ： a 34 上标为12：a<sup>{12},下标为34：a~{34</sup>2^}~ 上标为12：a<sup>12</sup>,下标为34：a34</s></p>
+<h4 id="特殊符号">特殊符号</h4>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>（1）对于 Markdown 中的语法符号，前面加反斜线\即可显示符号本身。</p>
+</li>
+<li class="lvl-2">
+<p>（2）其他特殊字符使用Unicode码表示，示例如下：</p>
+<p><img src="/posts/287bb156//image-20241110173249216.png" alt="image-20241110173249216"></p>
+</li>
+</ul>
+<h3 id="其他">其他</h3>
+<h4 id="各种线">各种线</h4>
+<p>你可以在一行中用三个以上的星号(*)、减号(-)、底线(_)来建立一个分隔线，行内不能有其他东西。你也可以在星号或是减号中间插入空格。</p>
+<figure class="highlight yaml"><table><tr><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="string">***</span></span><br><span class="line"><span class="string">___</span></span><br></pre></td></tr></table></figure>
+<hr>
+<hr>
+<hr>
+<h4 id="列表">列表</h4>
+<ol>
+<li class="lvl-3">
+<p><strong>无序列表</strong></p>
+</li>
+</ol>
+<p>使用*，+或-标记符号加空格来表示无需列表项，示例如下</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">*</span> 第一项</span><br><span class="line"><span class="bullet">*</span> 第二项</span><br><span class="line"><span class="bullet">+</span> 第一项</span><br><span class="line"><span class="bullet">+</span> 第二项</span><br><span class="line"><span class="bullet">-</span> 第一项</span><br><span class="line"><span class="bullet">-</span> 第二项</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>第一项</p>
+</li>
+<li class="lvl-2">
+<p>第二项</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>第一项</p>
+</li>
+<li class="lvl-2">
+<p>第二项</p>
+</li>
+</ul>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>第一项</p>
+</li>
+<li class="lvl-2">
+<p>第二项</p>
+</li>
+</ul>
+<ol start="2">
+<li class="lvl-3">
+<p><strong>有序列表</strong></p>
+</li>
+</ol>
+<p>使用数字加.再加空格来表示有序列表，其中，数字并不重要。示例如下：</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">1.</span> 第一项</span><br><span class="line"><span class="bullet">3.</span> 第二项</span><br><span class="line"><span class="bullet">10.</span> 第三项</span><br></pre></td></tr></table></figure>
+<ol>
+<li class="lvl-3">
+<p>第一项</p>
+</li>
+<li class="lvl-3">
+<p>第二项</p>
+</li>
+<li class="lvl-3">
+<p>第三项</p>
+</li>
+<li class="lvl-3">
+<p><strong>嵌套列表</strong></p>
+</li>
+</ol>
+<p>首先使用<code>*</code>、<code>+</code>或<code>-</code>进入列表，然后回车换行，会发现系统自动生成列表第二项，此时按下<strong>Tab</strong>键，列表第二项变为第一项的子列表。<strong>按回车退出当前列表</strong>。可以在无序列表中嵌套有序列表。</p>
+<figure class="highlight markdown"><table><tr><td class="code"><pre><span class="line"><span class="bullet">1.</span> 1. 一</span><br><span class="line"><span class="bullet">   1.</span> 一.一</span><br><span class="line"><span class="bullet">      1.</span> 一.一.一</span><br><span class="line"><span class="bullet">      2.</span> 一.一.二</span><br></pre></td></tr></table></figure>
+<ol>
+<li class="lvl-3">
+<p>一</p>
+<ol>
+<li class="lvl-6">
+<p>一.一</p>
+<ol>
+<li class="lvl-9">一.一.一</li>
+<li class="lvl-9">一.一.二</li>
+</ol>
+</li>
+<li class="lvl-6">
+<p>一.二</p>
+<ol>
+<li class="lvl-9">一.二.一</li>
+<li class="lvl-9">一.二.二</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h4 id="区块">区块</h4>
+<p>可以使用<code>&gt;</code>加空格来表示区块。</p>
+<p>当我们想要引用别人的文章内容或者需要对文字进行强调时，可以将其放在区块内。</p>
+<blockquote>
+<p>这是区块</p>
+<p>区块也可以嵌套</p>
+<blockquote>
+<p>​	这是二级区块</p>
+<blockquote>
+<p>这是三级区块</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<h4 id="图片">图片</h4>
+<p><strong>引用图片和链接的唯一区别就是在最前方添加一个感叹号。</strong> 插入图片的语法如下：</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line">!<span class="selector-attr">[alt 属性文本]</span>(图片地址)</span><br><span class="line">!<span class="selector-attr">[alt 属性文本]</span>(图片地址 &quot;可选标题&quot;)</span><br></pre></td></tr></table></figure>
+<p>示例如下：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>. !<span class="selector-attr">[绝对路径引用]</span>(/images/<span class="number">002</span><span class="selector-class">.png</span> <span class="string">&quot;绝对路径引用&quot;</span> =<span class="number">200</span>*<span class="number">200</span>)</span><br><span class="line"><span class="number">2</span>. !<span class="selector-attr">[相对路径引用]</span>(【Hexo】typora知识总结/<span class="number">001</span><span class="selector-class">.jpg</span> <span class="string">&quot;相对路径引用1&quot;</span>)</span><br><span class="line"><span class="number">3</span>. !<span class="selector-attr">[相对路径引用]</span>(<span class="number">001</span><span class="selector-class">.jpg</span> <span class="string">&quot;相对路径引用2&quot;</span>)</span><br><span class="line"><span class="number">4</span>. !<span class="selector-attr">[网络图片]</span>（https:<span class="comment">//www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png &quot;Baidu&quot;)</span></span><br></pre></td></tr></table></figure>
+<p>由于使用插件markdown-it-imsize控制了图片大小，此图片在 typora 中无法显示↓</p>
+<p><img src="/posts/287bb156//002.png" alt="本地png图片" title="绝对路径引用" width="200" height="200"></p>
+<p><img src="/posts/287bb156//001.jpg" alt="相对路径引用" title="相对路径引用1"></p>
+<p>由于使用了post_asset_folder，此图片在 typora 中无法显示↓</p>
+<p><img src="/posts/287bb156//001.jpg" alt="相对路径引用" title="相对路径引用2"></p>
+<p><img src="/posts/287bb156//PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png" alt="网络图片" title="Baidu"></p>
+<p><font class="notice">注：因为我的 typora 使用了图片自动下载功能，会强制改为本地图片，因此此处已经自动下载到了本地，并且依然使用的本地图片。</font></p>
+<p>在实际的使用过程中，虽然第三种方法最为方便，但是由于第三种方法图片不能在 typora 中显示，因此我采用了第二种方法来编写博客。其次由于我使用了 hexo 插件 abbrlink ，需要在主题配置文件中\node_modules\hexo-asset-image\index.js进行更改。</p>
+<h4 id="表格">表格</h4>
+<p>Markdown 制作表格使用 <code>|</code> 来分隔不同的单元格，使用 <code>-</code> 来分隔表头和其他行。<code>:-</code>表示左对齐<code>-:</code>表示右对齐<code>:-:</code>表示中间对齐。示例如下：</p>
+<figure class="highlight gherkin"><table><tr><td class="code"><pre><span class="line">|<span class="string">左对齐</span>|<span class="string">右对齐</span>|<span class="string">中间对齐</span>|</span><br><span class="line">|<span class="string">:---</span>|<span class="string">---:</span>|<span class="string">:----:</span>|</span><br><span class="line">|<span class="string">单元格</span>|<span class="string">单元格</span>|<span class="string">单元格</span>|</span><br><span class="line">|<span class="string">单元格</span>|<span class="string">单元格</span>|<span class="string">单元格</span>|</span><br></pre></td></tr></table></figure>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">左对齐</th>
+<th style="text-align:right">右对齐</th>
+<th style="text-align:center">中间对齐</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">单元格</td>
+<td style="text-align:right">单元格</td>
+<td style="text-align:center">单元格</td>
+</tr>
+<tr>
+<td style="text-align:left">单元格</td>
+<td style="text-align:right">单元格</td>
+<td style="text-align:center">单元格</td>
+</tr>
+</tbody>
+</table>
+<p>在Typora中，我们可以使用快捷键<strong>Ctrl+T</strong>来插入表格，并选择行列，当选中表格某一单元格时，可以在表格左上角手动设置对齐方式，右上角选择更多操作。</p>
+<p><img src="/posts/287bb156//image-20241028100647549.png" alt="image-20241028100647549"></p>
+<h4 id="数学公式">数学公式</h4>
+<p>在Typora中，有两种方法插入数学公式，示例如下：</p>
+<figure class="highlight gams"><table><tr><td class="code"><pre><span class="line">第一种方法：<span class="symbol">$</span><span class="number">1</span>+<span class="number">2</span>=<span class="number">3</span><span class="symbol">$</span></span><br><span class="line">第二种方法：</span><br><span class="line"><span class="symbol">$</span><span class="symbol">$</span></span><br><span class="line"><span class="number">1</span>+<span class="number">2</span>=<span class="number">3</span></span><br><span class="line"><span class="symbol">$</span><span class="symbol">$</span></span><br></pre></td></tr></table></figure>
+<p>第一种方法：$1+2=3$</p>
+<p>第二种方法：<br>
+$$<br>
+1+2=3<br>
+$$</p>
+<h2 id="三、Typora与HTML">三、Typora与HTML</h2>
+<h3 id="3-1-改变字体颜色及大小">3.1 改变字体颜色及大小</h3>
+<p>我们可以使用<code>&lt;font&gt; &lt;/font&gt;</code>标签来改变字体的颜色及大小，如：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">&lt;font <span class="attribute">size</span>=3 <span class="attribute">color</span>=<span class="string">&quot;red&quot;</span>&gt;字体颜色为红色，大小为3&lt;/font&gt;</span><br><span class="line"></span><br><span class="line">&lt;font <span class="attribute">size</span>=4 <span class="attribute">color</span>=<span class="string">&quot;blue&quot;</span>&gt;字体颜色为蓝色，大小为4&lt;/font&gt;</span><br><span class="line"></span><br><span class="line">&lt;font <span class="attribute">size</span>=6 <span class="attribute">color</span>=<span class="string">&quot;#ffffff&quot;</span>&gt;字体颜色为紫罗兰，大小为6&lt;/font&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p><font size="3" color="red">字体颜色为红色，大小为3</font></p>
+<p><font size="4" color="blue">字体颜色为蓝色，大小为4</font></p>
+<p><font size="6" color="#ffffff">字体颜色为紫罗兰，大小为6</font></p>
+<h3 id="3-2-改变对齐方式">3.2 改变对齐方式</h3>
+<p>我们可以改变字体的对齐方式，用标签<code>&lt;p&gt; &lt;/p&gt;</code>加上属性<code>align</code>，如：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">align</span>=<span class="string">&quot;left&quot;</span>&gt;</span>左对齐<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">align</span>=<span class="string">&quot;center&quot;</span>&gt;</span>中间对齐<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">align</span>=<span class="string">&quot;right&quot;</span>&gt;</span>右对齐<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p align="left">左对齐</p>
+<p align="center">中间对齐</p>
+<p align="right">右对齐</p>
+<h3 id="3-3-插入头像">3.3 插入头像</h3>
+<p>我们可以通过标签<code>&lt;img src=url /&gt;</code>来插入图片，如：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">&lt;<span class="selector-tag">img</span> <span class="attribute">src</span>=<span class="string">&quot;./【Hexo】typora知识总结/001.jpg&quot;</span> /&gt;</span><br></pre></td></tr></table></figure>
+<img src="/posts/287bb156//001.jpg">
+<p>我们可以改变<code>&lt;img&gt;</code>标签的属性，来改变图片的大小。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">&lt;img <span class="attribute">src</span>=<span class="string">&quot;./【Hexo】typora知识总结/001.jpg&quot;</span> <span class="attribute">width</span>=100 <span class="attribute">height</span>=100/&gt;</span><br></pre></td></tr></table></figure>
+<img src="/posts/287bb156//001.jpg" width="100" height="100/">
+<p>也可以改变图片的位置，如：</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">&lt;img <span class="attribute">src</span>=<span class="string">&quot;【Hexo】typora知识总结/001.jpg&quot;</span> <span class="attribute">width</span>=30 <span class="attribute">height</span>=30 <span class="attribute">style</span>=<span class="string">&quot;float:left&quot;</span>/&gt;图片在左边</span><br><span class="line">&lt;img <span class="attribute">src</span>=<span class="string">&quot;【Hexo】typora知识总结/001.jpg&quot;</span> <span class="attribute">width</span>=30 <span class="attribute">height</span>=30 <span class="attribute">style</span>=<span class="string">&quot;float:right&quot;</span>/&gt;图片在右边</span><br></pre></td></tr></table></figure>
+<p><img src="/posts/287bb156//001.jpg" width="30" height="30" style="float:left">图片在左边<img src="/posts/287bb156//001.jpg" width="30" height="30" style="float:right">图片在右边</p>
+<h2 id="四、其他用法">四、其他用法</h2>
+<h3 id="文章截断——阅读全文">文章截断——阅读全文</h3>
+<p>若你是用的是NEXT主题，可以在文章中使用<code>&lt; !--more--&gt;</code> 手动进行截断这种方法可以根据文章的内容，自己在合适的位置添加 <code>&lt; !--more--&gt;</code> 标签，使用灵活，也是Hexo推荐的方法。</p>
+<h3 id="目录功能">目录功能</h3>
+<p>使用hexo-toc可以在文章头部添加目录。 其配置在博客根目录的_config.yml文件中。类似于文章截断功能，在需要显示文章目录的地方添加<code>&lt;!--toc--&gt;</code></p>
+<p>额······因为使用这个以后侧边框的目录无法跳转，就又卸载了。</p>
+<p>本文参考：</p>
+<p><a href="https://blog.csdn.net/weixin_30745641/article/details/95686757">Hexo中添加emoji表情</a></p>
+<p><a href="https://www.imczw.com/post/tech/hexo-next-tags-markdown.html"> Hexo-Next 常用 MD 语法合集</a></p>
+<p><a href="https://blog.csdn.net/qq_41261251/article/details/102817673">https://blog.csdn.net/qq_41261251/article/details/102817673</a></p>
+<p><a href="https://whatsid.me/2019/08/21/hexo-markdown-syntax/#">https://whatsid.me/2019/08/21/hexo-markdown-syntax/#</a></p>
+<p><a href="https://blog.csdn.net/lewky_liu/article/details/82432003">Hexo系列(2) - NexT主题美化与博客功能增强</a></p>
+<p><a href="https://theme-next.iissnan.com/theme-settings.html">主题配置 - NexT 使用文档</a></p>
+<p><a href="https://blog.csdn.net/qq_32320399/article/details/99823695">Markdown连接的写法</a></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>typora</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【Hexo】标签插件使用</title>
+    <url>/posts/eefe99e9/</url>
+    <content><![CDATA[<p>「tag 插件」(Tag Plugin) 是 Hexo 提供的一种快速生成特定内容的方式。 例如，在标准 Markdown 语法中，我们无法指定图片的大小。这种情景，我们即可使用标签来解决。 Hexo 内置来许多标签来帮助写作者可以更快的书写， 完整的标签列表 可以参考 <a href="https://hexo.io/docs/tag-plugins.html">Hexo 官网</a>。 另外，Hexo 也开放来接口给主题，使主题有可能提供给写作者更简便的写作方法。</p>
+<span id="more"></span>
+<h2 id="引用块">引用块</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>blockquote</strong></p>
+</li>
+</ul>
+<p>在文章中插入引言，可包含作者、来源和标题，均可选。</p>
+<p>标签方式：使用 <code>blockquote</code> 或者 简写 <code>quote</code>。</p>
+<figure class="highlight twig"><table><tr><td class="code"><pre><span class="line"><span class="template-tag">&#123;%</span> <span class="name">block</span>quote author, <span class="name">source</span> link source_link_title <span class="template-tag">%&#125;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">content</span></span><br><span class="line"><span class="language-xml"></span><span class="template-tag">&#123;%</span> <span class="name">endblock</span>quote <span class="template-tag">%&#125;</span></span><br></pre></td></tr></table></figure>
+<p>示例如下：</p>
+<figure class="highlight django"><table><tr><td class="code"><pre><span class="line"><span class="template-tag">&#123;% <span class="name">blockquote</span> Corazon, https://www.mcorazon.top Corazon博客首页 %&#125;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">这个世界总有黑夜</span></span><br><span class="line"><span class="language-xml">但是我们总发着光</span></span><br><span class="line"><span class="language-xml"></span><span class="template-tag">&#123;% <span class="name">endblockquote</span> %&#125;</span></span><br></pre></td></tr></table></figure>
+<blockquote><p>这个世界总有黑夜但是我们总发着光</p>
+<footer><strong>Corazon,</strong><cite><a href="https://www.mcorazon.top">Corazon博客首页</a></cite></footer></blockquote>	
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>pullquote</strong></p>
+</li>
+</ul>
+<p>pullquote 可以自定义引用块的样式</p>
+<figure class="highlight perl"><table><tr><td class="code"><pre><span class="line">&#123;% pullquote [<span class="class"><span class="keyword">class</span>] %&#125;</span></span><br><span class="line"><span class="class"><span class="title">content</span></span></span><br><span class="line"><span class="class"></span>&#123;% endpullquote <span class="variable">%&#125;</span></span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>居中引用</strong></p>
+</li>
+</ul>
+<figure class="highlight django"><table><tr><td class="code"><pre><span class="line"><span class="template-tag">&#123;% <span class="name">centerquote</span> %&#125;</span><span class="language-xml">blah blah blah</span><span class="template-tag">&#123;% <span class="name">endcenterquote</span> %&#125;</span></span><br></pre></td></tr></table></figure>
+<blockquote class="blockquote-center">
+            <i class="fa fa-quote-left"></i>
+            <p>blah blah blah</p>
+
+            <i class="fa fa-quote-right"></i>
+          </blockquote>
+<p>同时HTML 居中引用的方式也比较简单：</p>
+<figure class="highlight mipsasm"><table><tr><td class="code"><pre><span class="line">&lt;<span class="keyword">blockquote </span>class=<span class="string">&quot;blockquote-center&quot;</span>&gt;<span class="keyword">blah </span><span class="keyword">blah </span><span class="keyword">blah&lt;/blockquote&gt;</span></span><br></pre></td></tr></table></figure>
+<blockquote class="blockquote-center">blah blah blah</blockquote>
+<h2 id="代码块-a-id-dmk-a">代码块<a id="dmk"></a></h2>
+<p>在文章中插入代码，包含指定语言、附加说明和网址，均可选。标签方式：使用 <code>codeblock</code> 或者 简写 <code>code</code>。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>codeblock代码块</p>
+</li>
+</ul>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&#123;% codeblock <span class="selector-attr">[title]</span> <span class="selector-attr">[lang:language]</span> <span class="selector-attr">[url]</span> <span class="selector-attr">[link text]</span> <span class="selector-attr">[additional options]</span> %&#125;</span><br><span class="line"><span class="selector-tag">code</span> snippet</span><br><span class="line">&#123;% endcodeblock %&#125;</span><br></pre></td></tr></table></figure>
+<p>示例如下：</p>
+<figure class="highlight django"><table><tr><td class="code"><pre><span class="line"><span class="template-tag">&#123;% <span class="name">codeblock</span> 示例代码 lang:objc https://www.mcorazon.top 博客首页 %&#125;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">[rectangle setX: 10 y: 10 width: 20 height: 20];</span></span><br><span class="line"><span class="language-xml"></span><span class="template-tag">&#123;% <span class="name">endcodeblock</span> %&#125;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight objc"><figcaption><span>示例代码</span><a href="https://www.mcorazon.top/posts/eefe99e9/#dmk">代码块示例</a></figcaption><table><tr><td class="code"><pre><span class="line">[rectangle setX: <span class="number">10</span> y: <span class="number">10</span> width: <span class="number">20</span> height: <span class="number">20</span>];</span><br></pre></td></tr></table></figure>
+<p>在 <code>additional options</code> 中，以 option:value 格式指定附加选项，例如 line_number:false（行数） first_line:5。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">Extra Options</th>
+<th style="text-align:center">Description</th>
+<th style="text-align:center">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center"><code>line_number</code></td>
+<td style="text-align:center">Show line number</td>
+<td style="text-align:center"><code>true</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>line_threshold</code></td>
+<td style="text-align:center">Only show line numbers as long as the numbers of lines of the code block exceed such threshold.</td>
+<td style="text-align:center"><code>0</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>highlight</code></td>
+<td style="text-align:center">Enable code highlighting</td>
+<td style="text-align:center"><code>true</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>first_line</code></td>
+<td style="text-align:center">Specify the first line number</td>
+<td style="text-align:center"><code>1</code></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>mark</code></td>
+<td style="text-align:center">Line highlight specific line(s), each value separated by a comma. Specify the number range using a dash Example: <code>mark:1,4-7,10</code> will mark lines 1, 4 to 7 and 10.</td>
+<td style="text-align:center"></td>
+</tr>
+<tr>
+<td style="text-align:center"><code>wrap</code></td>
+<td style="text-align:center">Wrap the code block in <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table">``</a></td>
+<td style="text-align:center"><code>true</code></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>反引号代码块<a id="fyhdmk"></a></p>
+</li>
+</ul>
+<p>这与使用代码块相同，但使用了三个回车键来分隔代码块。</p>
+<p>`` [language] [title] [url] [link text] code snippet ``</p>
+<p>示例如下：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">```python <span class="selector-attr">[反引号代码块示例]</span> https:<span class="comment">//www.mcorazon.top/posts/eefe99e9/#fyhdmk 反引号代码块</span></span><br><span class="line"><span class="function"><span class="title">print</span><span class="params">(<span class="string">&quot;hello-word&quot;</span>)</span></span> </span><br><span class="line">```</span><br></pre></td></tr></table></figure>
+ <figure class="highlight python"><figcaption><span>[反引号代码块示例]</span><a href="https://www.mcorazon.top/posts/eefe99e9/#fyhdmk">反引号代码块</a></figcaption><table><tr><td class="code"><pre><span class="line"><span class="built_in">print</span>(<span class="string">&quot;hello-word&quot;</span>) </span><br></pre></td></tr></table></figure>
+<h2 id="iframe">iframe</h2>
+<p>在文章中嵌入 iframe，</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&#123;% <span class="selector-tag">iframe</span> url <span class="selector-attr">[width]</span> <span class="selector-attr">[height]</span> %&#125;</span><br></pre></td></tr></table></figure>
+<p>示例如下：</p>
+<figure class="highlight twig"><table><tr><td class="code"><pre><span class="line"><span class="template-tag">&#123;%</span> <span class="name">if</span>rame //player.bilibili.com/player.html?isOutside=true&amp;aid=<span class="number">113446695739195</span>&amp;bvid=BV<span class="number">17</span>rDZYZEM<span class="number">1</span>&amp;cid=<span class="number">26669354075</span>&amp;p=<span class="number">1</span>  <span class="number">500</span>px <span class="number">250</span>px <span class="template-tag">%&#125;</span></span><br></pre></td></tr></table></figure>
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=113446695739195&bvid=BV17rDZYZEM1&cid=26669354075&p=1" width="500px" height="250px" frameborder="0" loading="lazy" allowfullscreen></iframe>
+<p>可能是因为主题的原因，目前video的iframe大小没有设置成功，但网页，图片可以设置。由于目前前端水平不足，暂时不处理。</p>
+<p>以下HTML代码可实现同样的功能，不予演示。</p>
+<figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">&lt;iframe <span class="attribute">src</span>=<span class="string">&quot;//player.bilibili.com/player.html?isOutside=true&amp;aid=113446695739195&amp;bvid=BV17rDZYZEM1&amp;cid=26669354075&amp;p=1&quot;</span> <span class="attribute">scrolling</span>=<span class="string">&quot;no&quot;</span> <span class="attribute">border</span>=<span class="string">&quot;0&quot;</span> <span class="attribute">frameborder</span>=<span class="string">&quot;no&quot;</span> <span class="attribute">framespacing</span>=<span class="string">&quot;0&quot;</span>  <span class="attribute">allowfullscreen</span>=<span class="string">&quot;true&quot;</span>&gt;&lt;/iframe&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="图像">图像</h2>
+<p>使用标签插入图像可以自定义图像的大小</p>
+<figure class="highlight angelscript"><table><tr><td class="code"><pre><span class="line">&#123;% img [<span class="keyword">class</span> <span class="symbol">names</span>] /<span class="symbol">path</span>/<span class="symbol">to</span>/<span class="symbol">image</span> [<span class="symbol">width</span>] [<span class="symbol">height</span>] &#x27;&quot;<span class="symbol">title</span> <span class="symbol">text</span>&quot; &quot;<span class="symbol">alt</span> <span class="symbol">text</span>&quot;&#x27; %&#125;</span><br></pre></td></tr></table></figure>
+<p>示例如下：</p>
+<figure class="highlight twig"><table><tr><td class="code"><pre><span class="line"><span class="template-tag">&#123;%</span> <span class="name">img</span> imgcls /【Hexo】标签插件使用/<span class="number">004</span>.png <span class="number">20</span>px <span class="number">20</span>px <span class="string">&#x27;&quot;004.png&quot; &quot;这就是我的头像&quot;&#x27;</span> <span class="template-tag">%&#125;</span></span><br></pre></td></tr></table></figure>
+<img src="/posts/eefe99e9//004.png" class="imgcls" title="20px 20px &quot;004.png&quot; &quot;这就是我的头像&quot;">
+<p><font class="notice"><em><s>mlgbzd</s>，一会儿行一会不行的</em></font></p>
+<h2 id="Video-标签">Video 标签</h2>
+<figure class="highlight twig"><table><tr><td class="code"><pre><span class="line"><span class="template-tag">&#123;%</span> <span class="name">video</span> //player.bilibili.com/player.html?isOutside=true&amp;aid=<span class="number">113446695739195</span>&amp;bvid=BV<span class="number">17</span>rDZYZEM<span class="number">1</span>&amp;cid=<span class="number">26669354075</span>&amp;p=<span class="number">1</span> <span class="template-tag">%&#125;</span></span><br></pre></td></tr></table></figure>
+<video src="//player.bilibili.com/player.html?isOutside=true&aid=113446695739195&bvid=BV17rDZYZEM1&cid=26669354075&p=1" preload="metadata" controls playsinline poster>Sorry, your browser does not support the video tag.</video>
+<h2 id="链接">链接</h2>
+<p>插入带有 target=“_blank” 属性的链接。</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&#123;% link <span class="selector-tag">text</span> url <span class="selector-attr">[external]</span> <span class="selector-attr">[title]</span> %&#125;</span><br></pre></td></tr></table></figure>
+<p>示例如下：</p>
+<figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line">&#123;% link <span class="built_in">text</span> https:<span class="comment">// [external] [title] %&#125;</span></span><br></pre></td></tr></table></figure>
+<div class="video-container"><iframe src="https://www.youtube.com/embed/lJIrF4YjHfQ" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+<p>参考文章：</p>
+<p><a href="https://blog.csdn.net/qq_41518277/article/details/101765886">Hexo标签插件的使用</a></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+        <tag>typora</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【MySQL】MYSQL知识总结</title>
+    <url>/posts/c826a854/</url>
+    <content><![CDATA[<p>本文重点参考了CSDN的一篇博客：<a href="https://blog.csdn.net/weixin_45851945/article/details/114287877">MySQL 有这一篇就够</a>。</p>
+<span id="more"></span>
+<h2 id="数据库的三大范式">数据库的三大范式</h2>
+<p>1、第一范式(1NF)是指数据库表的每一列都是不可分割的基本数据线；也就是说：每列的值具有原子性，不可再分割。<br>
+2、第二范式(2NF)是在第一范式(1NF)的基础上建立起来得，满足第二范式(2NF)必须先满足第一范式(1NF)。如果表是单主键，那么主键以外的列必须完全依赖于主键；如果表是复合主键，那么主键以外的列必须完全依赖于主键，不能仅依赖主键的一部分。<br>
+3、第三范式(3NF)是在第二范式的基础上建立起来的，即满足第三范式必须要先满足第二范式。第三范式(3NF)要求：表中的非主键列必须和主键直接相关而不能间接相关；也就是说：非主键列之间不能相关依赖。</p>
+<h2 id="SQL简述">SQL简述</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong>SQL的概述</strong></p>
+</li>
+</ul>
+<p>Structure Query Language(结构化查询语言)简称SQL，它被美国国家标准局(ANSI)确定为关系型数据库语言的美国标准，后被国际化标准组织(ISO)采纳为关系数据库语言的国际标准。数据库管理系统可以通过SQL管理数据库；定义和操作数据，维护数据的完整性和安全性。</p>
+<h3 id="SQL的优点">SQL的优点</h3>
+<p>1、简单易学，具有很强的操作性<br>
+2、绝大多数重要的数据库管理系统均支持SQL<br>
+3、高度非过程化；用SQL操作数据库时大部分的工作由DBMS自动完成</p>
+<h3 id="SQL的分类">SQL的分类</h3>
+<p>1、DDL(Data Definition Language) 数据定义语言，用来操作数据库、表、列等； 常用语句：CREATE、 ALTER、DROP<br>
+2、DML(Data Manipulation Language) 数据操作语言，用来操作数据库中表里的数据；常用语句：INSERT、 UPDATE、 DELETE<br>
+3、DCL(Data Control Language) 数据控制语言，用来操作访问权限和安全级别； 常用语句：GRANT、DENY<br>
+4、DQL(Data Query Language) 数据查询语言，用来查询数据 常用语句：SELECT</p>
+<h2 id="数据库的数据类型">数据库的数据类型</h2>
+<p>使用MySQL数据库存储数据时，不同的数据类型决定了 MySQL存储数据方式的不同。为此，MySQL数据库提供了多种数据类型，其中包括整数类型、浮点数类型、定点 数类型、日期和时间类型、字符串类型、二进制…等等数据类型。</p>
+<h3 id="整数类型">整数类型</h3>
+<p>根据数值取值范围的不同MySQL 中的整数类型可分为5种，分别是TINYINT、SMALUNT、MEDIUMINT、INT和 BIGINT。下图列举了 MySQL不同整数类型所对应的字节大小和取值范围而最常用的为INT类型的，</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>字节数</th>
+<th>无符号数的取值范围</th>
+<th>有符号数的取值范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TINYINT</td>
+<td>1</td>
+<td>0~255</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>SMALLINT</td>
+<td>2</td>
+<td>0~65535</td>
+<td>-32768~32768</td>
+</tr>
+<tr>
+<td>MEDIUINT</td>
+<td>3</td>
+<td>0~16777215</td>
+<td>-8388608~8388608</td>
+</tr>
+<tr>
+<td>INT（最常见）</td>
+<td>4</td>
+<td>0~4294967295</td>
+<td>-2147483648~ 2147483648</td>
+</tr>
+<tr>
+<td>BIGINT</td>
+<td>8</td>
+<td>0~18446744073709551615</td>
+<td>-9223372036854775808~9223372036854775808</td>
+</tr>
+</tbody>
+</table>
+<h3 id="浮点数类型和定点数类型">浮点数类型和定点数类型</h3>
+<p>在MySQL数据库中使用浮点数和定点数来存储小数。浮点数的类型有两种：单精度浮点数类型（FLOAT)和双精度浮点数类型（DOUBLE)。而定点数类型只有一种即DECIMAL类型。下图列举了 MySQL中浮点数和定点数类型所对应的字节大小及其取值范围：</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>字节数</th>
+<th>有符号数取值范围</th>
+<th>无符号数取值范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>FLOAT</td>
+<td>4</td>
+<td>-3.402823466E+38~-1.175494351E-38</td>
+<td>0和1.175494351E-38~3.402823466E+38</td>
+</tr>
+<tr>
+<td>DOUBLE</td>
+<td>8</td>
+<td>-1.7976931348623157E+308~2.2250738585072014E-308</td>
+<td>0和2.2250738585072014E-308~1.7976931348623157E+308</td>
+</tr>
+<tr>
+<td>DECIMAL（M,D）</td>
+<td>M+2</td>
+<td>-1.7976931348623157E+308~2.2250738585072014E-308</td>
+<td>0和2.2250738585072014E-308~1.7976931348623157E+308</td>
+</tr>
+</tbody>
+</table>
+<p>从上图中可以看出：DECIMAL类型的取值范围与DOUBLE类型相同。但是，请注意：DECIMAL类型的有效取值范围是由M和D决定的。其中，M表示的是数据的长 度，D表示的是小数点后的长度。比如，将数据类型为DECIMAL(6,2)的数据6.5243 插入数据库后显示的结果为6.52</p>
+<h3 id="字符串类型">字符串类型</h3>
+<p>在MySQL中常用CHAR 和 VARCHAR 表示字符串。两者不同的是：VARCHAR存储可变长度的字符串。<br>
+<strong>当数据为CHAR(M)类型时，不管插入值的长度是实际是多少它所占用的存储空间都是M个字节；而VARCHAR(M)所对应的数据所占用的字节数为实际长度加1</strong></p>
+<table>
+<thead>
+<tr>
+<th>插入值</th>
+<th>CHAR(3)</th>
+<th>存储需求</th>
+<th>VARCHAR(3)</th>
+<th>存储需求</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>‘’</td>
+<td>‘’</td>
+<td>3个字节</td>
+<td>‘’</td>
+<td>1个字节</td>
+</tr>
+<tr>
+<td>‘a’</td>
+<td>‘a’</td>
+<td>3个字节</td>
+<td>‘a’</td>
+<td>2个字节</td>
+</tr>
+<tr>
+<td>‘ab’</td>
+<td>‘ab’</td>
+<td>3个字节</td>
+<td>‘ab’</td>
+<td>3个字节</td>
+</tr>
+<tr>
+<td>‘abc’</td>
+<td>‘ab’</td>
+<td>3个字节</td>
+<td>‘abc’</td>
+<td>4个字节</td>
+</tr>
+<tr>
+<td>‘abcd’</td>
+<td>‘ab’</td>
+<td>3个字节</td>
+<td>‘abc’</td>
+<td>4字节</td>
+</tr>
+</tbody>
+</table>
+<h3 id="文本类型">文本类型</h3>
+<p>文本类型用于表示大文本数据，例如，文章内容、评论、详情等，它的类型分为如下4种：</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>储存范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TINYTEXT</td>
+<td>0~255字节</td>
+</tr>
+<tr>
+<td>TEXT</td>
+<td>0~65535字节</td>
+</tr>
+<tr>
+<td>MEDIUMTEXT</td>
+<td>0~16777215字节</td>
+</tr>
+<tr>
+<td>LONGTEXT</td>
+<td>0~4294967295字节</td>
+</tr>
+</tbody>
+</table>
+<h3 id="日期与时间类型">日期与时间类型</h3>
+<p>MySQL提供的表示日期和时间的数据类型分别是 ：YEAR、DATE、TIME、DATETIME 和 TIMESTAMP。下图列举了日期和时间数据类型所对应的字节数、取值范围、日期格式以及零值：</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>字节数</th>
+<th>取值范围</th>
+<th>日期格式</th>
+<th>零值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>YEAR</td>
+<td>1</td>
+<td>1901~2155</td>
+<td>YYYY</td>
+<td>0000</td>
+</tr>
+<tr>
+<td>DATE</td>
+<td>4</td>
+<td>1000-01-01~9999-12-31</td>
+<td>YYYY-MM-DD</td>
+<td>0000-00-00</td>
+</tr>
+<tr>
+<td>TIME</td>
+<td>3</td>
+<td>-838：59：59~ 838：59：59</td>
+<td>HH:MM:SS</td>
+<td>00:00:00</td>
+</tr>
+<tr>
+<td>DATETIME</td>
+<td>8</td>
+<td>1000-01-01 00:00:00~9999-12-31 23:59:59</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>0000-00-00 00:00:00</td>
+</tr>
+<tr>
+<td>TIMESTAMP</td>
+<td>4</td>
+<td>1970-01-01 00:00:01~2038-01-19 03:14:07</td>
+<td>YYYY-MM-DD HH:MM:SS</td>
+<td>0000-00-00 00:00:00</td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>YEAR<strong>类型</strong></p>
+</li>
+</ul>
+<p>YEAR类型用于表示年份，在MySQL中，可以使用以下三种格式指定YEAR类型 的值。<br>
+1、使用4位字符串或数字表示，范围为’1901’—'2155’或1901—2155。例如，输入 ‘2019’或2019插入到数据库中的值均为2019。<br>
+2、使用两位字符串表示，范围为’00’—‘99’。其中，‘00’—'69’范围的值会被转换为 2000—2069范围的YEAR值，‘70’—'99’范围的值会被转换为1970—1999范围的YEAR 值。例如，输入’19’插入到数据库中的值为2019。<br>
+3、使用两位数字表示，范围为1—99。其中，1—69范围的值会被转换为2001— 2069范围的YEAR值，70—99范围的值会被转换为1970—1999范围的YEAR值。例 如，输入19插入到数据库中的值为2019。请注意：当使用YEAR类型时，一定要区分’0’和0。因为字符串格式的’0’表示的YEAR值是2000而数字格式的0表示的YEAR值是0000。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>TIME<strong>类型</strong></p>
+</li>
+</ul>
+<p>TIME类型用于表示时间值，它的显示形式一般为HH:MM:SS，其中，HH表示小时， MM表示分,SS表示秒。在MySQL中，可以使用以下3种格式指定TIME类型的值。<br>
+1、以’D HH:MM:SS’字符串格式表示。其中，D表示日可取0—34之间的值, 插入数据时，小时的值等于(DX24+HH)。例如，输入’2 11:30:50’插入数据库中的日期为59:30:50。<br>
+2、以’HHMMSS’字符串格式或者HHMMSS数字格式表示。 例如，输入’115454’或115454,插入数据库中的日期为11:54:54<br>
+3、使用CURRENT_TIME或NOW()输入当前系统时间。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>DATETIME类型</p>
+</li>
+</ul>
+<p>DATETIME类型用于表示日期和时间，它的显示形式为’YYYY-MM-DD HH: MM:SS’，其中，YYYY表示年，MM表示月，DD表示日，HH表示小时，MM表示分，SS 表示秒。在MySQL中，可以使用以下4种格式指定DATETIME类型的值。<br>
+以’YYYY-MM-DD HH:MM:SS’或者’YYYYMMDDHHMMSS’字符串格式表示的日期和时间，取值范围为’1000-01-01 00:00:00’—‘9999-12-3 23:59:59’。例如，输入’2019-01-22 09:01:23’或 ‘20140122_0_90123’插入数据库中的 DATETIME 值都为 2019-01-22 09:01:23。<br>
+1、以’YY-MM-DD HH:MM:SS’或者’YYMMDDHHMMSS’字符串格式表示的日期和时间，其中YY表示年，取值范围为’00’—‘99’。与DATE类型中的YY相同，‘00’— '69’范围的值会被转换为2000—2069范围的值，‘70’—'99’范围的值会被转换为1970—1999范围的值。<br>
+2、以YYYYMMDDHHMMSS或者YYMMDDHHMMSS数字格式表示的日期 和时间。例如，插入20190122090123或者190122090123,插入数据库中的DATETIME值都 为 2019-01-22 09:01:23。<br>
+3、使用NOW来输入当前系统的日期和时间。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>TIMESTAMP类型</p>
+</li>
+</ul>
+<p>TIMESTAMP类型用于表示日期和时间，它的显示形式与DATETIME相同但取值范围比DATETIME小。在此，介绍几种TIMESTAMP类型与DATATIME类型不同的形式：<br>
+1、使用CURRENT_TIMESTAMP输入系统当前日期和时间。<br>
+2、输入NULL时系统会输入系统当前日期和时间。<br>
+3、无任何输入时系统会输入系统当前日期和时间。</p>
+<h3 id="二进制类型">二进制类型</h3>
+<p>在MySQL中常用BLOB存储二进制类型的数据，例如：图片、PDF文档等。BLOB类型分为如下四种：</p>
+<table>
+<thead>
+<tr>
+<th>数据类型</th>
+<th>储存范围</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TINYBLOB</td>
+<td>0~255字节</td>
+</tr>
+<tr>
+<td>BLOB</td>
+<td>0~65535字节</td>
+</tr>
+<tr>
+<td>MEDIUMBLOB</td>
+<td>0~16777215字节</td>
+</tr>
+<tr>
+<td>LONGBLOB</td>
+<td>0~4294967295字节</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight pgsql"><table><tr><td class="code"><pre><span class="line"><span class="comment">-- 创建数据库</span></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">DATABASE</span> <span class="keyword">IF</span> <span class="keyword">EXISTS</span> mydb;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">DATABASE</span> mydb;</span><br><span class="line">USE mydb;</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 创建student表</span></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> student (</span><br><span class="line">    sid <span class="type">CHAR</span>(<span class="number">6</span>),</span><br><span class="line">    sname <span class="type">VARCHAR</span>(<span class="number">50</span>),</span><br><span class="line">    age <span class="type">INT</span>,</span><br><span class="line">    gender <span class="type">VARCHAR</span>(<span class="number">50</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;male&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">-- 向student表插入数据</span></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1001&#x27;</span>, <span class="string">&#x27;lili&#x27;</span>, <span class="number">14</span>, <span class="string">&#x27;male&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1002&#x27;</span>, <span class="string">&#x27;wang&#x27;</span>, <span class="number">15</span>, <span class="string">&#x27;female&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1003&#x27;</span>, <span class="string">&#x27;tywd&#x27;</span>, <span class="number">16</span>, <span class="string">&#x27;male&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1004&#x27;</span>, <span class="string">&#x27;hfgs&#x27;</span>, <span class="number">17</span>, <span class="string">&#x27;female&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1005&#x27;</span>, <span class="string">&#x27;qwer&#x27;</span>, <span class="number">18</span>, <span class="string">&#x27;male&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1006&#x27;</span>, <span class="string">&#x27;zxsd&#x27;</span>, <span class="number">19</span>, <span class="string">&#x27;female&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1007&#x27;</span>, <span class="string">&#x27;hjop&#x27;</span>, <span class="number">16</span>, <span class="string">&#x27;male&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1008&#x27;</span>, <span class="string">&#x27;tyop&#x27;</span>, <span class="number">15</span>, <span class="string">&#x27;female&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1009&#x27;</span>, <span class="string">&#x27;nhmk&#x27;</span>, <span class="number">13</span>, <span class="string">&#x27;male&#x27;</span>);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> student (sid,sname,age,gender) <span class="keyword">VALUES</span> (<span class="string">&#x27;S_1010&#x27;</span>, <span class="string">&#x27;xdfv&#x27;</span>, <span class="number">17</span>, <span class="string">&#x27;female&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>本文参考：</p>
+<p><a href="https://blog.csdn.net/weixin_45851945/article/details/114287877">MySQL 有这一篇就够（呕心狂敲37k字，只为博君一点赞！！！）</a></p>
+]]></content>
+      <tags>
+        <tag>MYSQL</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【hexo】更高级的Markdown渲染器——hexo-renderer-markdown-it</title>
+    <url>/posts/e3e8d0c4/</url>
+    <content><![CDATA[<h2 id="引言">引言</h2>
+<p>Hexo 默认搭配的 Markdown 渲染器是 hexo-renderer-marked，但其支持的渲染格式有限，不利于自由写作。因此，今天教大家如何更换为功能更加强大，渲染速度更快的 hexo-renderer-markdown-it 渲染器，并且还会详细介绍常用插件的配置，实现更优雅的 Markdown 写作。</p>
+<p>container和footnote不知道为什么不能使用，估计也用不上，暂时不处理了。原文在参考文章里。</p>
+<span id="more"></span>
+<h2 id="安装">安装</h2>
+<p>卸载 <code>hexo-renderer-marked</code></p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line">npm un hexo-renderer-marked <span class="comment">--save</span></span><br></pre></td></tr></table></figure>
+<p>安装 <code>hexo-renderer-markdown-it</code></p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">npm i hexo-renderer-markdown-<span class="keyword">it</span> <span class="comment">--save</span></span><br></pre></td></tr></table></figure>
+<h2 id="配置">配置</h2>
+<p>将如下文本复制粘贴到 <a href="https://so.csdn.net/so/search?q=Hexo&amp;spm=1001.2101.3001.7020">Hexo</a> 的配置文件 <code>_config.yml</code> 的尾部</p>
+<figure class="highlight nestedtext"><table><tr><td class="code"><pre><span class="line"><span class="attribute">markdown</span><span class="punctuation">:</span></span><br><span class="line">  <span class="attribute">preset</span><span class="punctuation">:</span> <span class="string">&quot;default&quot;</span></span><br><span class="line">  <span class="attribute">render</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">html</span><span class="punctuation">:</span> <span class="string">true</span></span><br><span class="line">    <span class="attribute">xhtmlOut</span><span class="punctuation">:</span> <span class="string">false</span></span><br><span class="line">    <span class="attribute">langPrefix</span><span class="punctuation">:</span> <span class="string">&quot;language-&quot;</span></span><br><span class="line">    <span class="attribute">breaks</span><span class="punctuation">:</span> <span class="string">true</span></span><br><span class="line">    <span class="attribute">linkify</span><span class="punctuation">:</span> <span class="string">true</span></span><br><span class="line">    <span class="attribute">typographer</span><span class="punctuation">:</span> <span class="string">true</span></span><br><span class="line">    <span class="attribute">quotes</span><span class="punctuation">:</span> <span class="string">&quot;“”‘’&quot;</span></span><br><span class="line">  <span class="attribute">enable_rules</span><span class="punctuation">:</span></span><br><span class="line">  <span class="attribute">disable_rules</span><span class="punctuation">:</span></span><br><span class="line">  <span class="attribute">plugins</span><span class="punctuation">:</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-abbr</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-cjk-breaks</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-deflist</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-emoji</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-footnote</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-ins</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-mark</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-sub</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-sup</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-checkbox</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-imsize</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">markdown-it-expandable</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">name: markdown-it-container</span></span><br><span class="line">      <span class="attribute">options</span><span class="punctuation">:</span> <span class="string">success</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">name: markdown-it-container</span></span><br><span class="line">      <span class="attribute">options</span><span class="punctuation">:</span> <span class="string">tips</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">name: markdown-it-container</span></span><br><span class="line">      <span class="attribute">options</span><span class="punctuation">:</span> <span class="string">warning</span></span><br><span class="line">    <span class="bullet">-</span> <span class="string">name: markdown-it-container</span></span><br><span class="line">      <span class="attribute">options</span><span class="punctuation">:</span> <span class="string">danger</span></span><br><span class="line">  <span class="attribute">anchors</span><span class="punctuation">:</span></span><br><span class="line">    <span class="attribute">level</span><span class="punctuation">:</span> <span class="string">2</span></span><br><span class="line">    <span class="attribute">collisionSuffix</span><span class="punctuation">:</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="attribute">permalink</span><span class="punctuation">:</span> <span class="string">false</span></span><br><span class="line">    <span class="attribute">permalinkClass</span><span class="punctuation">:</span> <span class="string">&quot;header-anchor&quot;</span></span><br><span class="line">    <span class="attribute">permalinkSide</span><span class="punctuation">:</span> <span class="string">&quot;left&quot;</span></span><br><span class="line">    <span class="attribute">permalinkSymbol</span><span class="punctuation">:</span> <span class="string">&quot;¶&quot;</span></span><br><span class="line">    <span class="attribute">case</span><span class="punctuation">:</span> <span class="string">0</span></span><br><span class="line">    <span class="attribute">separator</span><span class="punctuation">:</span> <span class="string">&quot;-&quot;</span></span><br></pre></td></tr></table></figure>
+<h2 id="插件">插件</h2>
+<p>本章节讲述各种插件的用法、配置和注意事项。</p>
+<h3 id="安装-2">安装</h3>
+<p>分别使用 <code>npm</code> 命令安装以下三个插件：</p>
+<figure class="highlight livescript"><table><tr><td class="code"><pre><span class="line"><span class="built_in">npm</span> i markdown-<span class="literal">it</span>-checkbox</span><br><span class="line"><span class="built_in">npm</span> i markdown-<span class="literal">it</span>-imsize</span><br><span class="line"><span class="built_in">npm</span> i markdown-<span class="literal">it</span>-expandable</span><br></pre></td></tr></table></figure>
+<p>其它插件 <code>hexo-renderer-markdown-it</code> 渲染器自带的有，不要安装。</p>
+<h3 id="用法">用法</h3>
+<h4 id="基础">基础</h4>
+<table>
+<thead>
+<tr>
+<th>名称</th>
+<th>描述</th>
+<th>语法</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>markdown-it-abbr</td>
+<td>注释</td>
+<td><code>*[HTML]: 超文本标记语言</code></td>
+<td>*[HTML]: 超文本标记语言</td>
+</tr>
+<tr>
+<td>markdown-it-emoji</td>
+<td>表情</td>
+<td><code>:)</code>  <code>:crab:</code>  <code>:horse:</code></td>
+<td>😃 🦀 🐴</td>
+</tr>
+<tr>
+<td>markdown-it-footnote</td>
+<td>脚注</td>
+<td><code>参考文献&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; rel=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;</code></td>
+<td>参考文献<sup id="fnref:1"><a href="#fn:1" rel="footnote">1</a></sup></td>
+</tr>
+<tr>
+<td>markdown-it-ins</td>
+<td>下划线</td>
+<td><code>++下划线++</code></td>
+<td><ins>下划线</ins></td>
+</tr>
+<tr>
+<td>markdown-it-mark</td>
+<td>突出显示</td>
+<td><code>==标记==</code></td>
+<td><mark>标记</mark></td>
+</tr>
+<tr>
+<td>markdown-it-sub</td>
+<td>下标</td>
+<td><code>H~2~O</code></td>
+<td>H<sub>2</sub>O</td>
+</tr>
+<tr>
+<td>markdown-it-sup</td>
+<td>上标</td>
+<td><code>X^2^</code></td>
+<td>X<sup>2</sup></td>
+</tr>
+<tr>
+<td>markdown-it-checkbox</td>
+<td>复选框</td>
+<td><input type="checkbox" id="checkbox1"><label for="checkbox1"></label>未选 <br> <input type="checkbox" id="checkbox0" checked="true"><label for="checkbox0"></label>选中</td>
+<td><img src="/posts/e3e8d0c4//image-20241111151833850.png" alt="image-20241111151833850"></td>
+</tr>
+</tbody>
+</table>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox2"><label for="checkbox2">未选</label></p>
+</li>
+<li class="lvl-2">
+<p><input type="checkbox" id="checkbox3" checked="true"><label for="checkbox3">选中</label></p>
+</li>
+</ul>
+<h4 id="进阶">进阶</h4>
+<blockquote>
+<p><a href="https://github.com/tatsy/markdown-it-imsize">markdown-it-imsize</a>：自定义图片宽高。</p>
+</blockquote>
+<p>语法：（<strong>注意</strong>：<code>=100x200</code> 前面有一个空格）</p>
+<figure class="highlight scss"><table><tr><td class="code"><pre><span class="line">!<span class="selector-attr">[test]</span>(<span class="number">006</span>.png =<span class="number">100</span>x200)</span><br></pre></td></tr></table></figure>
+<p><img src="/posts/e3e8d0c4//006.png" alt="test" width="100" height="200"></p>
+<blockquote>
+<p><a href="https://github.com/bioruebe/markdown-it-collapsible">markdown-it-expandable</a>：折叠/展开内容。</p>
+</blockquote>
+<p>语法：</p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line"><span class="code">+++</span> <span class="strong">**点击折叠**</span></span><br><span class="line"><span class="section">这是被隐藏的内容</span></span><br><span class="line"><span class="section">+++</span></span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<details open>
+<summary><span class="pre-summary">&nbsp;</span><strong>点击折叠</strong></summary><p>这是被隐藏的内容</p>
+</details>
+<blockquote>
+<p><a href="https://github.com/markdown-it/markdown-it-container">markdown-it-container</a>：自定义容器。</p>
+</blockquote>
+<p>语法：</p>
+<figure class="highlight asciidoc"><table><tr><td class="code"><pre><span class="line"><span class="meta">:::</span> tips</span><br><span class="line"><span class="strong">**提示**</span></span><br><span class="line">这是一个提示</span><br><span class="line"><span class="meta">:::</span></span><br><span class="line"></span><br><span class="line"><span class="meta">:::</span> warning</span><br><span class="line"><span class="strong">**注意**</span></span><br><span class="line">这是一个警告</span><br><span class="line"><span class="meta">:::</span></span><br><span class="line"></span><br><span class="line"><span class="meta">:::</span> danger</span><br><span class="line"><span class="strong">**警告**</span></span><br><span class="line">这是一个危险信号</span><br><span class="line"><span class="meta">:::</span></span><br><span class="line"></span><br><span class="line"><span class="meta">:::</span> success</span><br><span class="line"><span class="strong">**成功**</span></span><br><span class="line">这是一个成功信号</span><br><span class="line"><span class="meta">:::</span></span><br></pre></td></tr></table></figure>
+<p>效果：</p>
+<div class="tips">
+<p><strong>提示</strong><br>
+这是一个提示</p>
+</div>
+<div class="warning">
+<p><strong>注意</strong><br>
+这是一个警告</p>
+</div>
+<div class="danger">
+<p><strong>警告</strong><br>
+这是一个危险信号</p>
+</div>
+<div class="success">
+<p><strong>成功</strong><br>
+这是一个成功信号</p>
+</div>
+<p>本文参考：</p>
+<p><a href="https://blog.csdn.net/qq_42951560/article/details/123596899">【Hexo】选择更高级的Markdown渲染器</a></p>
+]]></content>
+      <categories>
+        <category>hexo</category>
+      </categories>
+      <tags>
+        <tag>hexo</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>我的第一篇博客——开启我的新篇章</title>
+    <url>/posts/8d60c6a5/</url>
+    <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Wrong password, please try again.Or you can contact the author to view the blog" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
+  <script id="hbeData" type="hbeData" data-hmacdigest="3528a56aeba1a675791371d7698aeab3b12aea6720b0157e60f1935c38074323">35e94af5aa3de4403be2a274c3bae36ffa679d444bbf2c0ce98987b44b30a2b177390b045ff9b811b9d33ebdbc694d1dc87365728d7c66f7bd90d31b5c38ab9214a97f9a3b1e49c46ec95f9c4eb8dce252ab22ff16259921bf1f5d25bb525c592e381a68ea7bc6b289b36993d1d2a8ace0a87a2f629e64256dbfe2806228ad0ddb14ffedbbc828533f60c7c295453636a6eca6d52d1a5b5244a569529d38f5b8a542f55f8310e64fd67b6894930d4ca3405233fc057a8fecc27cdda65788f5c54afb9df1ceff2e4850e97f108f8c13d1ae6ad241254e6d769f7c9856d224a79665f2e112d88473eea7213660d383bf252530df3cfc4de7e20a54c29c095f96e0a4aa9d367bbd54003e0bf6e01feef60f2cbd0ba0163ff4f8f087a6cb96f4ab5c4c599b882784d6b5650a556c015cbb57526281545d4bb3a4ca46c04d07a382c0214ec2889b6a1add6510a1854a1904ffe3ba06ea7cd221da90f1e601841dfac17f597a518cb14338866248d60b6405f939be2d0146f9f23729ef0618474a96a73d1fbadb7547b52989a4bd04a4597dd5dd4502baf6c0fe0610889ea65a08a13d9d1810d334af5dc738548eff49d3ef7e5fc577c055eaa3b8c08e8082cb60c56c0bdc1549baa7e08a26daeec1b120ee9662fd81e2f7ee703d7db8b24d2d4b3c1970cb4c2aa92e1c17c883fb96c3df13eb5e747a15216a5357261471141171d5ca2adb8118cf28095b3a162c64c40190fad91789cea76174c6e74e5ca7eddc215ce231c2826db2a09c540a3579ac743f3a19b7788b3d1e802d2247d55f567a0723ebd72fbce905fa31c5ab88048784ba2d1019c26c449e94917bf75c14e17e636cc0d0032c17fa7aa2641204995761c93895aad607108350e4bcb8224c6bc5a19255a800d572203d5d3c9fd2019471e13c6a901122b37b26200b3cada781cc50ebc4bb7d19bd84330e1035bfb1b8c48ef83df64e500530de68a5b1878d6c2d290897d68c3fdb0a179d33195681206fa7d8368e1eb84f6875e97b16849449e0e98bfbcb4170916ea9ba56441336d23bd7cc940e16b111cefa2c5393a2af40a1b7843b9fa851c37f57fade9d1240ec8d2946370903fdbd4fbd2e08cd77e12799f42603b48aa5f85bf4ceedab1124a016051ff43aae544296fdca263a6bd4879cb1d8451208b61f47c5881269a1e2e8476bd4ba4278e0cecab7ebcecc03d2648c75003889a7ebe4f95e20d6b0a789a0dcb4f29776d9ad4642b85f3823bbd97b95a5c02b8e1a18e9bc6e06a2aba3eea8d6984dd332bb3159be480f524d677ccc06f85ca3ced1d3d2dd029a1424bc68a96254af1818bf2a38e7a93f5aecdee7c1edfbbdca0b610f756523ba0bdb7bb0a9fdcad205c9959e126e2ea8b0144dc647a27dbb23e10937bbe7a21cdac4f9e2e7292a778f6c1931ae509fce0a4b3520e20d57e3d89219c72d3f6c68ed98adaeb8a4edd1cf40263f360a2f224e7e5a8337ef1f28718f577f33300a45ca89174a647ddf17793dedddc18c550df9814854f691098ae21963e409aeb56d3dd0c4d095bcd504af39026fa6efb78f448c219e6176daa6c6c8256a9be7d8848e51fe2b7c45d9a4b106051ee9bcc7ce4c537ed917a7f4c77ffddca6b85e10ef1a4293f763ba58c879f01e65d8032fad7d5785fb561ca20c424f6d09adb5510f05d2bf86592d0e5de7a67c463080237f13d576e97b30d30f567e27526eb4e7867492f31587b359d3fae943691022bc5a3481e852ad3be8b98aebefd575a7d06b8b2f2186f75cc3101aa9eafbbfae6834e37f3275b44be4ef835e2b4c2b48daac0ec25712096104ccc9f8edb0587dcfb5d5908ad8846b92f369d68846f65c5d075bc188074612ad67323274a7d6bd034e79fa86b22d49f1c35e57a2adbb8fa31ffdf6eb1ba2f5e4bd4cd0a14c27ac447905c09af8b390f6a11ade9083decc833561f009817f6faad23155d4cfaf2c8d0a6f1df6c3573a1b102aeac4e7e7c7776bc851d630afc42236960c3c89d07039def65f0b4f92f181622a18b5feb39e3d7ee94893798797556a206a2add60f7384dfe3828dfd393908d2c496a6d33a548397ff78534a45b3eee2a3e0dad706ea2825f42db5cb9867770c0c9b472c2af9b44a7a896a2998949b13c614dbdc709f05e4f9473474415df6f10710b28dead3579c553070ccfb9e602283bd196ed12286ef3dde102b8ac09d4b5525aa61745e31e800e9b967081fb42d2a72c539af4eace26b4e19581f7cd79b3999d9757c316780d5ee3fcf60b87d46de39b3bc5fcdc800ff0cf5a59ef6dbd</script>
+  <div class="hbe hbe-content">
+    <div class="hbe hbe-input hbe-input-default">
+      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
+      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
+        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
+      </label>
+    </div>
+  </div>
+</div>
+<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
+      <tags>
+        <tag>private</tag>
+      </tags>
+  </entry>
+</search>
