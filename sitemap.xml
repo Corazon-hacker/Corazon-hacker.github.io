@@ -2,6 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://mcorazon.top/posts/f4ca21fa/</loc>
+    
+    <lastmod>2025-02-27</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://mcorazon.top/about/index.html</loc>
+    
+    <lastmod>2025-02-27</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://mcorazon.top/schedule/index.html</loc>
+    
+    <lastmod>2025-02-22</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>http://mcorazon.top/posts/c826a854/</loc>
     
     <lastmod>2025-02-21</lastmod>
@@ -155,27 +182,9 @@
   </url>
   
   <url>
-    <loc>http://mcorazon.top/schedule/index.html</loc>
-    
-    <lastmod>2025-02-19</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://mcorazon.top/posts/8d60c6a5/</loc>
     
     <lastmod>2025-02-18</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>http://mcorazon.top/about/index.html</loc>
-    
-    <lastmod>2024-11-04</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -238,7 +247,7 @@
 
   <url>
     <loc>http://mcorazon.top/</loc>
-    <lastmod>2025-02-21</lastmod>
+    <lastmod>2025-02-27</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -246,21 +255,21 @@
   
   <url>
     <loc>http://mcorazon.top/tags/Linux/</loc>
-    <lastmod>2025-02-21</lastmod>
+    <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://mcorazon.top/tags/MYSQL/</loc>
-    <lastmod>2025-02-21</lastmod>
+    <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://mcorazon.top/tags/private/</loc>
-    <lastmod>2025-02-21</lastmod>
+    <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
@@ -269,21 +278,21 @@
   
   <url>
     <loc>http://mcorazon.top/categories/%E5%8D%9A%E5%AE%A2%E5%86%99%E4%BD%9C/</loc>
-    <lastmod>2025-02-21</lastmod>
+    <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://mcorazon.top/categories/Linux/</loc>
-    <lastmod>2025-02-21</lastmod>
+    <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>http://mcorazon.top/categories/MySQL/</loc>
-    <lastmod>2025-02-21</lastmod>
+    <lastmod>2025-02-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
