@@ -1,8 +1,9 @@
 http://mcorazon.top/posts/3b7c6011/
+http://mcorazon.top/posts/23b5c41a/
+http://mcorazon.top/posts/26e49edf/
 http://mcorazon.top/posts/8071f3a9/
 http://mcorazon.top/posts/63063238/
 http://mcorazon.top/posts/f4ca21fa/
-http://mcorazon.top/posts/26e49edf/
 http://mcorazon.top/posts/5d71294b/
 http://mcorazon.top/posts/499dd9b6/
 http://mcorazon.top/posts/c826a854/
@@ -33,8 +34,10 @@ http://mcorazon.top/tags/Linux/
 http://mcorazon.top/tags/PortSwigger%E9%9D%B6%E5%9C%BA/
 http://mcorazon.top/tags/SQL%E6%B3%A8%E5%85%A5/
 http://mcorazon.top/tags/MYSQL/
+http://mcorazon.top/tags/sqlmap/
 http://mcorazon.top/tags/private/
 http://mcorazon.top/categories/%E5%8D%9A%E5%AE%A2%E5%86%99%E4%BD%9C/
 http://mcorazon.top/categories/Linux/
 http://mcorazon.top/categories/%E9%9D%B6%E5%9C%BA%E7%BB%83%E4%B9%A0/
 http://mcorazon.top/categories/MySQL/
+http://mcorazon.top/categories/%E5%AE%89%E5%85%A8%E5%B7%A5%E5%85%B7/

