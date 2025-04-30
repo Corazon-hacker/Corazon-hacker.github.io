@@ -347,10 +347,338 @@ $$</p>
 <p><a href="https://blog.csdn.net/lewky_liu/article/details/82432003">Hexo系列(2) - NexT主题美化与博客功能增强</a></p>
 <p><a href="https://theme-next.iissnan.com/theme-settings.html">主题配置 - NexT 使用文档</a></p>
 <p><a href="https://blog.csdn.net/qq_32320399/article/details/99823695">Markdown连接的写法</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>博客写作</category>
       </categories>
+  </entry>
+  <entry>
+    <title>【PortSwigger靶场】路径遍历</title>
+    <url>/posts/15b3971d/</url>
+    <content><![CDATA[<h2 id="什么是路径遍历">什么是路径遍历</h2>
+<p>路径遍历也称为目录遍历。这些漏洞可使攻击者在运行应用程序的服务器上读取任意文件。这可能包括：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>应用程序代码和数据</p>
+</li>
+<li class="lvl-2">
+<p>后端系统的凭证</p>
+</li>
+<li class="lvl-2">
+<p>敏感的操作系统文件。</p>
+</li>
+</ul>
+<p>在某些情况下，攻击者可能能够写入服务器上的任意文件，从而修改应用程序数据或行为，并最终完全控制服务器。</p>
+<h2 id="通过路径遍历读取任意文件">通过路径遍历读取任意文件</h2>
+<h3 id="Lab-File-path-traversal-simple-case">Lab: File path traversal, simple case</h3>
+<p>想象一下，一个购物应用程序会显示待售商品的图片。可以使用以下 HTML 加载图片：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;/loadImage?filename=218.png&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>loadImage </code>URL 接收一个<code>filename</code>参数，并返回指定文件的内容。图像文件存储在磁盘的 <code>/var/www/images/</code>  目录中。要返回图像，应用程序会将请求的文件名追加到该基本目录，并使用文件系统 API 读取文件内容。换句话说，应用程序会从以下文件路径读取内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/var/www/images/218.png</span><br></pre></td></tr></table></figure>
+<p>该应用程序没有针对路径遍历攻击实施任何防御措施。因此，攻击者可以请求以下 URL，从服务器文件系统中检索 /etc/passwd 文件：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//i</span>nsecure-website.com<span class="regexp">/loadImage?filename=../</span>..<span class="regexp">/../</span>etc/passwd</span><br></pre></td></tr></table></figure>
+<p>这将导致应用程序从以下文件路径读取数据：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/var/</span>www<span class="regexp">/images/</span>..<span class="regexp">/../</span>..<span class="regexp">/etc/</span>passwd</span><br></pre></td></tr></table></figure>
+<p><code>../</code>序列在文件路径中有效，表示在目录结构中上移一级。连续三个<code>../</code>顺序从 <code>/var/www/images/ </code>上移到文件系统根目录，因此实际读取的文件是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/passwd</span><br></pre></td></tr></table></figure>
+<p>在基于 Unix 的操作系统上，这是一个标准文件，包含服务器上注册用户的详细信息，但攻击者可以使用相同的技术检索其他任意文件。</p>
+<p>在 Windows 系统中，…/ 和 …\都是有效的目录遍历序列。下面是一个针对基于 Windows 的服务器的等效攻击示例：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line">https:<span class="string">//insecure-website.com/loadImage</span>?filename=<span class="string">..</span>\<span class="string">..</span>\<span class="string">..</span>\windows\win.ini</span><br></pre></td></tr></table></figure>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。要解决该实验问题，请检索 <code>/etc/passwd </code>文件的内容。</p>
+<p><img src="/posts/15b3971d//image-20250430160204983.png" alt="image-20250430160204983"></p>
+<p>这一题很简单。把参数改一下就可以了。</p>
+<h2 id="利用路径遍历漏洞的常见障碍">利用路径遍历漏洞的常见障碍</h2>
+<h3 id="Lab-File-path-traversal-traversal-sequences-blocked-with-absolute-path-bypass">Lab: File path traversal, traversal sequences blocked with absolute path bypass</h3>
+<p>许多将用户输入置入文件路径的应用程序都有针对路径遍历攻击的防御措施。这些防御措施往往可以被绕过。</p>
+<p>如果应用程序从用户提供的文件名中删除或阻止目录遍历序列，就有可能利用各种技术绕过防御。</p>
+<p>您可以使用文件系统根目录下的绝对路径（如 <code>filename=/etc/passwd</code>）来直接引用文件，而无需使用任何遍历序列。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。应用程序会阻止遍历序列，但会将所提供的文件名视为默认工作目录的相对文件名。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这道题阻止了相对目录遍历序列，但是可以用绝对路径</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430162204471.png" alt="image-20250430162204471"></p>
+<h3 id="Lab-File-path-traversal-traversal-sequences-stripped-non-recursively">Lab: File path traversal, traversal sequences stripped non-recursively</h3>
+<p>您或许可以使用嵌套遍历序列，如 …// 或 …//。当内部序列被剥离时，这些序列会恢复为简单的遍历序列。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。在使用用户提供的文件名之前，应用程序会从该文件名中删除路径遍历序列。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用<code>....//....//....//etc//passwd</code>遍历是可以的，但是<code>//etc//passwd</code>不行。</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430163057050.png" alt="image-20250430163057050"></p>
+<h3 id="Lab-File-path-traversal-traversal-sequences-stripped-with-superfluous-URL-decode">Lab: File path traversal, traversal sequences stripped with superfluous URL-decode</h3>
+<p>在某些情况下，例如在 URL 路径或<code>multipart/form-data</code>  请求的<code>filename</code>参数中，网络服务器可能会在将您的输入传递给应用程序之前去掉任何目录遍历序列。有时，您可以通过 URL 编码，甚至是双重 URL  编码来绕过这种清理。这将分别导致 <code>%2e%2e%2f</code> 和 <code>%252e%252e%252f</code>。各种非标准编码，如 <code>..%c0%af</code> 或  <code>..%ef%bc%8f</code> 也可以使用。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。应用程序会阻止包含路径遍历序列的输入。然后在使用输入之前对其进行 URL 解码。要解决本实验问题，请检索 /etc/passwd 文件的内容。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>url单层编码访问失败，双重编码成功。服务器会对HTTP请求双重url解码。这里把<code>../</code>换成<code>%252e%252e%252f</code>或者<code>..%252f</code>就可以了。</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430165746276.png" alt="image-20250430165746276"></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        为什么服务器会进行双重解码？
+    </div>
+    <div class="spoiler-content">
+        <p>可能的情况是，服务器在处理请求的时候，可能在不同的层次上多次进行URL解码。比如，Web服务器（如Apache或Nginx）可能先进行一次解码，然后应用框架（如PHP、Python的Flask等）可能再进行一次解码。如果两次解码之间没有对路径进行正确的规范化或安全检查，就会导致攻击者通过双重编码绕过一些安全检测。</p>
+
+    </div>
+</div>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        有没有可能只解码一次或者更多次？
+    </div>
+    <div class="spoiler-content">
+        <p>当然有可能。这取决于服务器的配置和代码实现。如果服务器只进行一次解码，那么攻击者需要直接使用单次编码的字符，例如<code>%2e%2f%2e%2e</code>等。而如果服务器解码次数超过两次，比如三次，那么攻击者可能需要使用三重编码，比如<code>%2525252e</code>（假设三重编码的话）。不过这种情况比较少见，因为通常服务器不会多次解码。</p>
+
+    </div>
+</div>
+<h3 id="Lab-File-path-traversal-validation-of-start-of-path">Lab: File path traversal, validation of start of path</h3>
+<p>应用程序可能要求用户提供的文件名以预期的基本文件夹开始，如 <code>/var/www/images</code>。在这种情况下，可以在所需的基本文件夹后加上适当的遍历序列。例如：<code>filename=/var/www/images/.../.../.../etc/passwd.</code></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>我用了url编码，不使用url编码也是可以的，但是这里单层解码，双层就不行了</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430171637924.png" alt="image-20250430171637924"></p>
+<h3 id="Lab-File-path-traversal-validation-of-file-extension-with-null-byte-bypass">Lab: File path traversal, validation of file extension with null byte bypass</h3>
+<p>应用程序可能要求用户提供的文件名以预期的文件扩展名结尾，如 .png。在这种情况下，可以使用空字节在所需扩展名之前有效地终止文件路径。例如：filename=…/…/…/etc/passwd%00.png。</p>
+<p>本实验室在显示产品图像时存在路径遍历漏洞。应用程序会验证所提供的文件名是否以预期的文件扩展名结尾。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
+<p>这个感觉好牛啊，希望自己慢慢积累，积跬步至千里吧。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>相对路径后加<code>%00.png</code>绕过文件后缀验证</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430172259167.png" alt="image-20250430172259167"></p>
+<h2 id="如何防止路径遍历攻击">如何防止路径遍历攻击</h2>
+<p>防止路径遍历漏洞的最有效方法是完全避免将用户提供的输入传递给文件系统 API。许多这样做的应用程序函数都可以重写，以更安全的方式提供相同的行为。</p>
+<p>如果无法避免将用户提供的输入传递给文件系统 API，我们建议使用两层防御来防止攻击：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在处理用户输入之前对其进行验证。理想情况下，将用户输入与允许值白名单进行比较。如果做不到这一点，则要验证输入是否只包含允许的内容，例如只包含字母数字字符。</p>
+</li>
+<li class="lvl-2">
+<p>验证所提供的输入后，将输入追加到基本目录，并使用平台文件系统 API 对路径进行规范化。验证规范化路径是否以预期的基本目录开始。</p>
+</li>
+</ul>
+<p>下面是一个根据用户输入验证文件规范路径的简单 Java 代码示例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(BASE_DIRECTORY, userInput);</span><br><span class="line"><span class="keyword">if</span> (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) &#123;</span><br><span class="line">    <span class="comment">// process file</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>代码逐行解析：</strong></p>
+<ol>
+<li class="lvl-3">
+<p>创建文件对象</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(BASE_DIRECTORY, userInput);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong><code>File</code>类</strong>：Java中用于表示文件或目录路径的类。</p>
+</li>
+<li class="lvl-2">
+<p><strong>构造函数参数</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4"><code>BASE_DIRECTORY</code>：预定义的基础目录（如<code>/safe/path</code>），用于限制文件访问范围。</li>
+<li class="lvl-4"><code>userInput</code>：用户输入的路径（如<code>data.txt</code>或<code>../../secret.txt</code>）。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><strong>作用</strong>：将两者拼接成完整路径。例如：</p>
+<ul class="lvl-2">
+<li class="lvl-4">若<code>BASE_DIRECTORY</code>是<code>/safe</code>，<code>userInput</code>是<code>file.txt</code>，则拼接为<code>/safe/file.txt</code>。</li>
+<li class="lvl-4">若<code>userInput</code>是<code>../etc/passwd</code>，则拼接为<code>/safe/../etc/passwd</code>。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li class="lvl-3">
+<p>路径规范化验证</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) &#123;</span><br><span class="line">    <span class="comment">// 处理文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong><code>getCanonicalPath()</code></strong>：将路径转换为<strong>绝对且唯一</strong>的规范形式：</p>
+<ul class="lvl-2">
+<li class="lvl-4">解析<code>.</code>（当前目录）和<code>..</code>（上级目录）。</li>
+<li class="lvl-4">去除多余的斜杠（如<code>/safe//file</code>变为<code>/safe/file</code>）。</li>
+<li class="lvl-4">解析符号链接（如将快捷方式转为真实路径）。</li>
+</ul>
+<p>例如：<code>/safe/../etc/passwd</code> 会被规范化为 <code>/etc/passwd</code>。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>startsWith(BASE_DIRECTORY)</code></strong>：检查规范路径是否以<code>BASE_DIRECTORY</code>开头。</p>
+<ul class="lvl-2">
+<li class="lvl-4">若用户输入合法（如<code>data.txt</code>），规范路径为<code>/safe/data.txt</code>，验证通过。</li>
+<li class="lvl-4">若用户输入非法（如<code>../../etc/passwd</code>），规范路径为<code>/etc/passwd</code>，验证失败。</li>
+</ul>
+</li>
+</ul>
+<p>但是这段代码应该有一定的问题，就是只要保证文件路径与<code>BASE_DIRECTORY</code>一致即可。比如说，如果<code>BASE_DIRECTORY</code>是<code>/base</code>便可以构造<code>/baseXXXX</code>越权访问与文件开头与<code>BASE_DIRECTORY</code>一致的同级目录。</p>
+<p>本文参考：</p>
+<p><a href="https://portswigger.net/web-security/file-path-traversal">Path traversal</a></p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>靶场练习</category>
+      </categories>
+      <tags>
+        <tag>PortSwigger靶场</tag>
+        <tag>路径遍历</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【PortSwigger靶场】文件上传</title>
+    <url>/posts/34bab347/</url>
+    <content><![CDATA[<h2 id="什么是文件上传漏洞？">什么是文件上传漏洞？</h2>
+<p>文件上传漏洞是指网络服务器允许用户上传文件到其文件系统，而不对文件名、类型、内容或大小等进行充分验证。如果不能正确执行这些限制，即使是基本的图片上传功能也可能被用来上传任意的、具有潜在危险的文件。这甚至可能包括支持远程代码执行的服务器端脚本文件。</p>
+<p>在某些情况下，上传文件本身就足以造成破坏。其他攻击可能涉及对文件的后续 HTTP 请求，通常是为了触发服务器执行文件。</p>
+<h2 id="文件上传漏洞有什么影响">文件上传漏洞有什么影响</h2>
+<p>文件上传漏洞的影响通常取决于两个关键因素：网站未能正确验证文件的哪个方面，无论是文件大小、类型还是内容等。文件上传成功后，对文件施加了哪些限制。</p>
+<p>在最坏的情况下，文件类型没有得到正确验证，服务器配置允许某些类型的文件（如 .php 和 .jsp）作为代码执行。在这种情况下，攻击者有可能上传一个服务器端代码文件，该文件可作为 web shell 使用，从而有效地完全控制服务器。</p>
+<p>如果文件名没有得到正确验证，攻击者只需上传同名文件，就能覆盖关键文件。如果服务器还存在目录遍历漏洞，这就意味着攻击者甚至可以将文件上传到意想不到的位置。</p>
+<p>如果不能确保文件大小在预期的阈值范围内，还可能导致某种形式的拒绝服务（DoS）攻击，即攻击者填满可用磁盘空间。</p>
+<h2 id="文件上传漏洞是如何产生的">文件上传漏洞是如何产生的</h2>
+<p>因为文件上传漏洞巨大的危害性，网站很少会对允许用户上传的文件不加任何限制。更常见的情况是，开发人员实施他们认为强大的验证，但这种验证要么存在固有缺陷，要么很容易被绕过。</p>
+<p>例如，它们可能试图将危险文件类型列入黑名单，但在检查文件扩展名时却没有考虑到解析差异。与任何黑名单一样，黑名单也很容易不小心遗漏更隐蔽的文件类型，而这些文件类型可能仍然具有危险性。</p>
+<p>在其他情况下，网站可能会尝试通过验证属性来检查文件类型，而这些属性很容易被使用 Burp Proxy 或 Repeater 等工具的攻击者操纵。</p>
+<p>最后，即使是强大的验证措施，在构成网站的主机和目录网络中的应用也可能不一致，从而导致可被利用的差异。</p>
+<h2 id="网络服务器如何处理静态文件请求">网络服务器如何处理静态文件请求</h2>
+<p>在了解如何利用文件上传漏洞之前，您必须对服务器如何处理静态文件请求有一个基本的了解。</p>
+<p>过去，网站几乎完全由静态文件组成，当用户提出请求时，网站就会向用户提供静态文件。因此，每个请求的路径都可以与服务器文件系统中的目录和文件层次结构进行 1:1  的映射。如今，网站越来越动态化，请求的路径往往与文件系统没有任何直接关系。不过，网络服务器仍然要处理一些静态文件的请求，包括样式表、图像等。</p>
+<p>处理这些静态文件的流程大致相同。服务器会解析请求中的路径，以确定文件扩展名。然后，服务器根据扩展名和 MIME 类型之间的预配置映射列表来确定请求的文件类型。接下来会发生什么取决于文件类型和服务器配置。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果该文件类型不可执行，如图像或静态 HTML 页面，服务器可能只会在 HTTP 响应中向客户端发送文件内容。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件类型是可执行的，如 PHP 文件，且服务器被配置为执行此类文件，那么在运行脚本之前，服务器会根据 HTTP 请求中的头和参数来分配变量。由此产生的输出结果会在 HTTP 响应中发送给客户端。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件类型是可执行的，但服务器未配置为执行该类型的文件，则通常会响应错误。不过，在某些情况下，文件内容仍会以纯文本形式提供给客户端。这种错误配置偶尔会被利用来泄露源代码和其他敏感信息。你可以在我们的信息披露学习材料中看到这方面的例子。</p>
+</li>
+</ul>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        TIPS
+    </div>
+    <div class="spoiler-content">
+        <p><code>Content-Type</code> 响应头可提供服务器认为它已提供的文件类型的线索。如果应用程序代码没有明确设置该标头，它通常包含文件扩展名/MIME 类型映射的结果。</p>
+
+    </div>
+</div>
+<h2 id="利用不受限制的文件上传部署网络外壳">利用不受限制的文件上传部署网络外壳</h2>
+<h3 id="Lab-通过Web-shell-上传远程执行代码">Lab: 通过Web shell 上传远程执行代码</h3>
+<p>从安全角度来看，最糟糕的情况是网站允许您上传服务器端脚本（如 PHP、Java 或 Python 文件），并将其配置为代码执行。这样，在服务器上创建自己的网络外壳就变得轻而易举了。</p>
+<blockquote>
+<p>Web shell</p>
+<p>Web shell是一种恶意脚本，攻击者只需向正确的端点发送 HTTP 请求，就能在远程网络服务器上执行任意命令</p>
+</blockquote>
+<p>如果你能成功上传Web shell，你实际上就拥有了对服务器的完全控制权。这意味着你可以读写任意文件、外泄敏感数据，甚至利用服务器对内部基础架构和网络外的其他服务器进行透视攻击。例如，可以使用下面的 PHP 单行程序从服务器的文件系统中读取任意文件：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/target/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>一旦上传，发送对该恶意文件的请求就会在响应中返回目标文件的内容。</p>
+<p>本实验室包含一个易受攻击的图片上传功能。在将用户上传的文件存储到服务器文件系统之前，它没有对这些文件执行任何验证。</p>
+<p>要解决该实验问题，请上传一个基本的<code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ol>
+<li class="lvl-3">
+<p>登录题目给的账户后，可以上传头像</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430120836773.png" alt="image-20250430120836773"></p>
+<ol start="2">
+<li class="lvl-3">
+<p>上传1.php文件</p>
+</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/home/carlos/secret&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/34bab347//image-20250430120903346.png" alt="image-20250430120903346"></p>
+<ol start="3">
+<li class="lvl-3">
+<p>打开图像</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430121009450.png" alt="image-20250430121009450"></p>
+<p>总结：前端无防护、后端无防护、服务器具备执行条件。</p>
+<h2 id="利用文件上传验证的缺陷">利用文件上传验证的缺陷</h2>
+<p>在网络中，你不太可能发现一个网站像我们在上一个实验室中看到的那样，对文件上传攻击没有任何防护措施。但是，有了防御措施，并不意味着它们就是强大的。有时，你仍然可以利用这些机制中的漏洞来获取网络外壳，从而远程执行代码。</p>
+<h3 id="文件类型验证存在缺陷">文件类型验证存在缺陷</h3>
+<p>在提交 HTML 表单时，浏览器通常会在 <code>POST </code>请求中发送所提供的数据，内容类型为  <code>application/x-www-form-url-encoded</code>。这对于发送简单的文本（如姓名或地址）很合适。但它不适合发送大量二进制数据，如整个图像文件或 PDF 文档。在这种情况下，首选内容类型为 <code>multipart/form-data</code>。</p>
+<p>考虑一个包含上传图片、提供图片说明和输入用户名等字段的表单。提交这样的表单后，可能会得到类似下面的请求：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">POST /images HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line">    Content-Length: <span class="number">12345</span></span><br><span class="line">    Content-<span class="type">Type</span>: multipart/form-data; boundary=---------------------------012345678901234567890123456</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;image&quot;</span>; filename=<span class="string">&quot;example.jpg&quot;</span></span><br><span class="line">    Content-<span class="type">Type</span>: image/jpeg</span><br><span class="line"></span><br><span class="line">    [...binary content of example.jpg...]</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;description&quot;</span></span><br><span class="line"></span><br><span class="line">    This <span class="keyword">is</span> an interesting description of my image.</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;username&quot;</span></span><br><span class="line"></span><br><span class="line">    wiener</span><br><span class="line">    ---------------------------012345678901234567890123456--</span><br></pre></td></tr></table></figure>
+<p>正如你所看到的，消息正文被分割成不同的部分，分别用于表单的每个输入。每个部分都包含一个 <code>Content-Disposition</code>  标头，它提供了与输入字段相关的一些基本信息。这些单独的部分还可能包含自己的 <code>Content-Type</code> 标头，告诉服务器使用此输入提交的数据的  MIME 类型。</p>
+<p>网站尝试验证文件上传的一种方法是检查特定于输入的 Content-Type 标头是否与预期的 MIME  类型相匹配。例如，如果服务器只接收图像文件，它可能只允许图像/jpeg 和图像/png  等类型。当服务器默认信任该标头的值时，就会出现问题。如果不执行进一步的验证来检查文件内容是否真的与假定的 MIME 类型相匹配，就可以使用  Burp Repeater 等工具轻松绕过这一防御。</p>
+<h3 id="Lab-绕过内容类型限制上传网络外壳">Lab: 绕过内容类型限制上传网络外壳</h3>
+<p>本实验室包含一个易受攻击的图片上传功能。它试图防止用户上传意外的文件类型，但需要依靠检查用户可控输入来验证。</p>
+<p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ol>
+<li class="lvl-3">
+<p>上传PHP代码发现进行了前端防护</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123852944.png" alt="image-20250430123852944"></p>
+<ol start="2">
+<li class="lvl-3">
+<p>将Content-Type修改为符合规定的内容，php代码不变，即可上传成功</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123908753.png" alt="image-20250430123908753"></p>
+<ol start="3">
+<li class="lvl-3">
+<p>访问账户的头像通关</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123725160.png" alt="image-20250430123725160"></p>
+<p>总结：前端防护，限制上传的文件类型，通过Burp Suitte 修改文件名绕过检测。后端无防护，服务器具备执行条件。</p>
+<h3 id="防止在用户可访问的目录中执行文件">防止在用户可访问的目录中执行文件</h3>
+<p>虽然从一开始就防止上传危险文件类型显然更好，但第二道防线阻止服务器执行任何漏网脚本。</p>
+<p>为谨慎起见，服务器通常只运行其 MIME 类型已明确配置为可执行的脚本。否则，它们可能只会返回某种错误信息，或者在某些情况下，以纯文本形式提供文件内容：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">GET /static/exploit.php?command=<span class="built_in">id</span> HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">    Content-<span class="type">Type</span>: text/plain</span><br><span class="line">    Content-Length: <span class="number">39</span></span><br><span class="line"></span><br><span class="line">    &lt;?php echo system($_GET[<span class="string">&#x27;command&#x27;</span>]); ?&gt;</span><br></pre></td></tr></table></figure>
+<p>这种行为本身可能很有趣，因为它提供了一种泄漏源代码的方法，但它使任何创建网络 shell 的尝试都化为乌有。</p>
+<p>这种配置通常因目录而异。上传用户提供文件的目录可能比文件系统中其他位置的控制要严格得多，因为其他位置被认为是最终用户无法访问的。如果你能找到一种方法，将脚本上传到另一个不应该包含用户提供文件的目录，那么服务器终究可能会执行你的脚本。</p>
+<p><font class="notice">注意：网络服务器通常使用<code>multipart/form-data</code>请求中的文件名字段来确定文件的名称和保存位置。</font></p>
+<h3 id="Lab：通过路径遍历上传网络-shell">Lab：通过路径遍历上传网络 shell</h3>
+<p>该实验室包含一个易受攻击的图片上传功能。服务器被配置为防止执行用户提供的文件，但可通过利用次要漏洞（文件路径遍历）绕过此限制。要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>按照以往的方式访问自己上传的php代码，服务器直接将php代码以文本方式返回</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183245601.png" alt="image-20250430183245601"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>修改<code>filename</code>目录遍历语句被服务器清理</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183451599.png" alt="image-20250430183451599"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用url编码上传成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183708967.png" alt="image-20250430183708967"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问即可</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183739696.png" alt="image-20250430183739696"></p>
+<p>您还应注意，尽管您可能会将所有请求发送到同一域名，但这通常指向某种反向代理服务器，如负载平衡器。您的请求通常会由其他服务器在幕后处理，这些服务器的配置也可能不同。</p>
+<h3 id="危险文件类型黑名单不足">危险文件类型黑名单不足</h3>
+<p>防止用户上传恶意脚本的一个比较明显的方法是将 <code>.php</code>  等潜在危险的文件扩展名列入黑名单。黑名单的做法本质上是有缺陷的，因为很难明确阻止每一个可能用于执行代码的文件扩展名。有时可以通过使用较不知名的、仍可执行的替代文件扩展名（如 <code>.php5</code>、<code>.shtml</code> 等）来绕过此类黑名单。</p>
+<h3 id="覆盖服务器配置">覆盖服务器配置</h3>
+<p>正如我们在上一节所讨论的，除非经过配置，否则服务器通常不会执行文件。例如，若允许 Apache 服务器执行客户端请求的 PHP 文件，开发人员需要在 <code>/etc/apache2/apache2.conf</code> 文件中添加以下指令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">LoadModule php_module /usr/lib/apache2/modules/libphp.so</span><br><span class="line">    AddType application/x-httpd-php .php</span><br></pre></td></tr></table></figure>
+<p>许多服务器还允许开发人员在个别目录中创建特殊配置文件，以覆盖或添加一个或多个全局设置。例如，Apache 服务器会从名为 <code>.htaccess</code> 的文件中加载特定目录的配置（如果有的话）。</p>
+<p>同样，开发人员可以使用 <code>web.config</code> 文件对 IIS 服务器进行特定目录配置。这可能包括以下指令，在本例中，这些指令允许向用户提供 JSON 文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">staticContent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mimeMap</span> <span class="attr">fileExtension</span>=<span class="string">&quot;.json&quot;</span> <span class="attr">mimeType</span>=<span class="string">&quot;application/json&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">staticContent</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>网络服务器会使用这类配置文件，但通常不允许使用 HTTP 请求访问它们。不过，你偶尔会发现服务器无法阻止你上传自己的恶意配置文件。在这种情况下，即使你需要的文件扩展名被列入了黑名单，你也可以欺骗服务器将任意的自定义文件扩展名映射到可执行的 MIME 类型。</p>
+<h3 id="Lab-Web-shell-upload-via-extension-blacklist-bypass">Lab: Web shell upload via extension blacklist bypass</h3>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
   </entry>
   <entry>
     <title>【pikachu靶场】docker搭建pikachu靶场</title>
@@ -358,7 +686,7 @@ $$</p>
     <content><![CDATA[<p>pikachu靶场的搭建其实是比较简单的，但是我在使用docker搭建pikachu靶场的时候遇到了几个问题，使我有了一些感悟，因此特意写篇博客记录一下。</p>
 <p>因为我已经在服务器上搭好了pikachu靶场，所以这里我用CentOS 7在虚拟机再复现一次。</p>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
   </entry>
   <entry>
     <title>【安全工具】sqlmap</title>
@@ -499,7 +827,7 @@ $$</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sqlmap -u <span class="string">&#x27;http://xx/?id=1&#x27;</span> --statements </span><br></pre></td></tr></table></figure>
 <p>本文参考：</p>
 <p><a href="https://blog.csdn.net/wangyuxiang946/article/details/131236510">SQLmap使用教程图文教程（超详细）</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>安全工具</category>
       </categories>
@@ -648,7 +976,7 @@ $$</p>
 <p><img src="/posts/3b7c6011//image-20250320153828228.png" alt="image-20250320153828228"></p>
 <p><img src="/posts/3b7c6011//image-20250320153954704.png" alt="image-20250320153954704"></p>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>靶场练习</category>
       </categories>
@@ -664,7 +992,7 @@ $$</p>
 <p>带空格的标题需要用双引号<code>“标  题”</code>引起来，不然文件和标题的命名会发生错误。</p>
 <p><img src="/posts/8071f3a9//image-20250305142442398.png" alt="image-20250305142442398"></p>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>博客写作</category>
       </categories>
@@ -778,7 +1106,7 @@ $$</p>
 </ol>
 <p>本文参考：</p>
 <p><a href="https://yeasy.gitbook.io/docker_practice/">Docker — 从入门到实践</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -1865,7 +2193,7 @@ $$</p>
 <h4 id="99乘法表：">99乘法表：</h4>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> &#123;1..9&#125;;<span class="keyword">do</span></span><br><span class="line"> <span class="keyword">for</span>((j=<span class="number">1</span>;j&lt;=i;j++));<span class="keyword">do</span></span><br><span class="line">  <span class="built_in">echo</span> -en <span class="string">&quot;<span class="variable">$i</span>*<span class="variable">$j</span>=<span class="subst">$(($i*$j)</span>)\t&quot;</span></span><br><span class="line"> <span class="keyword">done</span></span><br><span class="line"> <span class="built_in">echo</span> <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> &#123;1..9&#125;;<span class="keyword">do</span></span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> &#123;0..9&#125;;<span class="keyword">do</span></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> &#123;0..9&#125;;<span class="keyword">do</span></span><br><span class="line">            number1=$((a*<span class="number">100</span>+b*<span class="number">10</span>+c))</span><br><span class="line">            number2=$((a**<span class="number">3</span>+b**<span class="number">3</span>+c**<span class="number">3</span>))</span><br><span class="line">            <span class="keyword">if</span> <span class="built_in">test</span> <span class="variable">$number1</span> -eq <span class="variable">$number2</span>; <span class="keyword">then</span></span><br><span class="line">                <span class="built_in">echo</span> <span class="string">&quot;Found number <span class="variable">$number1</span>&quot;</span></span><br><span class="line">            <span class="keyword">fi</span></span><br><span class="line">        <span class="keyword">done</span></span><br><span class="line">    <span class="keyword">done</span></span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -2062,7 +2390,7 @@ $$</p>
 <p>卸载/dev/hdc6</p>
 <figure class="highlight autoit"><table><tr><td class="code"><pre><span class="line">[root<span class="symbol">@www</span> ~]<span class="meta"># umount /dev/hdc6     </span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -2390,7 +2718,7 @@ $$</p>
 <h2 id="测试远程主机连通性：ping">测试远程主机连通性：ping</h2>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@rocky8:~]# ping baidu.com</span><br><span class="line">PING baidu.com (39.156.66.10) 56(84) bytes of data.</span><br><span class="line">64 bytes from 39.156.66.10 (39.156.66.10): icmp_seq=1 ttl=128 time=25.4 ms</span><br><span class="line">64 bytes from 39.156.66.10 (39.156.66.10): icmp_seq=2 ttl=128 time=25.1 ms</span><br><span class="line">64 bytes from 39.156.66.10 (39.156.66.10): icmp_seq=3 ttl=128 time=33.5 ms</span><br><span class="line">^C</span><br><span class="line">--- baidu.com ping statistics ---</span><br><span class="line">7 packets transmitted, 7 received, 0% packet loss, time 15100ms</span><br><span class="line">rtt min/avg/max/mdev = 24.992/26.546/33.483/2.870 ms</span><br><span class="line">[root@rocky8:~]# ping baidu.com -c 3</span><br><span class="line">PING baidu.com (39.156.66.10) 56(84) bytes of data.</span><br><span class="line">64 bytes from 39.156.66.10 (39.156.66.10): icmp_seq=1 ttl=128 time=26.4 ms</span><br><span class="line">64 bytes from 39.156.66.10 (39.156.66.10): icmp_seq=2 ttl=128 time=25.1 ms</span><br><span class="line">64 bytes from 39.156.66.10 (39.156.66.10): icmp_seq=3 ttl=128 time=29.8 ms</span><br><span class="line"></span><br><span class="line">--- baidu.com ping statistics ---</span><br><span class="line">3 packets transmitted, 3 received, 0% packet loss, time 11041ms</span><br><span class="line">rtt min/avg/max/mdev = 25.122/27.080/29.754/1.966 ms</span><br></pre></td></tr></table></figure>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -3024,7 +3352,7 @@ $$</p>
 <p>解压文件：unzip -d 解压后目录文件 压缩文件</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@rocky8:~]# <span class="built_in">ls</span></span><br><span class="line">1.txt  2.txt  3.txt  4.txt  test.tar</span><br><span class="line">[root@rocky8:~]# zip myzip *.txt</span><br><span class="line">  adding: 1.txt (stored 0%)</span><br><span class="line">  adding: 2.txt (stored 0%)</span><br><span class="line">  adding: 3.txt (stored 0%)</span><br><span class="line">  adding: 4.txt (stored 0%)</span><br><span class="line">[root@rocky8:~]# <span class="built_in">ls</span></span><br><span class="line">1.txt  2.txt  3.txt  4.txt  myzip.zip  test.tar</span><br><span class="line">[root@rocky8:~]# <span class="built_in">rm</span> -f *.txt *.tar</span><br><span class="line">[root@rocky8:~]# <span class="built_in">ls</span></span><br><span class="line">myzip.zip</span><br><span class="line">[root@rocky8:~]# unzip myzip</span><br><span class="line">Archive:  myzip.zip</span><br><span class="line"> extracting: 1.txt                   </span><br><span class="line"> extracting: 2.txt                   </span><br><span class="line"> extracting: 3.txt                   </span><br><span class="line"> extracting: 4.txt                   </span><br><span class="line">[root@rocky8:~]# <span class="built_in">ls</span></span><br><span class="line">1.txt  2.txt  3.txt  4.txt  myzip.zip</span><br></pre></td></tr></table></figure>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -4945,7 +5273,7 @@ grep [yh]<br>
 </table>
 <p>本文参考：</p>
 <p><a href="https://blog.csdn.net/Jerry00713/article/details/123867016">linux三剑客sed之模式空间与保持空间</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -5542,7 +5870,7 @@ grep [yh]<br>
 <p>umask命令只能临时修改umask值，系统重启之后umask将还原成默认值。如果要永久修改umask值，可修改<code>/etc/bashrc</code>或<code>/etc/profile</code>文件。</p>
 <p>例如要将默认umask值设置为027，那么可以在文件中增加一行<code>umask 027</code>。</p>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -5730,7 +6058,7 @@ grep [yh]<br>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># cd /data/rpm</span></span><br><span class="line"><span class="comment"># createrepo .</span></span><br></pre></td></tr></table></figure>
 <p>这样，rpm包存放的目录就可以作为yum源目录使用。如果提示找不到createrepo命令，可以使用yum install createrepo安装该程序。</p>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -5955,7 +6283,7 @@ grep [yh]<br>
 <p><img src="/posts/26e49edf//e2a2b2f6ce4531eab5bd71d51e4caee1.jpeg" alt="img"></p>
 <p>修改完之后重启系统。</p>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -6120,7 +6448,7 @@ grep [yh]<br>
 <p>history保留了最近执行的命令记录，默认可以保留1000。历史清单从0开始编号到最大值。常见用法：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">history</span> N		显示最近N条命令</span><br><span class="line"><span class="built_in">history</span> -c		清除所有的历史记录</span><br><span class="line"><span class="built_in">history</span> -w  xxx.txt	保存历史记录到文本xxx.txt</span><br></pre></td></tr></table></figure>
 <p>本文参考：</p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -6156,7 +6484,7 @@ grep [yh]<br>
 <p><img src="/posts/4fb642e//image-20250220122601039.png" alt="image-20250220122601039"></p>
 <p>本文参考：</p>
 <p><a href="https://blog.csdn.net/qq_36437693/article/details/127286941">如何csdn复制他人博客文章到自己博客下</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>博客写作</category>
       </categories>
@@ -6474,7 +6802,7 @@ grep [yh]<br>
 <figure class="highlight routeros"><table><tr><td class="code"><pre><span class="line">需要设置网关<span class="built_in"></span></span><br><span class="line"><span class="built_in">route </span><span class="built_in">add</span><span class="built_in"> default </span>gw 192.168.33.1</span><br><span class="line">添加nameserver</span><br><span class="line">vi /etc/resolv.conf</span><br><span class="line">nameserver 192.168.33.1</span><br><span class="line">12345</span><br></pre></td></tr></table></figure>
 <h4 id="虚拟机克隆后eth0消失">虚拟机克隆后eth0消失</h4>
 <figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">直接修改  <span class="regexp">/etc/</span>sysconfig<span class="regexp">/network-script/i</span>fcfg-eth0</span><br><span class="line">删掉UUID  HWADDR</span><br><span class="line">配置静态地址</span><br><span class="line">然后：</span><br><span class="line">rm -rf 　<span class="regexp">/etc/u</span>dev<span class="regexp">/rules.d/</span><span class="number">70</span>-persistent-net.rules</span><br><span class="line">然后 reboot</span><br><span class="line"><span class="number">123456</span></span><br></pre></td></tr></table></figure>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>Linux</category>
       </categories>
@@ -6611,7 +6939,7 @@ grep [yh]<br>
 </div>
 <p>本文参考：</p>
 <p><a href="https://blog.csdn.net/qq_42951560/article/details/123596899">【Hexo】选择更高级的Markdown渲染器</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>博客写作</category>
       </categories>
@@ -6809,7 +7137,7 @@ grep [yh]<br>
 </tr>
 </tbody>
 </table>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>博客写作</category>
       </categories>
@@ -6941,9 +7269,26 @@ grep [yh]<br>
 <p>示例如下：</p>
 <figure class="highlight arcade"><table><tr><td class="code"><pre><span class="line">&#123;% link <span class="built_in">text</span> https:<span class="comment">// [external] [title] %&#125;</span></span><br></pre></td></tr></table></figure>
 <div class="video-container"><iframe src="https://www.youtube.com/embed/lJIrF4YjHfQ" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+<h2 id="折叠展开文字hexo-sliding-spoiler">折叠展开文字hexo-sliding-spoiler</h2>
+<p>项目地址：<a href="https://gitcode.com/gh_mirrors/he/hexo-sliding-spoiler">https://gitcode.com/gh_mirrors/he/hexo-sliding-spoiler</a></p>
+<h2 id="安装">安装</h2>
+<figure class="highlight sh"><table><tr><td class="code"><pre><span class="line">npm install hexo-sliding-spoiler --save</span><br></pre></td></tr></table></figure>
+<h2 id="语法：">语法：</h2>
+<figure class="highlight django"><table><tr><td class="code"><pre><span class="line"><span class="template-tag">&#123;% <span class="name">spoiler</span> title %&#125;</span><span class="language-xml"></span></span><br><span class="line"><span class="language-xml">内容</span></span><br><span class="line"><span class="language-xml"></span><span class="template-tag">&#123;% <span class="name">endspoiler</span> %&#125;</span></span><br></pre></td></tr></table></figure>
+<h2 id="演示：">演示：</h2>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        title
+    </div>
+    <div class="spoiler-content">
+        <p>内容</p>
+
+    </div>
+</div>
+<p><font class="notice">注意：标题中包含空格时，用<code>&quot;</code>包括</font></p>
 <p>参考文章：</p>
 <p><a href="https://blog.csdn.net/qq_41518277/article/details/101765886">Hexo标签插件的使用</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>博客写作</category>
       </categories>
@@ -7851,7 +8196,7 @@ rows：返回具体行数。</strong></p>
 <p>关于外键</p>
 <p>参考链接：</p>
 <p><a href="https://blog.csdn.net/weixin_45851945/article/details/114287877">MySQL 有这一篇就够（呕心狂敲37k字，只为博君一点赞！！！）</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>MySQL</category>
       </categories>
@@ -7863,7 +8208,7 @@ rows：返回具体行数。</strong></p>
     <title>我的第一篇博客——开启我的新篇章</title>
     <url>/posts/8d60c6a5/</url>
     <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Wrong password, please try again.Or you can contact the author to view the blog" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="3528a56aeba1a675791371d7698aeab3b12aea6720b0157e60f1935c38074323">35e94af5aa3de4403be2a274c3bae36ffa679d444bbf2c0ce98987b44b30a2b177390b045ff9b811b9d33ebdbc694d1dc87365728d7c66f7bd90d31b5c38ab9214a97f9a3b1e49c46ec95f9c4eb8dce252ab22ff16259921bf1f5d25bb525c592e381a68ea7bc6b289b36993d1d2a8ace0a87a2f629e64256dbfe2806228ad0ddb14ffedbbc828533f60c7c295453636a6eca6d52d1a5b5244a569529d38f5b8a542f55f8310e64fd67b6894930d4ca3405233fc057a8fecc27cdda65788f5c54afb9df1ceff2e4850e97f108f8c13d1ae6ad241254e6d769f7c9856d224a79665f2e112d88473eea7213660d383bf252530df3cfc4de7e20a54c29c095f96e0a4aa9d367bbd54003e0bf6e01feef60f2cbd0ba0163ff4f8f087a6cb96f4ab5c4c599b882784d6b5650a556c015cbb57526281545d4bb3a4ca46c04d07a382c0214ec2889b6a1add6510a1854a1904ffe3ba06ea7cd221da90f1e601841dfac17f597a518cb14338866248d60b6405f939be2d0146f9f23729ef0618474a96a73d1fbadb7547b52989a4bd04a4597dd5dd4502baf6c0fe0610889ea65a08a13d9d1810d334af5dc738548eff49d3ef7e5fc577c055eaa3b8c08e8082cb60c56c0bdc1549baa7e08a26daeec1b120ee9662fd81e2f7ee703d7db8b24d2d4b3c1970cb4c2aa92e1c17c883fb96c3df13eb5e747a15216a5357261471141171d5ca2adb8118cf28095b3a162c64c40190fad91789cea76174c6e74e5ca7eddc215ce231c2826db2a09c540a3579ac743f3a19b7788b3d1e802d2247d55f567a0723ebd72fbce905fa31c5ab88048784ba2d1019c26c449e94917bf75c14e17e636cc0d0032c17fa7aa2641204995761c93895aad607108350e4bcb8224c6bc5a19255a800d572203d5d3c9fd2019471e13c6a901122b37b26200b3cada781cc50ebc4bb7d19bd84330e1035bfb1b8c48ef83df64e500530de68a5b1878d6c2d290897d68c3fdb0a179d33195681206fa7d8368e1eb84f6875e97b16849449e0e98bfbcb4170916ea9ba56441336d23bd7cc940e16b111cefa2c5393a2af40a1b7843b9fa851c37f57fade9d1240ec8d2946370903fdbd4fbd2e08cd77e12799f42603b48aa5f85bf4ceedab1124a016051ff43aae544296fdca263a6bd4879cb1d8451208b61f47c5881269a1e2e8476bd4ba4278e0cecab7ebcecc03d2648c75003889a7ebe4f95e20d6b0a789a0dcb4f29776d9ad4642b85f3823bbd97b95a5c02b8e1a18e9bc6e06a2aba3eea8d6984dd332bb3159be480f524d677ccc06f85ca3ced1d3d2dd029a1424bc68a96254af1818bf2a38e7a93f5aecdee7c1edfbbdca0b610f756523ba0bdb7bb0a9fdcad205c9959e126e2ea8b0144dc647a27dbb23e10937bbe7a21cdac4f9e2e7292a778f6c1931ae509fce0a4b3520e20d57e3d89219c72d3f6c68ed98adaeb8a4edd1cf40263f360a2f224e7e5a8337ef1f28718f577f33300a45ca89174a647ddf17793dedddc18c550df9814854f691098ae21963e409aeb56d3dd0c4d095bcd504af39026fa6efb78f448c219e6176daa6c6c8256a9be7d8848e51fe2b7c45d9a4b106051ee9bcc7ce4c537ed917a7f4c77ffddca6b85e10ef1a4293f763ba58c879f01e65d8032fad7d5785fb561ca20c424f6d09adb5510f05d2bf86592d0e5de7a67c463080237f13d576e97b30d30f567e27526eb4e7867492f31587b359d3fae943691022bc5a3481e852ad3be8b98aebefd575a7d06b8b2f2186f75cc3101aa9eafbbfae6834e37f3275b44be4ef835e2b4c2b48daac0ec25712096104ccc9f8edb0587dcfb5d5908ad8846b92f369d68846f65c5d075bc188074612ad67323274a7d6bd034e79fa86b22d49f1c35e57a2adbb8fa31ffdf6eb1ba2f5e4bd4cd0a14c27ac447905c09af8b390f6a11ade9083decc833561f009817f6faad23155d4cfaf2c8d0a6f1df6c3573a1b102aeac4e7e7c7776bc851d630afc42236960c3c89d07039def65f0b4f92f181622a18b5feb39e3d7ee94893798797556a206a2add60f7384dfe3828dfd393908d2c496a6d33a548397ff78534a45b3eee2a3e0dad706ea2825f42db5cb9867770c0c9b472c2af9b44a7a896a2998949b13c614dbdc709f05e4f9473474415df6f10710b28dead3579c553070ccfb9e602283bd196ed12286ef3dde102b8ac09d4b5525aa61745e31e800e9b967081fb42d2a72c539af4eace26b4e19581f7cd79b3999d9757c316780d5ee3fcf60b87d46de39b3bc5fcdc800ff0cf5a59ef6dbd</script>
+  <script id="hbeData" type="hbeData" data-hmacdigest="a88ca09f2a502f00e8e10b29b01bd63010d52d1545d04f46512711429ef31851">35e94af5aa3de4403be2a274c3bae36ffa679d444bbf2c0ce98987b44b30a2b177390b045ff9b811b9d33ebdbc694d1dc87365728d7c66f7bd90d31b5c38ab9214a97f9a3b1e49c46ec95f9c4eb8dce252ab22ff16259921bf1f5d25bb525c592e381a68ea7bc6b289b36993d1d2a8ace0a87a2f629e64256dbfe2806228ad0ddb14ffedbbc828533f60c7c295453636a6eca6d52d1a5b5244a569529d38f5b8a542f55f8310e64fd67b6894930d4ca3405233fc057a8fecc27cdda65788f5c54afb9df1ceff2e4850e97f108f8c13d1ae6ad241254e6d769f7c9856d224a79665f2e112d88473eea7213660d383bf252530df3cfc4de7e20a54c29c095f96e0a4aa9d367bbd54003e0bf6e01feef60f2cbd0ba0163ff4f8f087a6cb96f4ab5c4c599b882784d6b5650a556c015cbb57526281545d4bb3a4ca46c04d07a382c0214ec2889b6a1add6510a1854a1904ffe3ba06ea7cd221da90f1e601841dfac17f597a518cb14338866248d60b6405f939be2d0146f9f23729ef0618474a96a73d1fbadb7547b52989a4bd04a4597dd5dd4502baf6c0fe0610889ea65a08a13d9d1810d334af5dc738548eff49d3ef7e5fc577c055eaa3b8c08e8082cb60c56c0bdc1549baa7e08a26daeec1b120ee9662fd81e2f7ee703d7db8b24d2d4b3c1970cb4c2aa92e1c17c883fb96c3df13eb5e747a15216a5357261471141171d5ca2adb8118cf28095b3a162c64c40190fad91789cea76174c6e74e5ca7eddc215ce231c2826db2a09c540a3579ac743f3a19b7788b3d1e802d2247d55f567a0723ebd72fbce905fa31c5ab88048784ba2d1019c26c449e94917bf75c14e17e636cc0d0032c17fa7aa2641204995761c93895aad607108350e4bcb8224c6bc5a19255a800d572203d5d3c9fd2019471e13c6a901122b37b26200b3cada781cc50ebc4bb7d19bd84330e1035bfb1b8c48ef83df64e500530de68a5b1878d6c2d290897d68c3fdb0a179d33195681206fa7d8368e1eb84f6875e97b16849449e0e98bfbcb4170916ea9ba56441336d23bd7cc940e16b111cefa2c5393a2af40a1b7843b9fa851c37f57fade9d1240ec8d2946370903fdbd4fbd2e08cd77e12799f42603b48aa5f85bf4ceedab1124a016051ff43aae544296fdca263a6bd4879cb1d8451208b61f47c5881269a1e2e8476bd4ba4278e0cecab7ebcecc03d2648c75003889a7ebe4f95e20d6b0a789a0dcb4f29776d9ad4642b85f3823bbd97b95a5c02b8e1a18e9bc6e06a2aba3eea8d6984dd332bb3159be480f524d677ccc06f85ca3ced1d3d2dd029a1424bc68a96254af1818bf2a38e7a93f5aecdee7c1edfbbdca0b610f756523ba0bdb7bb0a9fdcad205c9959e126e2ea8b0144dc647a27dbb23e10937bbe7a21cdac4f9e2e7292a778f6c1931ae509fce0a4b3520e20d57e3d89219c72d3f6c68ed98adaeb8a4edd1cf40263f360a2f224e7e5a8337ef1f28718f577f33300a45ca89174a647ddf17793dedddc18c550df9814854f691098ae21963e409aeb56d3dd0c4d095bcd504af39026fa6efb78f448c219e6176daa6c6c8256a9be7d8848e51fe2b7c45d9a4b106051ee9bcc7ce4c537ed917a7f4c77ffddca6b85e10ef1a4293f763ba58c879f01e65d8032fad7d5785fb561ca20c424f6d09adb5510f05d2bf86592d0e5de7a67c463080237f13d576e97b30d30f567e27526eb4e7867492f31587b359d3fae943691022bc5a3481e852ad3be8b98aebefd575a7d06b8b2f2186f75cc3101aa9eafbbfae6834e37f3275b44be4ef835e2b4c2b48daac0ec25712096104ccc9f8edb0587dcfb5d5908ad8846b92f369d68846f65c5d075bc188074612ad67323274a7d6bd034e79fa86b22d49f1c35e57a2adbb8fa31ffdf6eb1ba2f5e4bd4cd0a14c27ac447905c09af8b390f6a11ade9083decc833561f009817f6faad23155d4cfaf2c8d0a6f1df6c3573a1b102aeac4e7e7c7776bc851d630afc42236960c3c89d07039def65f0b4f92f181622a18b5feb39e3d7ee94893798797556a206a2add60f7384dfe3828dfd393908d2c496a6d33a548397ff78534a45b3eee2a3e0dad706ea2825f42db5cb9867770c0c9b472c2af9b44a7a896a2998949b13c614dbdc709f05e4f9473474415df6f10710b28dead3579c553070ccfb9e602283bd196ed12286ef3dde102b8ac09d4b5525aa61745e31e800e9b967081fb42d2a72c539af4eace26b4e19581f7cd79b3999d9757c316780d5ee3fcf60b87d408408210ae1caae7311d6c92e2c985ef842bdff27d2d96319c7cc0b9934eeb36dfe403bf2324e99dba806b88d60fcbd11def2945a3c20fe9b42a20adde633d64daf9a37063c25b22883bd17cba2f319a7e4429c07a28bb3be684f622692fc8929b94a181e31647df3edb5761e952137b8fa369a683cd72f8c0d274e6862b8b16843b9ee6bf175c6ebc05dbf412943548</script>
   <div class="hbe hbe-content">
     <div class="hbe hbe-input hbe-input-default">
       <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
@@ -7895,7 +8240,7 @@ rows：返回具体行数。</strong></p>
 <h3 id="Deploy-to-remote-sites">Deploy to remote sites</h3>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
 <p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-]]></content>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>博客写作</category>
       </categories>
