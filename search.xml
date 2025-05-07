@@ -531,13 +531,21 @@ $$</p>
   <entry>
     <title>【PortSwigger靶场】文件上传</title>
     <url>/posts/34bab347/</url>
-    <content><![CDATA[<h2 id="什么是文件上传漏洞？">什么是文件上传漏洞？</h2>
-<p>文件上传漏洞是指网络服务器允许用户上传文件到其文件系统，而不对文件名、类型、内容或大小等进行充分验证。如果不能正确执行这些限制，即使是基本的图片上传功能也可能被用来上传任意的、具有潜在危险的文件。这甚至可能包括支持远程代码执行的服务器端脚本文件。</p>
+    <content><![CDATA[<h2 id="原理与危害">原理与危害</h2>
+<p>文件上传漏洞是指网络服务器允许用户上传文件到其文件系统，而未对文件名、类型、内容或大小等进行充分验证。这就可能导致允许攻击者上传有潜在危险的文件，甚至可能包括支持远程代码执行的服务器端脚本文件。</p>
 <p>在某些情况下，上传文件本身就足以造成破坏。其他攻击可能涉及对文件的后续 HTTP 请求，通常是为了触发服务器执行文件。</p>
-<h2 id="文件上传漏洞有什么影响">文件上传漏洞有什么影响</h2>
-<p>文件上传漏洞的影响通常取决于两个关键因素：网站未能正确验证文件的哪个方面，无论是文件大小、类型还是内容等。文件上传成功后，对文件施加了哪些限制。</p>
-<p>在最坏的情况下，文件类型没有得到正确验证，服务器配置允许某些类型的文件（如 .php 和 .jsp）作为代码执行。在这种情况下，攻击者有可能上传一个服务器端代码文件，该文件可作为 web shell 使用，从而有效地完全控制服务器。</p>
-<p>如果文件名没有得到正确验证，攻击者只需上传同名文件，就能覆盖关键文件。如果服务器还存在目录遍历漏洞，这就意味着攻击者甚至可以将文件上传到意想不到的位置。</p>
+<h2 id="文件上传漏洞的影响">文件上传漏洞的影响</h2>
+<p>文件上传漏洞的影响通常取决于两个关键因素：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>网站未能正确验证文件的哪个方面，无论是文件大小、类型还是内容等。</p>
+</li>
+<li class="lvl-2">
+<p>文件上传成功后，对文件施加了哪些限制。</p>
+</li>
+</ul>
+<p>在最坏的情况下，文件类型没有得到正确验证，服务器配置允许某些类型的文件（如 .php 和 .jsp）作为代码执行。在这种情况下，攻击者有可能上传一个服务器端代码文件，该文件可作为 web shell 使用，就可以完全控制服务器。</p>
+<p>如果文件名没有得到正确验证，攻击者只需上传同名文件，就能覆盖关键文件。如果服务器还存在目录遍历漏洞，这就意味着攻击者甚至可以将文件上传到意想不到的位置，比如覆盖服务器的系统文件。</p>
 <p>如果不能确保文件大小在预期的阈值范围内，还可能导致某种形式的拒绝服务（DoS）攻击，即攻击者填满可用磁盘空间。</p>
 <h2 id="文件上传漏洞是如何产生的">文件上传漏洞是如何产生的</h2>
 <p>因为文件上传漏洞巨大的危害性，网站很少会对允许用户上传的文件不加任何限制。更常见的情况是，开发人员实施他们认为强大的验证，但这种验证要么存在固有缺陷，要么很容易被绕过。</p>
@@ -556,7 +564,7 @@ $$</p>
 <p>如果文件类型是可执行的，如 PHP 文件，且服务器被配置为执行此类文件，那么在运行脚本之前，服务器会根据 HTTP 请求中的头和参数来分配变量。由此产生的输出结果会在 HTTP 响应中发送给客户端。</p>
 </li>
 <li class="lvl-2">
-<p>如果文件类型是可执行的，但服务器未配置为执行该类型的文件，则通常会响应错误。不过，在某些情况下，文件内容仍会以纯文本形式提供给客户端。这种错误配置偶尔会被利用来泄露源代码和其他敏感信息。你可以在我们的信息披露学习材料中看到这方面的例子。</p>
+<p>如果文件类型是可执行的，但服务器未配置为执行该类型的文件，则通常会响应错误。不过，在某些情况下，文件内容仍会以纯文本形式提供给客户端。这种错误配置偶尔会被利用来泄露源代码和其他敏感信息。</p>
 </li>
 </ul>
 <div class="spoiler collapsed">
@@ -569,7 +577,6 @@ $$</p>
     </div>
 </div>
 <h2 id="利用不受限制的文件上传部署网络外壳">利用不受限制的文件上传部署网络外壳</h2>
-<h3 id="Lab-通过Web-shell-上传远程执行代码">Lab: 通过Web shell 上传远程执行代码</h3>
 <p>从安全角度来看，最糟糕的情况是网站允许您上传服务器端脚本（如 PHP、Java 或 Python 文件），并将其配置为代码执行。这样，在服务器上创建自己的网络外壳就变得轻而易举了。</p>
 <blockquote>
 <p>Web shell</p>
@@ -578,6 +585,7 @@ $$</p>
 <p>如果你能成功上传Web shell，你实际上就拥有了对服务器的完全控制权。这意味着你可以读写任意文件、外泄敏感数据，甚至利用服务器对内部基础架构和网络外的其他服务器进行透视攻击。例如，可以使用下面的 PHP 单行程序从服务器的文件系统中读取任意文件：</p>
 <figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/target/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
 <p>一旦上传，发送对该恶意文件的请求就会在响应中返回目标文件的内容。</p>
+<h4 id="Lab-通过Web-shell-上传远程执行代码">Lab: 通过Web shell 上传远程执行代码</h4>
 <p>本实验室包含一个易受攻击的图片上传功能。在将用户上传的文件存储到服务器文件系统之前，它没有对这些文件执行任何验证。</p>
 <p>要解决该实验问题，请上传一个基本的<code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
 <p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
@@ -608,9 +616,9 @@ $$</p>
 <p>在提交 HTML 表单时，浏览器通常会在 <code>POST </code>请求中发送所提供的数据，内容类型为  <code>application/x-www-form-url-encoded</code>。这对于发送简单的文本（如姓名或地址）很合适。但它不适合发送大量二进制数据，如整个图像文件或 PDF 文档。在这种情况下，首选内容类型为 <code>multipart/form-data</code>。</p>
 <p>考虑一个包含上传图片、提供图片说明和输入用户名等字段的表单。提交这样的表单后，可能会得到类似下面的请求：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line">POST /images HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line">    Content-Length: <span class="number">12345</span></span><br><span class="line">    Content-<span class="type">Type</span>: multipart/form-data; boundary=---------------------------012345678901234567890123456</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;image&quot;</span>; filename=<span class="string">&quot;example.jpg&quot;</span></span><br><span class="line">    Content-<span class="type">Type</span>: image/jpeg</span><br><span class="line"></span><br><span class="line">    [...binary content of example.jpg...]</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;description&quot;</span></span><br><span class="line"></span><br><span class="line">    This <span class="keyword">is</span> an interesting description of my image.</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;username&quot;</span></span><br><span class="line"></span><br><span class="line">    wiener</span><br><span class="line">    ---------------------------012345678901234567890123456--</span><br></pre></td></tr></table></figure>
-<p>正如你所看到的，消息正文被分割成不同的部分，分别用于表单的每个输入。每个部分都包含一个 <code>Content-Disposition</code>  标头，它提供了与输入字段相关的一些基本信息。这些单独的部分还可能包含自己的 <code>Content-Type</code> 标头，告诉服务器使用此输入提交的数据的  MIME 类型。</p>
+<p>正如你所看到的，消息正文被分割成不同的部分，分别用于表单的每个输入。每个部分都包含一个 <code>Content-Disposition</code>  标头，它提供了与输入字段相关的一些基本信息。这些单独的部分还包含自己的 <code>Content-Type</code> 标头，告诉服务器使用此输入提交的数据的  MIME 类型。</p>
 <p>网站尝试验证文件上传的一种方法是检查特定于输入的 Content-Type 标头是否与预期的 MIME  类型相匹配。例如，如果服务器只接收图像文件，它可能只允许图像/jpeg 和图像/png  等类型。当服务器默认信任该标头的值时，就会出现问题。如果不执行进一步的验证来检查文件内容是否真的与假定的 MIME 类型相匹配，就可以使用  Burp Repeater 等工具轻松绕过这一防御。</p>
-<h3 id="Lab-绕过内容类型限制上传网络外壳">Lab: 绕过内容类型限制上传网络外壳</h3>
+<h4 id="Lab-绕过内容类型限制上传网络外壳">Lab: 绕过内容类型限制上传网络外壳</h4>
 <p>本实验室包含一个易受攻击的图片上传功能。它试图防止用户上传意外的文件类型，但需要依靠检查用户可控输入来验证。</p>
 <p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
 <p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
@@ -640,7 +648,7 @@ $$</p>
 <p>这种行为本身可能很有趣，因为它提供了一种泄漏源代码的方法，但它使任何创建网络 shell 的尝试都化为乌有。</p>
 <p>这种配置通常因目录而异。上传用户提供文件的目录可能比文件系统中其他位置的控制要严格得多，因为其他位置被认为是最终用户无法访问的。如果你能找到一种方法，将脚本上传到另一个不应该包含用户提供文件的目录，那么服务器终究可能会执行你的脚本。</p>
 <p><font class="notice">注意：网络服务器通常使用<code>multipart/form-data</code>请求中的文件名字段来确定文件的名称和保存位置。</font></p>
-<h3 id="Lab：通过路径遍历上传网络-shell">Lab：通过路径遍历上传网络 shell</h3>
+<h4 id="Lab：通过路径遍历上传网络-shell">Lab：通过路径遍历上传网络 shell</h4>
 <p>该实验室包含一个易受攻击的图片上传功能。服务器被配置为防止执行用户提供的文件，但可通过利用次要漏洞（文件路径遍历）绕过此限制。要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
 <ul class="lvl-0">
 <li class="lvl-2">
@@ -668,17 +676,365 @@ $$</p>
 <p><img src="/posts/34bab347//image-20250430183739696.png" alt="image-20250430183739696"></p>
 <p>您还应注意，尽管您可能会将所有请求发送到同一域名，但这通常指向某种反向代理服务器，如负载平衡器。您的请求通常会由其他服务器在幕后处理，这些服务器的配置也可能不同。</p>
 <h3 id="危险文件类型黑名单不足">危险文件类型黑名单不足</h3>
-<p>防止用户上传恶意脚本的一个比较明显的方法是将 <code>.php</code>  等潜在危险的文件扩展名列入黑名单。黑名单的做法本质上是有缺陷的，因为很难明确阻止每一个可能用于执行代码的文件扩展名。有时可以通过使用较不知名的、仍可执行的替代文件扩展名（如 <code>.php5</code>、<code>.shtml</code> 等）来绕过此类黑名单。</p>
-<h3 id="覆盖服务器配置">覆盖服务器配置</h3>
+<p>防止用户上传恶意脚本的一个比较明显的方法是将 <code>.php</code>  等潜在危险的文件扩展名列入黑名单。黑名单的做法本质上是有缺陷的，因为很难明确阻止每一个可能用于执行代码的文件扩展名。有时可以通过使用较不知名的、仍可执行的替代文件扩展名（如 <code>.php5</code>、<code>.shtml</code> 等）来绕过此类黑名单。针对这种防护，可以尝试以下几种方式进行绕过：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用不常见的后缀名：<code>php5,pht,phpt,phtml,php3,php4,php5,php6</code></p>
+</li>
+<li class="lvl-2">
+<p>使用大小写：<code>.pHp</code></p>
+</li>
+<li class="lvl-2">
+<p>重写服务器配置文件：apache的<code>.htaccess</code>或者IIS的<code>web.config</code></p>
+</li>
+<li class="lvl-2">
+<p>使用多扩展名，譬如<code>example.php.jpg</code>，这种方式依赖于服务器如何解析文件，如果服务器<strong>从前往后解析，并且解析到第一个扩展名就停止解析</strong>，则该文件会被当作<code>example.php</code>存储</p>
+</li>
+<li class="lvl-2">
+<p>添加尾随字符，有些组件可能会过滤或忽视文件名末尾的空格或小数点，譬如<code>example.php.</code>或<code>example.php </code> (末尾有一个空格)</p>
+</li>
+<li class="lvl-2">
+<p>尝试使用url编码，譬如：<code>example%2ephp</code></p>
+</li>
+<li class="lvl-2">
+<p>再文件扩展名前添加分号或者url编码的空字符，譬如：<code>example.php;jpg</code>或<code>example.php%00.jpg</code></p>
+</li>
+<li class="lvl-2">
+<p>使用多字节Unicode字符，譬如Unicode字符序列：<code>xC0 xAE</code>，<code>xC4 xAE</code>，<code>xC0 x2E</code>再utf-8编码下可能转化为<code>x2E</code>，然后转化为ASCII字符使用</p>
+</li>
+</ul>
+<h4 id="覆盖服务器配置">覆盖服务器配置</h4>
 <p>正如我们在上一节所讨论的，除非经过配置，否则服务器通常不会执行文件。例如，若允许 Apache 服务器执行客户端请求的 PHP 文件，开发人员需要在 <code>/etc/apache2/apache2.conf</code> 文件中添加以下指令：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">LoadModule php_module /usr/lib/apache2/modules/libphp.so</span><br><span class="line">    AddType application/x-httpd-php .php</span><br></pre></td></tr></table></figure>
 <p>许多服务器还允许开发人员在个别目录中创建特殊配置文件，以覆盖或添加一个或多个全局设置。例如，Apache 服务器会从名为 <code>.htaccess</code> 的文件中加载特定目录的配置（如果有的话）。</p>
 <p>同样，开发人员可以使用 <code>web.config</code> 文件对 IIS 服务器进行特定目录配置。这可能包括以下指令，在本例中，这些指令允许向用户提供 JSON 文件：</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">staticContent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mimeMap</span> <span class="attr">fileExtension</span>=<span class="string">&quot;.json&quot;</span> <span class="attr">mimeType</span>=<span class="string">&quot;application/json&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">staticContent</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>网络服务器会使用这类配置文件，但通常不允许使用 HTTP 请求访问它们。不过，你偶尔会发现服务器无法阻止你上传自己的恶意配置文件。在这种情况下，即使你需要的文件扩展名被列入了黑名单，你也可以欺骗服务器将任意的自定义文件扩展名映射到可执行的 MIME 类型。</p>
-<h3 id="Lab-Web-shell-upload-via-extension-blacklist-bypass">Lab: Web shell upload via extension blacklist bypass</h3>
+<h5 id="Lab：通过扩展黑名单绕过网络外壳上传">Lab：通过扩展黑名单绕过网络外壳上传</h5>
+<p>本实验室包含一个易受攻击的图片上传功能。某些文件扩展名被列入了黑名单，但由于该黑名单配置中的一个基本缺陷，这一防御可被绕过。要解决该实验问题，请上传一个基本的 PHP web shell，然后使用它渗出文件 /home/carlos/secret 的内容。使用实验横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter。</p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        Hint
+    </div>
+    <div class="spoiler-content">
+        <p>You need to upload two different files to solve this lab.</p>
+
+    </div>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>直接上传php文件失败，服务采用了黑名单防护机制</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505174128331.png" alt="image-20250505174128331"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>尝试上传Apache的配置文件<code>htaccess</code>，将文件扩展名 <strong><code>.l33t</code></strong> 关联到PHP解析器，，提醒上传成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505174603001.png" alt="image-20250505174603001"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>再试上传恶意文件成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505175302956.png" alt="image-20250505175302956"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问即可获得密码</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505175433671.png" alt="image-20250505175433671"></p>
+<p><strong>代码解释：</strong></p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">AddType <span class="built_in">application</span>/x-httpd-php .l33t</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong><code>AddType</code></strong>：Apache指令，用于将特定文件扩展名映射到对应的MIME类型。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>application/x-httpd-php</code></strong>：PHP脚本的MIME类型，告诉服务器使用PHP解析器处理该文件。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>.l33t</code></strong>：自定义的文件扩展名（通常用于替代常见的 <code>.php</code>）。</p>
+</li>
+</ul>
+<p><strong>作用：</strong></p>
+<ol>
+<li class="lvl-3">
+<p><strong>PHP解析</strong>：所有以 <code>.l33t</code> 结尾的文件会被Apache视为PHP脚本，<strong>其中的PHP代码会被服务器解析执行</strong>。</p>
+</li>
+<li class="lvl-3">
+<p><strong>隐藏技术栈</strong>：通过非标准扩展名（如 <code>.l33t</code>）隐藏网站使用的PHP技术，增加攻击者识别难度（但实际安全提升有限，需配合其他措施）。</p>
+</li>
+</ol>
+<h4 id="混淆文件扩展名">混淆文件扩展名</h4>
+<p>即使是最详尽的黑名单，也有可能被经典的混淆技术绕过。假设验证代码对大小写敏感，无法识别 exploit.pHp 实际上是 .php  文件。如果随后将文件扩展名映射到 MIME 类型的代码对大小写不敏感，这种差异就会使恶意 PHP 文件偷偷通过验证，最终被服务器执行。</p>
+<p>您还可以使用以下技术实现类似的效果：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>提供多种扩展名。根据解析文件名所使用的算法，以下文件可能被解释为 PHP 文件或 JPG 图像：exploit.php.jpg</p>
+</li>
+<li class="lvl-2">
+<p>添加尾部字符。某些组件会删除或忽略尾部空格、点等类似字符： exploit.php.jpg。</p>
+</li>
+<li class="lvl-2">
+<p>尝试使用 URL 编码（或双 URL 编码）来处理点、正斜线和反斜线。如果在验证文件扩展名时未对该值进行解码，但随后在服务器端进行了解码，这样也可以上传恶意文件，否则会被阻止： exploit%2Ephp在文件扩展名前添加分号或 URL 编码的空字节字符。</p>
+</li>
+<li class="lvl-2">
+<p>如果验证是用 PHP 或 Java 等高级语言编写的，但服务器使用 C/C++  等低级函数处理文件，这可能会导致文件名末尾的处理不一致：exploit.asp;.jpg 或 exploit.asp%00.jpg尝试使用多字节 unicode 字符，这些字符可能在 unicode 转换或规范化后被转换为空字节和点。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件名被解析为 UTF-8 字符串，xC0  x2E、xC4 xAE 或 xC0 xAE 等序列可能会被转换为 x2E，但在路径中使用前又会被转换为 ASCII 字符。</p>
+</li>
+</ul>
+<p>其他防御措施包括删除或替换危险的扩展名，以防止文件被执行。如果这种转换不是递归应用的，你可以将禁止的字符串定位在这样一种方式，即删除它仍然会留下一个有效的文件扩展名。例如，如果从以下文件名中删除 .php 会发生什么情况：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">exploit<span class="selector-class">.p</span>.phphp</span><br></pre></td></tr></table></figure>
+<p>这只是混淆文件扩展名的众多方法中的一小部分。</p>
+<h5 id="Lab：通过混淆文件扩展名上传网络外壳">Lab：通过混淆文件扩展名上传网络外壳</h5>
+<p>该实验室包含一个易受攻击的图片上传功能。某些文件扩展名被列入了黑名单，但可以使用经典的混淆技术绕过这一防御。要解决该实验问题，请上传一个基本的 PHP web shell，然后用它来外泄文件 /home/carlos/secret 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>直接上传失败，提示只能传JPG和PNG</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505184603898.png" alt="image-20250505184603898"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><s>啊，这就过啦</s>   添加后缀，文件的后缀并没有变，考虑添加空字节</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505184818551.png" alt="image-20250505184818551"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这就可以了</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505214317371.png" alt="image-20250505214317371"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问就可以得到密码</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505214506196.png" alt="image-20250505214506196"></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        补充
+    </div>
+    <div class="spoiler-content">
+        <ul class="lvl-0">
+<li class="lvl-2">
+<p><code>%00</code> 是 <strong>URL编码的空字符（Null Character）</strong>，对应 ASCII 码中的 <code>0x00</code>。它在计算机系统中通常表示字符串的<strong>结束符</strong>，但在不同场景下可能引发安全问题或功能异常。</p>
+</li>
+<li class="lvl-2">
+<p>旧版PHP（5.3之前）存在空字节阶段漏洞，PHP&gt;=5.3版本中已将其修复</p>
+</li>
+<li class="lvl-2">
+<p>如 PHP 的 <code>basename()</code> 会自动过滤空字符。</p>
+</li>
+<li class="lvl-2">
+<p>在路径遍历在也可以利用 <code>%00</code> 截断路径，访问非授权文件（如 <code>../../secret.log%00</code>）。</p>
+</li>
+<li class="lvl-2">
+<p>大多数 Web 服务器并不是在一开始安装成功后就能执行文件的，像 Apache，要执行 PHP 脚本，需要在 <code>/etc/apache2/apache2.conf</code> 配置文件中添加如下指令加载 php 模块，以及当访问后缀名为 <code>.php</code> 的文件时，作为 php 脚本执行。：</p>
+</li>
+</ul>
+<p>LoadModule php_module /usr/lib/apache2/modules/libphp.so<br>
+AddType application/x-httpd-php .php</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>不止 Apache，Nginx 和 IIS 也都是要做一些配置才能执行脚本。</p>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>除了 apache2.conf 这个系统级的配置文件，Apache 服务器允许在每个目录下放置一个 <code>.htaccess</code> 文件，在该文件中添加的指令可以覆盖和补充 apache2.conf 的配置。如果应用程序允许上传 <code>.htaccess</code> ，那么就能利用它绕过安全防护，执行代码。</p>
+</li>
+<li class="lvl-4">
+<p>IIS 服务器也有一个类似的配置文件，名为 <code>web.config</code>，它的指令示例：</p>
+<ul class="lvl-4">
+<li class="lvl-6">//.json 文件被当成 json 发送给客户端。<br>
+<staticContent><br>
+<mimeMap fileextension=".json" mimetype="application/json"><br>
+</mimeMap></staticContent></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</div>
+<h3 id="文件内容验证存在缺陷">文件内容验证存在缺陷</h3>
+<p>更安全的服务器会尝试验证文件内容是否与预期相符，而不是隐含地信任请求中指定的 <code>Content-Type</code>。</p>
+<p>在图像上传功能中，服务器可能会尝试验证图像的某些固有属性，如尺寸。例如，如果您尝试上传一个 PHP 脚本，它根本不会有任何尺寸。因此，服务器会推断它不可能是图像，并相应地拒绝上传。</p>
+<p>同样，某些文件类型的页眉或页脚可能总是包含特定的字节序列。这些序列就像指纹或签名一样，可用于确定文件内容是否与预期类型相符。例如，JPEG 文件总是以 <code>FF D8 FF</code> 字节开始。</p>
+<p>这是验证文件类型的一种更稳健的方法，但即便如此也并非万无一失。使用 ExifTool 等特殊工具（Exiftool 工具在 kali 系统中已默认安装），可以轻而易举地创建一个在元数据中包含恶意代码的多格式 JPEG 文件。</p>
+<h4 id="Lab-通过多语言网络外壳上传远程执行代码">Lab: 通过多语言网络外壳上传远程执行代码</h4>
+<p>本实验室包含一个易受攻击的图片上传功能。虽然它会检查文件内容以验证其是否为真正的图片，但仍有可能上传并执行服务器端代码。要解决该实验问题，请上传一个基本的 PHP web shell，然后用它来外泄文件 /home/carlos/secret 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter</p>
+<p>这道题web应用对上传的文件头做了校验，如果没有识别到预期的特征码就会报错，这种情况下，可以通过exiftool或其他工具来修改文件元数据，插入脚本生成多态jpeg文件进行绕过 exiftool命令：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>不管是直接上传php脚本，还是尝试其他在之前实验室里用过的技术都已经不行了。</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506154133865.png" alt="image-20250506154133865"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个多语 PHP/JPG 文件，该文件从根本上说是一个普通图像，但在元数据中包含了 PHP 有效载荷。一种简单的方法是下载并从命令行运行 ExifTool，将 PHP 有效载荷添加到图片的注释字段，以 .php 扩展名保存图片，然后上传。如下所示：</p>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">exiftool -Comment=<span class="string">&quot;&lt;?php echo &#x27;START &#x27; . file_get_contents(&#x27;/home/carlos/secret&#x27;) . &#x27; END&#x27;; ?&gt;&quot;</span> NiuBi.jpg -o polyglot.php</span><br></pre></td></tr></table></figure>
+<p><img src="/posts/34bab347//image-20250506160513314.png" alt="image-20250506160513314"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将<code>polyglot</code> 上传</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506160911322.png" alt="image-20250506160911322"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><s>访问就行啦</s>   我靠咋不行，网上的都是jpg，应该是文件格式的问题吧，再用jpg试一下</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506163353446.png" alt="image-20250506163353446"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>果然可以了。。。网络的世界真是奇妙</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506163844566.png" alt="image-20250506163844566"></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        补充
+    </div>
+    <div class="spoiler-content">
+        <ul class="lvl-0">
+<li class="lvl-2">
+<p>exiftool命令的含义</p>
+<ul class="lvl-2">
+<li class="lvl-4"><strong><code>exiftool</code></strong>：一个用于读写文件元数据（如EXIF信息）的命令行工具，常用于处理图片的拍摄参数、注释等。</li>
+<li class="lvl-4"><strong><code>-Comment=&quot;&lt;?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?&gt;&quot;</code></strong>
+<ul class="lvl-4">
+<li class="lvl-6">将JPEG图片的**注释字段（Comment）**修改为一段PHP代码。</li>
+<li class="lvl-6">代码功能：读取服务器上**<code>/home/carlos/secret</code>**文件的内容，并包裹在<code>START</code>和<code>END</code>之间输出。</li>
+</ul>
+</li>
+<li class="lvl-4"><strong><code>-o polyglot.php</code>：<strong>将处理后的文件输出为</strong><code>polyglot.php</code></strong>。生成的文件既是合法图片（保留原JPEG数据），又是PHP脚本（因扩展名为<code>.php</code>且包含可执行代码）。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>此题上传的文件为 <code>polyglot.php</code> ，当然大部分服务器是不能上传php文件的，但是如果能采用某些方法将jpg解析为php，这段代码依然是可以执行的</p>
+</li>
+</ul>
+
+    </div>
+</div>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        为什么上传png会失败
+    </div>
+    <div class="spoiler-content">
+        <ol>
+<li class="lvl-3">
+<p><strong>元数据结构的本质差异</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5"><strong>JPG（JPEG）</strong>：使用 <strong>EXIF 标准</strong>存储元数据，允许直接将PHP代码写入<code>Comment</code>字段。ExifTool修改后，文件仍保持有效的JPEG结构，同时代码位于可被PHP解析的位置。</li>
+<li class="lvl-5"><strong>PNG</strong>：元数据存储在 <strong>“数据块”（Chunks）</strong> 中（如<code>tEXt</code>、<code>iTXt</code>等）。直接通过<code>-Comment</code>参数注入代码可能破坏PNG文件结构，或代码未存储在服务器会解析的位置。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p><strong>PHP执行逻辑的差异</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5">即使成功注入代码到PNG中，PHP解析器可能不会执行位于PNG数据块中的代码，因为PHP默认从文件开头解析，遇到非PHP标签（如PNG的二进制头<code>‰PNG</code>）会直接终止执行。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p><strong>服务器对文件扩展名的处理</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5">如果上传的PNG文件保留<code>.png</code>扩展名，服务器可能不会调用PHP解析器，即使内容包含PHP代码。而<code>.php</code>扩展名的文件（如你生成的<code>polyglot.php</code>）会被强制用PHP解析。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p>我按照deepseek给我的方法用png进行了尝试，依然失败了。首先我的PHP代码没能写进去（检查时发现的），然后服务端依然没能解析后缀php的png图片。感觉png的安全性应该是比jpg高的。</p>
+</li>
+<li class="lvl-3">
+<p><strong>总的来说：</strong></p>
+<ul class="lvl-2">
+<li class="lvl-5"><strong>JPG成功</strong>：因其元数据允许直接注入PHP代码，且生成文件扩展名为<code>.php</code>触发服务器解析。</li>
+<li class="lvl-5"><strong>PNG失败</strong>：元数据存储方式不同，且默认扩展名（<code>.png</code>）不触发PHP解析。需调整注入位置或文件结构才能成功。</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+</div>
+<h3 id="利用文件上传竞赛条件">利用文件上传竞赛条件</h3>
+<p>现代框架对此类攻击的防御能力更强。它们通常不会直接将文件上传到文件系统上的目标位置。相反，它们会采取一些预防措施，比如先上传至一个临时的沙盒目录，并随机化名称以避免覆盖现有文件。然后，它们对临时文件进行验证，只有在认为安全后才将文件传输到目的地。</p>
+<p>尽管如此，开发人员有时会独立于任何框架实现自己的文件上传处理。要做好这一点不仅相当复杂，还可能引入危险的竞赛条件，使攻击者能够完全绕过最强大的验证。</p>
+<p>例如，有些网站会将文件直接上传到主文件系统，如果没有通过验证，就会再次删除。这种行为在依赖反病毒软件等检查恶意软件的网站中非常典型。这可能只需要几毫秒，但在文件存在于服务器上的短时间内，攻击者仍有可能执行该文件。</p>
+<p>这些漏洞往往非常隐蔽，因此很难在黑盒测试中发现，除非你能找到泄露相关源代码的方法。</p>
+<p>总的来说啊就是：很多文件上传功能不会先将上传的文件上传到目标位置，而是先送去沙盒化临时目录做检查，并随机化它的名称，看看他是不是恶意文件，然后再传到最终目录。但是有的开发者比较疏忽，把文件传到自己的框架目录对它检查。虽然检查的时间很短，但是黑客依然可能利用短短的几毫秒时间搞事情。</p>
+<p>另外，还有一种情况可能发生条件竞争文件上传漏洞，就是让用户提供一个 URL 来保存文件，这一般只能由开发人员自己编写处理程序，也必须先下载一份文件副本到本地，然后再做安全性验证，所以这种情况很容易出现漏洞。如果上传的文件或通过 URL 下载的文件保存到一个具有随机名称的临时目录，这一般不太可能被攻击者知道，但如果临时目录是伪随机数，那么仍然有可能被攻击者用暴力破解的方法知道。</p>
+<p>为了让条件竞争上传文件的攻击更容易，攻击者会上传一个恶意的大文件，里面填充大量无用字符，但不会影响到里面的代码被执行，应用程序处理这类大文件会处理得更久，那么文件在文件系统上停留的时间更久，也就更容易被攻击者趁机访问。</p>
+<h4 id="Lab：-通过竞赛条件上传网络外壳">Lab： 通过竞赛条件上传网络外壳</h4>
+<p>该实验室包含一个易受攻击的图片上传功能。虽然它对上传的任何文件都执行了稳健的验证，但利用其处理文件方式中的竞赛条件，完全可以绕过验证。引入这一竞赛条件的脆弱代码如下：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//存储目标文件夹名 &#x27;avatars/&#x27;</span></span><br><span class="line"><span class="variable">$target_dir</span> = <span class="string">&quot;avatars/&quot;</span>;</span><br><span class="line"><span class="comment">//$target_file 是最终保存文件的路径。</span></span><br><span class="line"><span class="comment">//$_FILES[&quot;avatar&quot;][&quot;name&quot;] 是用户上传文件的原始名字（比如用户上传的文件叫 cat.jpg，这里就是 cat.jpg）。</span></span><br><span class="line"><span class="variable">$target_file</span> = <span class="variable">$target_dir</span> . <span class="variable">$_FILES</span>[<span class="string">&quot;avatar&quot;</span>][<span class="string">&quot;name&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// temporary move</span></span><br><span class="line"><span class="comment">//$_FILES[&quot;avatar&quot;][&quot;tmp_name&quot;] 是文件上传到服务器后的临时存储路径（比如 &#x27;/tmp/php123.tmp&#x27;）。</span></span><br><span class="line"><span class="comment">//move_uploaded_file 的作用是将临时文件移动到目标路径 $target_file。</span></span><br><span class="line"><span class="title function_ invoke__">move_uploaded_file</span>(<span class="variable">$_FILES</span>[<span class="string">&quot;avatar&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>], <span class="variable">$target_file</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果文件通过了病毒检查(checkViruses)和文件类型检查(checkFileType)，显示上传成功；否则删除文件，显示错误。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">checkViruses</span>(<span class="variable">$target_file</span>) &amp;&amp; <span class="title function_ invoke__">checkFileType</span>(<span class="variable">$target_file</span>)) &#123;</span><br><span class="line">    <span class="comment">//htmlspecialchars：防止文件名中的特殊字符引发安全问题（比如 &lt;script&gt; 这类代码）。</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;The file &quot;</span>. <span class="title function_ invoke__">htmlspecialchars</span>( <span class="variable">$target_file</span>). <span class="string">&quot; has been uploaded.&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">unlink</span>(<span class="variable">$target_file</span>);<span class="comment">//删除文件。</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Sorry, there was an error uploading your file.&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);<span class="comment">//返回“禁止访问”的状态码。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkViruses</span>(<span class="params"><span class="variable">$fileName</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// checking for viruses</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//检查文件扩展名（后缀）是否是 jpg 或 png。</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkFileType</span>(<span class="params"><span class="variable">$fileName</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//pathinfo($fileName, PATHINFO_EXTENSION)：提取文件名的后缀（比如 cat.jpg 提取出 jpg）。</span></span><br><span class="line">    <span class="comment">//strtolower：将后缀转为小写（防止 JPG 和 jpg 不一致）。</span></span><br><span class="line">    <span class="variable">$imageFileType</span> = <span class="title function_ invoke__">strtolower</span>(<span class="title function_ invoke__">pathinfo</span>(<span class="variable">$fileName</span>,PATHINFO_EXTENSION));</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$imageFileType</span> != <span class="string">&quot;jpg&quot;</span> &amp;&amp; <span class="variable">$imageFileType</span> != <span class="string">&quot;png&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Sorry, only JPG &amp; PNG files are allowed\n&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><font class="notice">注：我php太菜，直接上注释了</font></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>首先上传图片，然后添加路径访问图片，确保访问路径正确</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250507101849368.png" alt="image-20250507101849368"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>然后构造Tburbo Intruder文件上传竞赛脚本进行攻击，将request1设置为上传php代码的包，将request2设置为上传的php代码的路径。</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250507102639395.png" alt="image-20250507102639395"></p>
+<h4 id="基于-URL-的文件上传中的竞赛条件">基于 URL 的文件上传中的竞赛条件</h4>
+<p>在允许您通过提供 URL 上传文件的函数中，也会出现类似的竞赛条件。在这种情况下，服务器必须通过互联网获取文件并创建本地副本，然后才能执行任何验证。</p>
+<p>由于文件是使用 HTTP 加载的，开发人员无法使用框架的内置机制来安全地验证文件。相反，他们可能会手动创建自己的流程来临时存储和验证文件，但这样可能不太安全。</p>
+<p>例如，如果文件被加载到一个名称随机的临时目录中，理论上攻击者就不可能利用任何竞赛条件。如果攻击者不知道目录名，就无法请求文件以触发文件的执行。另一方面，如果使用伪随机函数（如 PHP 的 uniqid()）生成随机目录名，就有可能被暴力破解。</p>
+<p>为了让这种攻击更容易得手，可以尝试延长处理文件的时间，从而延长暴力破解目录名的时间窗口。一种方法是上传较大的文件。如果文件是分块处理的，你就有可能利用这一点，创建一个恶意文件，在文件开头添加有效载荷，然后添加大量任意填充字节。</p>
+<h2 id="利用文件上传漏洞而不执行远程代码">利用文件上传漏洞而不执行远程代码</h2>
+<p>在我们迄今为止看过的示例中，我们可以上传服务器端脚本以远程执行代码。这是文件上传功能不安全造成的最严重后果，但这些漏洞仍然可以通过其他方式被利用。</p>
+<h3 id="上传恶意客户端脚本">上传恶意客户端脚本</h3>
+<p>虽然您可能无法在服务器上执行脚本，但您仍然可以上传脚本进行客户端攻击。例如，如果可以上传 HTML 文件或 SVG 图像，就有可能使用 <script> 标记创建存储的 XSS 有效载荷。</p>
+<p>如果上传的文件出现在其他用户访问的页面上，他们的浏览器在尝试呈现页面时就会执行脚本。请注意，由于同源策略的限制，这类攻击只有在上传的文件和您上传文件的同一源提供时才会起作用。</p>
+<p>能上传带有恶意代码的文件是最严重的漏洞，这是针对服务器的攻击，但文件上传也能用于针对客户端攻击。上传一个 HTML  文件或 SVG 图像，里面包含 XSS 代码，那么就相当于是一个存储型 XSS 漏洞了，然后把文件的 URL  发给受害者，因为域名是合法的，所以更容易被信任。（注意，上传的文件如果被保存到另一个网站，那么要考虑同源策略的影响）</p>
+<h3 id="使用-PUT-上传文件">使用 PUT 上传文件</h3>
+<p>值得注意的是，某些网络服务器可能被配置为支持 PUT 请求。如果没有适当的防御措施，即使网络接口没有上传功能，也可以通过这种方式上传恶意文件。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">PUT /images/exploit.php HTTP/<span class="number">1.1</span></span><br><span class="line">Host: vulnerable-website.com</span><br><span class="line">Content-Type: application/x-httpd-php</span><br><span class="line">Content-Length: <span class="number">49</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Tip">Tip</h3>
+<p>您可以尝试向不同的端点发送 OPTIONS 请求，以测试是否有任何端点宣布支持 PUT 方法。</p>
+<h2 id="如何防止文件上传漏洞">如何防止文件上传漏洞</h2>
+<p>允许用户上传文件已是司空见惯的事情，只要采取正确的预防措施，就不会有什么危险。一般来说，保护自己的网站免受这些漏洞攻击的最有效方法是实施以下所有做法：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>对照允许扩展名的白名单而不是禁止扩展名的黑名单检查文件扩展名。猜测你可能希望允许哪些扩展名要比猜测攻击者可能试图上传哪些扩展名容易得多。</p>
+</li>
+<li class="lvl-2">
+<p>确保文件名不包含任何可能被解释为目录或遍历序列（…/）的子串。</p>
+</li>
+<li class="lvl-2">
+<p>重新命名上传的文件，避免可能导致现有文件被覆盖的碰撞。</p>
+</li>
+<li class="lvl-2">
+<p>在完全验证之前，不要将文件上传到服务器的永久文件系统。</p>
+</li>
+<li class="lvl-2">
+<p>尽可能使用已建立的框架来预处理文件上传，而不是尝试编写自己的验证机制。</p>
+</li>
+</ul>
 <p>本文参考：</p>
-<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+<p><a href="https://blog.csdn.net/shawdow_bug/article/details/140149569">【Portswigger 学院】文件上传</a></p>
+</script></p><link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>靶场练习</category>
+      </categories>
+      <tags>
+        <tag>PortSwigger靶场</tag>
+        <tag>文件上传</tag>
+      </tags>
   </entry>
   <entry>
     <title>【pikachu靶场】docker搭建pikachu靶场</title>
@@ -8207,21 +8563,10 @@ rows：返回具体行数。</strong></p>
   <entry>
     <title>我的第一篇博客——开启我的新篇章</title>
     <url>/posts/8d60c6a5/</url>
-    <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Wrong password, please try again.Or you can contact the author to view the blog" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="a88ca09f2a502f00e8e10b29b01bd63010d52d1545d04f46512711429ef31851">35e94af5aa3de4403be2a274c3bae36ffa679d444bbf2c0ce98987b44b30a2b177390b045ff9b811b9d33ebdbc694d1dc87365728d7c66f7bd90d31b5c38ab9214a97f9a3b1e49c46ec95f9c4eb8dce252ab22ff16259921bf1f5d25bb525c592e381a68ea7bc6b289b36993d1d2a8ace0a87a2f629e64256dbfe2806228ad0ddb14ffedbbc828533f60c7c295453636a6eca6d52d1a5b5244a569529d38f5b8a542f55f8310e64fd67b6894930d4ca3405233fc057a8fecc27cdda65788f5c54afb9df1ceff2e4850e97f108f8c13d1ae6ad241254e6d769f7c9856d224a79665f2e112d88473eea7213660d383bf252530df3cfc4de7e20a54c29c095f96e0a4aa9d367bbd54003e0bf6e01feef60f2cbd0ba0163ff4f8f087a6cb96f4ab5c4c599b882784d6b5650a556c015cbb57526281545d4bb3a4ca46c04d07a382c0214ec2889b6a1add6510a1854a1904ffe3ba06ea7cd221da90f1e601841dfac17f597a518cb14338866248d60b6405f939be2d0146f9f23729ef0618474a96a73d1fbadb7547b52989a4bd04a4597dd5dd4502baf6c0fe0610889ea65a08a13d9d1810d334af5dc738548eff49d3ef7e5fc577c055eaa3b8c08e8082cb60c56c0bdc1549baa7e08a26daeec1b120ee9662fd81e2f7ee703d7db8b24d2d4b3c1970cb4c2aa92e1c17c883fb96c3df13eb5e747a15216a5357261471141171d5ca2adb8118cf28095b3a162c64c40190fad91789cea76174c6e74e5ca7eddc215ce231c2826db2a09c540a3579ac743f3a19b7788b3d1e802d2247d55f567a0723ebd72fbce905fa31c5ab88048784ba2d1019c26c449e94917bf75c14e17e636cc0d0032c17fa7aa2641204995761c93895aad607108350e4bcb8224c6bc5a19255a800d572203d5d3c9fd2019471e13c6a901122b37b26200b3cada781cc50ebc4bb7d19bd84330e1035bfb1b8c48ef83df64e500530de68a5b1878d6c2d290897d68c3fdb0a179d33195681206fa7d8368e1eb84f6875e97b16849449e0e98bfbcb4170916ea9ba56441336d23bd7cc940e16b111cefa2c5393a2af40a1b7843b9fa851c37f57fade9d1240ec8d2946370903fdbd4fbd2e08cd77e12799f42603b48aa5f85bf4ceedab1124a016051ff43aae544296fdca263a6bd4879cb1d8451208b61f47c5881269a1e2e8476bd4ba4278e0cecab7ebcecc03d2648c75003889a7ebe4f95e20d6b0a789a0dcb4f29776d9ad4642b85f3823bbd97b95a5c02b8e1a18e9bc6e06a2aba3eea8d6984dd332bb3159be480f524d677ccc06f85ca3ced1d3d2dd029a1424bc68a96254af1818bf2a38e7a93f5aecdee7c1edfbbdca0b610f756523ba0bdb7bb0a9fdcad205c9959e126e2ea8b0144dc647a27dbb23e10937bbe7a21cdac4f9e2e7292a778f6c1931ae509fce0a4b3520e20d57e3d89219c72d3f6c68ed98adaeb8a4edd1cf40263f360a2f224e7e5a8337ef1f28718f577f33300a45ca89174a647ddf17793dedddc18c550df9814854f691098ae21963e409aeb56d3dd0c4d095bcd504af39026fa6efb78f448c219e6176daa6c6c8256a9be7d8848e51fe2b7c45d9a4b106051ee9bcc7ce4c537ed917a7f4c77ffddca6b85e10ef1a4293f763ba58c879f01e65d8032fad7d5785fb561ca20c424f6d09adb5510f05d2bf86592d0e5de7a67c463080237f13d576e97b30d30f567e27526eb4e7867492f31587b359d3fae943691022bc5a3481e852ad3be8b98aebefd575a7d06b8b2f2186f75cc3101aa9eafbbfae6834e37f3275b44be4ef835e2b4c2b48daac0ec25712096104ccc9f8edb0587dcfb5d5908ad8846b92f369d68846f65c5d075bc188074612ad67323274a7d6bd034e79fa86b22d49f1c35e57a2adbb8fa31ffdf6eb1ba2f5e4bd4cd0a14c27ac447905c09af8b390f6a11ade9083decc833561f009817f6faad23155d4cfaf2c8d0a6f1df6c3573a1b102aeac4e7e7c7776bc851d630afc42236960c3c89d07039def65f0b4f92f181622a18b5feb39e3d7ee94893798797556a206a2add60f7384dfe3828dfd393908d2c496a6d33a548397ff78534a45b3eee2a3e0dad706ea2825f42db5cb9867770c0c9b472c2af9b44a7a896a2998949b13c614dbdc709f05e4f9473474415df6f10710b28dead3579c553070ccfb9e602283bd196ed12286ef3dde102b8ac09d4b5525aa61745e31e800e9b967081fb42d2a72c539af4eace26b4e19581f7cd79b3999d9757c316780d5ee3fcf60b87d408408210ae1caae7311d6c92e2c985ef842bdff27d2d96319c7cc0b9934eeb36dfe403bf2324e99dba806b88d60fcbd11def2945a3c20fe9b42a20adde633d64daf9a37063c25b22883bd17cba2f319a7e4429c07a28bb3be684f622692fc8929b94a181e31647df3edb5761e952137b8fa369a683cd72f8c0d274e6862b8b16843b9ee6bf175c6ebc05dbf412943548</script>
-  <div class="hbe hbe-content">
-    <div class="hbe hbe-input hbe-input-default">
-      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
-      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
-        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
-      </label>
-    </div>
-  </div>
-</div>
-<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
-      <tags>
-        <tag>private</tag>
-      </tags>
+    <content><![CDATA[<p>    时过境迁，恍恍惚惚我已走到今日。这是我的第一篇博客，寄托着我的期望，象征着我的新起点、新开始。谨以此篇为始，展开我的新征程。<br>
+    在过去的一两年里，由于身体的原因，我经历了前所未有的痛苦和迷茫，在寻不到希望的世界里苦苦坚持。我也因此考研失利、错过了校招、以及我本可以去享受和追寻的美好的东西。好在，如今一切都已慢慢恢复。纵使我错过、失去了很多，但未来怎样尚不可为人知。总是没有人可以让自己的人生总是一帆风顺，即使是我。熬过了黑暗，黎明总会到来。我有时也会为自己已经过去的不好的经历遗憾感慨，但我更希望我能像熬过了冬天的雨后春笋般茁壮成长起来，尽快让自己的人生回到自己预期的轨迹。也在此感谢一位和我多年的朋友，他是一名医学生——在那段时间里，他几乎承担了我在情况不好时全部的倾诉，他是对我最有耐心、给我最大支撑和力量的朋友。同时还有很多关心和帮助我的朋友，他们是我黑夜里的星辰和月光，有他们我总能燃起希望、重拾信心。<br>
+    今日正式踏上征途，希望自己能放平心态、虚心学习、厚积薄发、早日突破困境，如往常那般一往无前地活着。无论结果如何，愿自己都有勇气面对自己的人生。</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
   </entry>
   <entry>
     <title>Hello World</title>
