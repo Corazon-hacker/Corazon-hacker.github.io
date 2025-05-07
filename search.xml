@@ -840,8 +840,10 @@ $$</p>
 <p>大多数 Web 服务器并不是在一开始安装成功后就能执行文件的，像 Apache，要执行 PHP 脚本，需要在 <code>/etc/apache2/apache2.conf</code> 配置文件中添加如下指令加载 php 模块，以及当访问后缀名为 <code>.php</code> 的文件时，作为 php 脚本执行。：</p>
 </li>
 </ul>
+<blockquote>
 <p>LoadModule php_module /usr/lib/apache2/modules/libphp.so<br>
 AddType application/x-httpd-php .php</p>
+</blockquote>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>不止 Apache，Nginx 和 IIS 也都是要做一些配置才能执行脚本。</p>
@@ -852,10 +854,14 @@ AddType application/x-httpd-php .php</p>
 <li class="lvl-4">
 <p>IIS 服务器也有一个类似的配置文件，名为 <code>web.config</code>，它的指令示例：</p>
 <ul class="lvl-4">
-<li class="lvl-6">//.json 文件被当成 json 发送给客户端。<br>
-<staticContent><br>
-<mimeMap fileextension=".json" mimetype="application/json"><br>
-</mimeMap></staticContent></li>
+<li class="lvl-6">
+<p>//.json 文件被当成 json 发送给客户端。</p>
+<blockquote>
+<staticContent>
+    <mimeMap fileextension=".json" mimetype="application/json">
+    </mimeMap></staticContent>
+</blockquote>
+</li>
 </ul>
 </li>
 </ul>
