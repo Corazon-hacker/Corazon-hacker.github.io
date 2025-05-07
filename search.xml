@@ -1364,6 +1364,30 @@ AddType application/x-httpd-php .php</p>
 <p>错误信息显示“unexpected end of file”，通常意味着模板中有未闭合的标签或语法错误，但也有其他可能。</p>
 <p><img src="/posts/8071f3a9//image-20250507115534543.png" alt="image-20250507115534543"></p>
 <h2 id="取消图片名字">取消图片名字</h2>
+<p><img src="/posts/8071f3a9//111.png" alt="111"></p>
+<p>我使用Typora编写博客，复制粘贴图像的时候会自动生成名字，但是我觉得这样并不美观，因此我想让我的博客不再显示名称。由于我已经写了很多的博客，所以单纯的修改Typora会使我之前的图片依然显示名字，因此我考虑修改我的主题配置。</p>
+<p>这个问题也花费了我不短的时间，主要明明可以简单的在主题的配置文件里添加<code>head: source/_data/head.css</code> 但是我这么做以后，始终不能成功。我的head.css文件并没有加载。网络适配器里搜索不到head.css，并且在我博客的右上角出现 <code>[object Promise]</code> 字符。</p>
+<p>因此我直接修改了主题模板强制引入。</p>
+<ol>
+<li class="lvl-3">
+<p>打开主题的 <code>head.swig</code> 文件（路径：<code>themes/next/layout/_partials/head.swig</code>）。</p>
+</li>
+<li class="lvl-3">
+<p>在文件末尾添加以下代码：</p>
+</li>
+</ol>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&#123;# 手动引入自定义 CSS #&#125;</span><br><span class="line">&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/head<span class="selector-class">.css</span>&quot;&gt;</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li class="lvl-3">
+<p>将 <code>head.css</code> 移动到 Hexo 的 <code>source/css/</code> 目录：</p>
+</li>
+</ol>
+<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line">博客根目录/</span><br><span class="line">├─ source/</span><br><span class="line">│  └─ css/</span><br><span class="line">│     └─ head.css   &lt;<span class="comment">-- 移动到此目录</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li class="lvl-3">
+<p>清理缓存并重新生成：<code>hexo clean &amp;&amp; hexo g</code></p>
+</li>
+</ol>
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
