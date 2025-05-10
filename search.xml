@@ -353,7 +353,66 @@ $$</p>
       </categories>
   </entry>
   <entry>
-    <title>【PortSwigger靶场】路径遍历</title>
+    <title>【PortSwigger学院】跨站脚本（XSS）</title>
+    <url>/posts/cded1aa8/</url>
+    <content><![CDATA[<h2 id="跨站脚本">跨站脚本</h2>
+<h2 id="什么是跨站脚本-XSS-？">什么是跨站脚本 (XSS)？</h2>
+<p>跨站脚本攻击（又称 XSS）是一种网络安全漏洞，它允许攻击者破坏用户与有漏洞的应用程序之间的交互。它允许攻击者规避同源策略，该策略旨在将不同网站相互隔离。跨站脚本漏洞通常允许攻击者伪装成受害用户，执行用户能够执行的任何操作，并访问用户的任何数据。如果受害用户在应用程序中拥有特权访问权限，那么攻击者就可以完全控制应用程序的所有功能和数据。</p>
+<h2 id="XSS-如何工作？">XSS 如何工作？</h2>
+<p>跨站脚本攻击的原理是操纵有漏洞的网站，使其向用户返回恶意 JavaScript。当恶意代码在受害者的浏览器中执行时，攻击者就能完全破坏他们与应用程序的交互。</p>
+<blockquote>
+<p><strong>Labs</strong></p>
+<p>如果您已经熟悉了 XSS 漏洞背后的基本概念，只是想在一些现实的、故意易受攻击的目标上练习利用这些漏洞，您可以通过下面的链接访问本主题中的所有实验室。</p>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p><a href="https://portswigger.net/web-security/all-labs#cross-site-scripting">View all XSS labs</a></p>
+</li>
+</ul>
+</blockquote>
+<h2 id="XSS-概念验证">XSS 概念验证</h2>
+<p>您可以通过注入有效负载，使自己的浏览器执行一些任意 JavaScript 来确认大多数类型的 XSS 漏洞。使用 alert() 函数来实现这一目的早已成为惯例，因为它简短、无害，而且成功调用时很难被忽略。事实上，我们的大多数 XSS 实验都是在模拟受害者的浏览器中调用 alert() 来解决的。</p>
+<p>不幸的是，如果您使用的是 Chrome 浏览器，就会遇到一点小麻烦。从版本 92 开始（2021 年 7 月 20 日），跨源 iframe 无法调用 alert()。由于这些框架用于构建一些更高级的 XSS 攻击，因此有时需要使用其他 PoC 有效负载。在这种情况下，我们推荐使用 print() 函数。如果您有兴趣了解有关这一变更的更多信息，以及我们为什么喜欢 print()，请查看我们有关这一主题的<a href="https://portswigger.net/research/alert-is-dead-long-live-print">博客</a>。</p>
+<h2 id="XSS-攻击有哪些类型？">XSS 攻击有哪些类型？</h2>
+<p>XSS 攻击主要有三种类型。它们是：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>反射 XSS：恶意脚本来自当前 HTTP 请求。</p>
+</li>
+<li class="lvl-2">
+<p>存储型 XSS：恶意脚本来自网站数据库。</p>
+</li>
+<li class="lvl-2">
+<p>基于 DOM 的 XSS，即漏洞存在于客户端代码而非服务器端代码中</p>
+</li>
+</ul>
+<h2 id="反射式跨站脚本">反射式跨站脚本</h2>
+<h3 id="什么是反射式跨站脚本？">什么是反射式跨站脚本？</h3>
+<p>反射式 XSS 是跨站脚本攻击中最简单的一种。当应用程序接收 HTTP 请求中的数据，并以不安全的方式将这些数据包含在即时响应中时，就会出现这种情况。</p>
+<p>下面是一个反射 XSS 漏洞的简单示例：</p>
+<figure class="highlight ada"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/status?message=<span class="keyword">All</span>+<span class="keyword">is</span>+well.</span><br><span class="line">&lt;p&gt;Status: <span class="keyword">All</span> <span class="keyword">is</span> well.&lt;/p&gt;</span><br></pre></td></tr></table></figure>
+<p>应用程序不会对数据进行任何其他处理，因此攻击者可以构建类似的攻击：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/status?message=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/*+Bad+stuff+here...+*/</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Status: <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果用户访问了攻击者构建的 URL，那么攻击者的脚本就会在该用户与应用程序的会话上下文中，在用户的浏览器中执行。此时，脚本可以执行任何操作，并检索用户可以访问的任何数据。</p>
+<blockquote>
+<p><strong>Read more</strong></p>
+<ul class="lvl-1">
+<li class="lvl-2"><a href="https://portswigger.net/web-security/cross-site-scripting/reflected">Reflected cross-site scripting</a></li>
+<li class="lvl-2"><a href="https://portswigger.net/web-security/cross-site-scripting/cheat-sheet">Cross-site scripting cheat sheet</a></li>
+</ul>
+</blockquote>
+<p>存储型XSS</p>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>靶场练习</category>
+      </categories>
+      <tags>
+        <tag>PortSwigger靶场</tag>
+        <tag>XSS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【PortSwigger学院】路径遍历</title>
     <url>/posts/15b3971d/</url>
     <content><![CDATA[<h2 id="什么是路径遍历">什么是路径遍历</h2>
 <p>路径遍历也称为目录遍历。这些漏洞可使攻击者在运行应用程序的服务器上读取任意文件。这可能包括：</p>
@@ -530,7 +589,7 @@ $$</p>
       </tags>
   </entry>
   <entry>
-    <title>【PortSwigger靶场】文件上传</title>
+    <title>【PortSwigger学院】文件上传</title>
     <url>/posts/34bab347/</url>
     <content><![CDATA[<h2 id="原理与危害">原理与危害</h2>
 <p>文件上传漏洞是指网络服务器允许用户上传文件到其文件系统，而未对文件名、类型、内容或大小等进行充分验证。这就可能导致允许攻击者上传有潜在危险的文件，甚至可能包括支持远程代码执行的服务器端脚本文件。</p>
@@ -1202,7 +1261,7 @@ AddType application/x-httpd-php .php</p>
       </tags>
   </entry>
   <entry>
-    <title>【PortSwigger靶场】SQL injection</title>
+    <title>【PortSwigger学院】SQL injection</title>
     <url>/posts/3b7c6011/</url>
     <content><![CDATA[<h2 id="SQL-injection-vulnerability-in-WHERE-clause-allowing-retrieval-of-hidden-data">SQL injection vulnerability in WHERE clause allowing retrieval of hidden data</h2>
 <p>这个是查看隐藏数据的漏洞，比较简单。通过BurpSuite直接拦截修改就行。</p>
@@ -1415,10 +1474,10 @@ AddType application/x-httpd-php .php</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Unit]</span><br><span class="line">Description=mihomo Daemon, Another Clash Kernel.</span><br><span class="line">After=network.target NetworkManager.service systemd-networkd.service iwd.service</span><br><span class="line"></span><br><span class="line">[Service]</span><br><span class="line">Type=simple</span><br><span class="line">LimitNPROC=500</span><br><span class="line">LimitNOFILE=1000000</span><br><span class="line">CapabilityBoundingSet=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE</span><br><span class="line">AmbientCapabilities=CAP_NET_ADMIN CAP_NET_RAW CAP_NET_BIND_SERVICE CAP_SYS_TIME CAP_SYS_PTRACE CAP_DAC_READ_SEARCH CAP_DAC_OVERRIDE</span><br><span class="line">Restart=always</span><br><span class="line">ExecStartPre=/usr/bin/sleep 1s</span><br><span class="line">ExecStart=/usr/local/bin/mihomo -d /etc/mihomo</span><br><span class="line">ExecReload=/bin/kill -HUP <span class="variable">$MAINPID</span></span><br><span class="line"></span><br><span class="line">[Install]</span><br><span class="line">WantedBy=multi-user.target</span><br></pre></td></tr></table></figure>
 <ol start="3">
 <li class="lvl-3">
-<p>创建配置文件。mihomo和clash meta用的是相同的内核，因此这个配置文件和我本地Windows系统用的clash meta是一样的。我创建的配置文件在/etc/mihomo/config.yaml。部分细节如下：</p>
+<p>创建配置文件。mihomo和clash meta用的是相同的内核，因此这个配置文件和我本地Windows系统用的clash meta是一样的。我创建的配置文件在/etc/mihomo/config.yaml。但是这个配置文件需要按个性修改，我会在后文介绍他的更全面的功能，部分细节如下：</p>
 </li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[11:42:20 root@rocky95 ~]# <span class="built_in">head</span> -n 20 /etc/mihomo/config.yaml </span><br><span class="line">mixed-port: 7890</span><br><span class="line">allow-lan: <span class="literal">true</span></span><br><span class="line">bind-address: <span class="string">&#x27;*&#x27;</span></span><br><span class="line">mode: rule</span><br><span class="line">log-level: info</span><br><span class="line">external-controller: <span class="string">&#x27;127.0.0.1:9090&#x27;</span></span><br><span class="line">unified-delay: <span class="literal">true</span></span><br><span class="line">tcp-concurrent: <span class="literal">true</span></span><br><span class="line">dns:</span><br><span class="line">    <span class="built_in">enable</span>: <span class="literal">true</span></span><br><span class="line">    ipv6: <span class="literal">false</span></span><br><span class="line">    default-nameserver: [223.5.5.5, 119.29.29.29]</span><br><span class="line">    enhanced-mode: fake-ip</span><br><span class="line">    fake-ip-range: 198.18.0.1/16</span><br><span class="line">    use-hosts: <span class="literal">true</span></span><br><span class="line">    nameserver: [<span class="string">&#x27;https://doh.pub/dns-query&#x27;</span>, <span class="string">&#x27;https://dns.alidns.com/dns-query&#x27;</span>]</span><br><span class="line">    fallback: [<span class="string">&#x27;https://doh.dns.sb/dns-query&#x27;</span>, <span class="string">&#x27;https://dns.cloudflare.com/dns-query&#x27;</span>, <span class="string">&#x27;https://dns.twnic.tw/dns-query&#x27;</span>, <span class="string">&#x27;tls://8.8.4.4:853&#x27;</span>]</span><br><span class="line">    fallback-filter: &#123; geoip: <span class="literal">true</span>, ipcidr: [240.0.0.0/4, 0.0.0.0/32] &#125;</span><br><span class="line">proxies:</span><br><span class="line">    - &#123; name: <span class="string">&#x27;剩余流量：918.16 GB&#x27;</span>, <span class="built_in">type</span>: vless, server: pq.aws48.yydjc.top, port: 443, uuid: 6806220d-2952-4fab-8617-ea56feab45b1, udp: <span class="literal">true</span>, tls: <span class="literal">true</span>, skip-cert-verify: <span class="literal">false</span>, flow: xtls-rprx-vision, client-fingerprint: chrome, servername: buylite.tv.apple.com, reality-opts: &#123; public-key: 6T-kYBf65ERaEAhxIyHL1FCfu0QR6P2XQMtcvUgzSjM, short-id: 70ad150d &#125; &#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[11:42:20 root@rocky95 ~]# <span class="built_in">head</span> -n 20 /etc/mihomo/config.yaml </span><br><span class="line">mixed-port: 7890</span><br><span class="line">allow-lan: <span class="literal">true</span></span><br><span class="line">bind-address: <span class="string">&#x27;*&#x27;</span></span><br><span class="line">mode: rule</span><br><span class="line">log-level: info</span><br><span class="line">external-controller: <span class="string">&#x27;127.0.0.1:9090&#x27;</span></span><br><span class="line">unified-delay: <span class="literal">true</span></span><br><span class="line">tcp-concurrent: <span class="literal">true</span></span><br><span class="line">dns:</span><br><span class="line">........</span><br><span class="line">proxies:</span><br><span class="line">.........</span><br></pre></td></tr></table></figure>
 <ol start="4">
 <li class="lvl-3">
 <p>重启systemd</p>
@@ -1436,23 +1495,30 @@ AddType application/x-httpd-php .php</p>
 <h2 id="为Linux设置代理">为Linux设置代理</h2>
 <h3 id="临时启用和关闭代理">临时启用和关闭代理</h3>
 <p>在使用Linux时，临时启用代理的命令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://ip:port</span><br><span class="line"><span class="built_in">export</span> https_proxy=http://ip:port</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://username:password@ip:port</span><br><span class="line"><span class="built_in">export</span> https_proxy=http://username:password@ip:port</span><br></pre></td></tr></table></figure>
 <p>ip和port为你的代理服务器的ip以及开放的端口。</p>
 <p>取消代理：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">unset</span> http_proxy</span><br><span class="line"><span class="built_in">unset</span> https_proxy</span><br></pre></td></tr></table></figure>
 <h3 id="永久全局代理">永久全局代理</h3>
 <p>永久全局代理将临时启用代理的命令添加至系统配置文件中，source刷新shell环境即可。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line">……</span><br><span class="line"><span class="built_in">export</span> http_proxy=http://ip:port</span><br><span class="line"><span class="built_in">export</span> https_proxy=https://ip:port</span><br><span class="line">……</span><br><span class="line"><span class="built_in">source</span> /etc/profile</span><br></pre></td></tr></table></figure>
+<ol>
+<li class="lvl-3">
+<p>修改系统配置文件</p>
+</li>
+</ol>
+<p><code>vim /etc/profile</code> 添加以下代码：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> http_proxy=http://username:password@ip:port</span><br><span class="line"><span class="built_in">export</span> https_proxy=https://username:password@ip:port</span><br></pre></td></tr></table></figure>
+<p><code>source /etc/profile</code> 是配置文件生效</p>
 <h3 id="设置代理的基本语法">设置代理的基本语法</h3>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">`环境变量</span><br><span class="line">http_proxy:为http变量设置代理;默认不填开头以http协议传输</span><br><span class="line"><span class="comment"># 示例</span></span><br><span class="line">`以下是常见的基本语法</span><br><span class="line">http_proxy=ip:port</span><br><span class="line">http_proxy=http://ip:port</span><br><span class="line">http_proxy=socks4://ip:port</span><br><span class="line">http_proxy=socks5://ip:port</span><br><span class="line">​</span><br><span class="line">`如果不想设置白名单,也可以使用用户名和密码进行验证</span><br><span class="line">http_proxy=http://username:password@ip:port</span><br><span class="line">http_proxy=http://username:password@ip:port</span><br><span class="line">​</span><br><span class="line">https_proxy:为https设置代理</span><br><span class="line">ftp_proxy:为ftp设置代理</span><br><span class="line">all_proxy:全部变量设置代理,设置了这个的时候上面不需要设置</span><br><span class="line">no_proxy:无需代理的主机或域名;可以使用通配符,多个时使用<span class="string">&quot;,&quot;</span>号分隔</span><br><span class="line"><span class="comment"># 示例：</span></span><br><span class="line">*.aiezu.com,10.*.*.*,192.168.*.*</span><br><span class="line">*.<span class="built_in">local</span>,localhost,127.0.0.1</span><br></pre></td></tr></table></figure>
 <h3 id="部署Web控制面板">部署Web控制面板</h3>
-<p>部署好了mihomo代理以后，在虚拟机上切换节点、重载配置等较为不便，可以为mihomo部署控制面板，方便管理。但如果服务器暴露在公网中，使用Web面板会很不安全。因此我只在需要调试的时候会把Web面板打开。部署控制面板的操作如下：</p>
+<p>部署好了mihomo代理以后，在虚拟机上切换节点、重载配置等较为不便，可以为mihomo部署控制面板，方便管理。但如果服务器暴露在公网中，使用Web面板会很不安全。因此把Web面板设置成只能本地发开就可以了，我们可以通过SSH协议链接服务器再打开Web面板。</p>
 <ol>
 <li class="lvl-3">
 <p>在config.yaml中添加或修改如下配置：</p>
 </li>
 </ol>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">external-controller: <span class="string">&#x27;0.0.0.0:7891&#x27;</span></span><br><span class="line">external-ui: /etc/mihomo/ui</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">external-controller: <span class="string">&#x27;127.0.0.1:7891&#x27;</span>#0.0.0.0所有ip都可访问</span><br><span class="line">secret: <span class="string">&quot;*******&quot;</span>  <span class="comment">#设置密码更加保险</span></span><br><span class="line">external-ui: /etc/mihomo/ui <span class="comment">#web页面存放地址</span></span><br></pre></td></tr></table></figure>
 <ol start="2">
 <li class="lvl-3">
 <p>从github下载</p>
@@ -1465,13 +1531,19 @@ AddType application/x-httpd-php .php</p>
 </li>
 </ol>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl restart mihomo</span><br></pre></td></tr></table></figure>
-<p>本地访问<a href="http://ip">http://ip</a>:port/ui就可以访问Web面板了</p>
-<p><font class="notice">注意：虽然查看该面板需要密码，但是密码随机输入即可，并不具备安全性</font></p>
+<ol start="4">
+<li class="lvl-3">
+<p>远程连接访问</p>
+</li>
+</ol>
+<figure class="highlight pf"><table><tr><td class="code"><pre><span class="line"><span class="comment">#首先通过SSH连接我们的服务器</span></span><br><span class="line">ssh -L <span class="keyword">port</span>:localhost:<span class="keyword">port</span> <span class="keyword">user</span>@ip</span><br><span class="line"><span class="comment">#然后在浏览器打开 http://localhost:7891/ui/ 就可以啦</span></span><br></pre></td></tr></table></figure>
+<p>如果<code>external-controller</code>设置成 <code>0.0.0.0</code> 就直接访问<a href="http://ip">http://ip</a>:port/ui（不建议）</p>
 <h2 id="docker使用网络代理">docker使用网络代理</h2>
+<p>Docker守护进程默认不会使用系统环境变量中的代理设置，需要单独配置。</p>
 <p>gitbook上有一篇docker的详解：<a href="https://yeasy.gitbook.io/docker_practice/">Docker — 从入门到实践</a></p>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>为 dockerd 创建配置文件夹。</p>
+<p>为 docker 创建配置文件夹。</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/systemd/system/docker.service.d</span><br></pre></td></tr></table></figure>
@@ -1480,16 +1552,23 @@ AddType application/x-httpd-php .php</p>
 <p>为 dockerd 创建 HTTP/HTTPS 网络代理的配置文件，文件路径是 /etc/systemd/system/docker.service.d/http-proxy.conf 。并在该文件中添加相关环境变量。</p>
 </li>
 </ul>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Service]</span><br><span class="line">Environment=<span class="string">&quot;HTTP_PROXY=http://proxy.example.com:8080/&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;HTTPS_PROXY=http://proxy.example.com:8080/&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[Service]</span><br><span class="line">Environment=<span class="string">&quot;HTTP_PROXY=http://user:password@ip:port/&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;HTTPS_PROXY=http://user:password@ip:port/&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span></span><br></pre></td></tr></table></figure>
+<p><font class="notice">注意：如果没有密码就不添加 <code>user:password@</code> （建议设置密码）</font></p>
 <ul class="lvl-0">
 <li class="lvl-2">
 <p>刷新配置并重启 docker 服务。</p>
 </li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+<p><font class="notice">注意：使用 <code>docker info</code> 可以查看docker配置信息</font></p>
+<p>经过我不断的测试，我本地的电脑总是会出现无法使用服务器的代理访问外网的情况，通常需要我进入Web控制页面换几个代理才可以。这样一来非常的麻烦，因此我放弃了这么操作。为了方便，当我的本地机器（虚拟机）需要使用代理时，直接使用我主机的代理。而为了云服务器的安全，直接将云服务器的代理对外关闭了。</p>
 <h2 id="客户端使用代理">客户端使用代理</h2>
-<p>因为代理是部署在服务器的，因此自己的手机、电脑、平板等也可以使用服务器的代理。但是要修改配置文件allow-lan改为true。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">allow-lan: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<p>因为代理是部署在服务器的，因此自己的手机、电脑、平板等也可以使用服务器的代理。修改配置文件allow-lan改为true即可（危险）。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">allow-lan: <span class="literal">true</span></span><br><span class="line">authentication:</span><br><span class="line">  - <span class="string">&quot;user:password&quot;</span>   <span class="comment"># 格式：用户名:密码（可配置多组）</span></span><br></pre></td></tr></table></figure>
+<p>但是不得不说，如果你的服务器在公网，那么这是一件很危险的事情，因此至少需要给你的代理设置密码，也可以绑定IP白名单。</p>
+<p>我试了一下，如果手机不用工具的话使用用户名密码访问不了公网，需要安装代理工具。</p>
+<h2 id="详细配置说明">详细配置说明</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># ==== 核心代理配置 ====</span></span><br><span class="line"><span class="comment"># 混合代理端口（同时支持 HTTP 和 SOCKS5 协议）</span></span><br><span class="line">mixed-port: 7890  <span class="comment"># 客户端（浏览器/Docker等）通过此端口连接代理</span></span><br><span class="line"><span class="comment"># 是否允许局域网内其他设备连接代理（如果本机在公网，那就都可以连接了）</span></span><br><span class="line">allow-lan: <span class="literal">true</span>   <span class="comment"># true:允许同一局域网设备使用代理 | false:仅本机可用</span></span><br><span class="line"><span class="comment"># 绑定地址（* 表示允许所有网络接口，包括公网和本地）</span></span><br><span class="line">bind-address: <span class="string">&#x27;*&#x27;</span># 若需限制访问IP，可改为 127.0.0.1（仅本机）或特定IP</span><br><span class="line"><span class="comment"># 代理模式（rule:基于规则分流 | global:全局代理 | direct:直连）</span></span><br><span class="line">mode: rule</span><br><span class="line"></span><br><span class="line"><span class="comment"># ==== 日志配置 ====</span></span><br><span class="line"><span class="comment"># 日志级别（debug/info/warning/error/silent）</span></span><br><span class="line">log-level: info</span><br><span class="line"><span class="comment"># 日志文件路径（需确保目录存在且 mihomo 有写入权限）建议定期清理或配置 logrotate</span></span><br><span class="line">log-file: /var/log/mihomo.log  <span class="comment">#日志保存地址</span></span><br><span class="line"><span class="comment">#远程连接时使用的用户和密码（可以多个）密码务必高强度</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ==== 代理认证配置 ====</span></span><br><span class="line"><span class="comment"># HTTP/SOCKS5 代理的客户端认证（非控制面板密码）</span></span><br><span class="line">authentication:</span><br><span class="line">  - <span class="string">&quot;user1:pass1&quot;</span>   <span class="comment"># 格式：用户名:密码（可配置多组）</span></span><br><span class="line">  <span class="comment"># - &quot;user2:pass2&quot;          # 客户端连接需填写对应用户名密码</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ==== 控制面板配置 ====</span></span><br><span class="line"><span class="comment"># Web 控制面板监听地址（强烈建议绑定到 127.0.0.1 避免公网暴露）</span></span><br><span class="line"><span class="comment">#0.0.0.0表示所有ip均可访问</span></span><br><span class="line"><span class="comment">#127.0.0.1表示只有本机可以访问</span></span><br><span class="line">external-controller: <span class="string">&#x27;127.0.0.1:7891&#x27;</span>  </span><br><span class="line">secret: <span class="string">&quot;********&quot;</span>  <span class="comment">#web页面密码，访问 http://IP:7891/ui 时需输入此密码，建议高强度</span></span><br><span class="line">external-ui: /etc/mihomo/ui <span class="comment"># Web 面板静态文件路径（需确保目录存在）</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># ==== 高级网络配置 ====</span></span><br><span class="line"><span class="comment"># 统一延迟测试（true:所有节点同时测速 | false:按需测速）</span></span><br><span class="line">unified-delay: <span class="literal">true</span></span><br><span class="line"><span class="comment"># 启用 TCP 并发连接提升速度（可能增加服务器负载）</span></span><br><span class="line">tcp-concurrent: <span class="literal">true</span></span><br><span class="line">dns:</span><br><span class="line">.................</span><br><span class="line">proxies:</span><br><span class="line">.................</span><br><span class="line">rule：</span><br><span class="line">.................</span><br></pre></td></tr></table></figure>
 <h2 id="遇到的问题：">遇到的问题：</h2>
 <ol>
 <li class="lvl-3">
