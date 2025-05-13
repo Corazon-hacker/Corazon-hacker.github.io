@@ -351,6 +351,9 @@ $$</p>
       <categories>
         <category>博客写作</category>
       </categories>
+      <tags>
+        <tag>Typora</tag>
+      </tags>
   </entry>
   <entry>
     <title>【upload-lab靶场】文件上传</title>
@@ -7669,6 +7672,9 @@ grep [yh]<br>
       <categories>
         <category>博客写作</category>
       </categories>
+      <tags>
+        <tag>Typora</tag>
+      </tags>
   </entry>
   <entry>
     <title>【Hexo】标签插件使用</title>
