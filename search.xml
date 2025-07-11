@@ -356,8 +356,8 @@ $$</p>
       </tags>
   </entry>
   <entry>
-    <title>【linux】docker使用</title>
-    <url>/posts/4c00139f/</url>
+    <title>【Linux】docker安装</title>
+    <url>/posts/b1246162/</url>
     <content><![CDATA[<h2 id="docker安装">docker安装</h2>
 <ol>
 <li class="lvl-3"><strong>关闭安全程序</strong></li>
@@ -380,7 +380,7 @@ $$</p>
 <p><strong>安装阿里云docker源</strong></p>
 </li>
 </ol>
-<figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">yum-config-manager --<span class="built_in">add</span>-repo http://mirrors.aliyun.<span class="keyword">com</span>/docker-<span class="keyword">ce</span>/linux/centos/docker-<span class="keyword">ce</span>.repo</span><br><span class="line"></span><br><span class="line">安装docker：</span><br><span class="line">yum install docker-<span class="keyword">ce</span> -<span class="keyword">y</span></span><br><span class="line"></span><br><span class="line">安装完毕后可以执行</span><br><span class="line">docker <span class="keyword">version</span></span><br><span class="line">查看docker版本</span><br><span class="line"></span><br><span class="line">启动并开机运行docker</span><br><span class="line">systemctl start docker &amp;&amp; systemctl enable docker</span><br><span class="line"></span><br><span class="line">检查docker是否启动成功</span><br><span class="line">systemctl status docker</span><br><span class="line">看到running就是成功了</span><br></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo</span><br><span class="line"></span><br><span class="line">安装docker：</span><br><span class="line">yum install docker-ce -y</span><br><span class="line"></span><br><span class="line">安装完毕后可以执行</span><br><span class="line">docker version</span><br><span class="line">查看docker版本</span><br><span class="line"></span><br><span class="line">启动并开机运行docker</span><br><span class="line">systemctl start docker &amp;&amp; systemctl <span class="built_in">enable</span> docker</span><br><span class="line"></span><br><span class="line">检查docker是否启动成功</span><br><span class="line">systemctl status docker</span><br><span class="line">看到running就是成功了</span><br></pre></td></tr></table></figure>
 <ol start="5">
 <li class="lvl-3">
 <p><strong>修改内核参数</strong></p>
@@ -397,7 +397,13 @@ $$</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/docker</span><br><span class="line">vim /etc/docker/daemon.json</span><br><span class="line">添加如下内容：</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;registry-mirrors&quot;</span>:[<span class="string">&quot;https://a88u1jg4.mirror.aliyuncs.com&quot;</span>,<span class="string">&quot;https://docker.lmirror.top&quot;</span>,<span class="string">&quot;https://docker.m.daocloud.io&quot;</span>,<span class="string">&quot;https://hub.uuuabc.top&quot;</span>,<span class="string">&quot;https://docker.anyhub.us.kg&quot;</span>,<span class="string">&quot;https://dockerhub.jobcher.com&quot;</span>,<span class="string">&quot;https://dockerhub.icu&quot;</span>,<span class="string">&quot;https://docker.ckyl.me&quot;</span>,<span class="string">&quot;https://docker.awsl9527.cn&quot;</span>,<span class="string">&quot;https://docker.laoex.link&quot;</span>]</span><br><span class="line">&#125;</span><br><span class="line">保存退出</span><br><span class="line">systemctl  daemon-reload</span><br><span class="line">systemctl restart docker</span><br></pre></td></tr></table></figure>
 <p><strong>代理：</strong></p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">sudo</span> <span class="built_in">mkdir</span> -p /etc/systemd/system/docker.service.d</span><br><span class="line"></span><br><span class="line">添加内容：</span><br><span class="line">[Service]</span><br><span class="line">Environment=<span class="string">&quot;HTTP_PROXY=http://user:password@ip:port/&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;HTTPS_PROXY=http://user:password@ip:port/&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;NO_PROXY=localhost,127.0.0.1,.example.com&quot;</span></span><br><span class="line">注意改成自己的代理ip和端口，如果没有密码去掉“user:password@”</span><br><span class="line"></span><br><span class="line">刷新配置并重启 docker 服务</span><br><span class="line"><span class="built_in">sudo</span> systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl restart docker</span><br></pre></td></tr></table></figure>
-<h2 id="镜像操作">镜像操作</h2>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+  </entry>
+  <entry>
+    <title>【Linux】docker使用</title>
+    <url>/posts/4c00139f/</url>
+    <content><![CDATA[<h2 id="镜像操作">镜像操作</h2>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">能够连接镜像仓库情况下：</span><br><span class="line">docker search centos  <span class="comment">#找到相关镜像</span></span><br><span class="line">然后：</span><br><span class="line">docker pull centos  <span class="comment">#将镜像直接下载到docker里面</span></span><br><span class="line">docker images  <span class="comment">#查看镜像</span></span><br><span class="line"></span><br><span class="line">现在docker官方镜像仓库不可用，只能使用离线镜像：</span><br><span class="line">如何使用离线镜像：</span><br><span class="line">首先将镜像上传到服务器</span><br><span class="line">rz -be上传镜像文件</span><br><span class="line"></span><br><span class="line">上传完毕后，上载到docker里</span><br><span class="line">容器镜像压缩包不要用tar命令进行解压，要用docker load加载及解压镜像压缩包</span><br><span class="line">docker load -i centos.tar.gz</span><br><span class="line"></span><br><span class="line">查看镜像：</span><br><span class="line">docker images</span><br><span class="line">删除镜像：</span><br><span class="line">docker rmi [镜像名字]或[镜像ID]</span><br></pre></td></tr></table></figure>
 <h2 id="容器操作：">容器操作：</h2>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">进入一个镜像容器</span><br><span class="line">docker run --name 容器名称（自己取） -it centos(镜像的名称) /bin/bash(调用环境)</span><br><span class="line">退出<span class="built_in">exit</span></span><br><span class="line">此时退出后，容器就会停止运行</span><br><span class="line"></span><br><span class="line">查看所有的容器，包括停止的</span><br><span class="line">docker ps -a </span><br><span class="line"></span><br><span class="line">删除容器</span><br><span class="line">docker <span class="built_in">rm</span> [镜像名字]或[镜像ID]  <span class="comment">#（名称不能重复）</span></span><br><span class="line">守护形式容器（-d 不会退出就关闭）</span><br><span class="line">docker run --name=xiaoA -td centos /bin/bash</span><br><span class="line"></span><br><span class="line">查看正在运行的容器</span><br><span class="line">docker ps</span><br><span class="line"></span><br><span class="line">进入正在运行的容器</span><br><span class="line">docker <span class="built_in">exec</span> -it xiaoA /bin/bash</span><br><span class="line"></span><br><span class="line">停止容器</span><br><span class="line">docker stop 容器名（容器ID）</span><br><span class="line">开启</span><br><span class="line">docker start 容器名（容器ID）</span><br><span class="line">重启</span><br><span class="line">docker restart 容器名（容器ID）</span><br><span class="line"></span><br><span class="line">查看容器日志</span><br><span class="line">docker logs 容器名（容器ID）</span><br></pre></td></tr></table></figure>
@@ -417,21 +423,23 @@ $$</p>
 <h3 id="ip互联">ip互联</h3>
 <p>基于上面创建的inter-image镜像分别启动容器test1和test2，并进入到容器中。</p>
 <p>查询ip地址即可互联</p>
-<p><img src="/posts/4c00139f//image-20250710214550350.png" alt="image-20250710214550350"></p>
+<p><img src="/posts/4c00139f//image-20250710214550350-17521567889481.png" alt="image-20250710214550350"></p>
 <p>开启nginx服务后也可以通过 <code>curl</code> 命令连</p>
-<p><img src="/posts/4c00139f//image-20250710220009917.png" alt="image-20250710220009917"></p>
+<p><img src="/posts/4c00139f//image-20250710220009917-17521567983984.png" alt="image-20250710220009917"></p>
 <h3 id="网络别名互联">网络别名互联</h3>
 <p>定义网络别名（防止容器ip变化了，导致我们访问不到）</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run --name test3 -td inter-image  <span class="comment">#创建一个测试容器</span></span><br><span class="line">docker run --name test4 -td --<span class="built_in">link</span>=test3:webtest inter-image  <span class="comment">#创建别名容器</span></span><br><span class="line">docker <span class="built_in">exec</span> -it test4 /bin/bash  <span class="comment">#进入别名容器</span></span><br><span class="line">ping webtest <span class="comment">#就可以无视test3容器IP变化</span></span><br></pre></td></tr></table></figure>
-<p><img src="/posts/4c00139f//image-20250710205010145.png" alt="image-20250710205010145"></p>
+<p><img src="/posts/4c00139f//image-20250710205010145-175215682419010.png" alt="image-20250710205010145"></p>
 <h2 id="docker的网络权限">docker的网络权限</h2>
 <p>host模式：</p>
 <figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">docker run --name host -it --net=host --privileged=true centos:<span class="number">7</span></span><br><span class="line">ip a  <span class="comment">#发现和本机的IP一样</span></span><br><span class="line"><span class="keyword">exit</span>  <span class="comment">#退出</span></span><br><span class="line">docker rm host  <span class="comment">#删除容器</span></span><br></pre></td></tr></table></figure>
-<p>我的centos太纯净了吧？？？</p>
-<p><img src="/posts/4c00139f//image-20250710210406834.png" alt="image-20250710210406834"></p>
 <p>none模式：</p>
 <figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">docker run -td --name none --net=none --privileged=true centos:<span class="number">7</span></span><br><span class="line">docker exec -it none <span class="regexp">/bin/</span>bash</span><br><span class="line">ip a  <span class="comment">#发现只有lo网卡</span></span><br><span class="line"><span class="keyword">exit</span>  <span class="comment">#退出</span></span><br></pre></td></tr></table></figure>
-<p><img src="/posts/4c00139f//image-20250710210105908.png" alt="image-20250710210105908"></p>
+<h2 id="如何判断是否为docker环境">如何判断是否为docker环境</h2>
+<p>可以通过：<code>cat /proc/1/cgroup</code>命令查看内容</p>
+<p><img src="/posts/4c00139f//image-20250710223300288.png" alt="image-20250710223300288"></p>
+<p>也可以通过<code>ls -alh /.dockerenv</code>查看是否有容器环境文件</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[root@92a79e791862 /]# <span class="built_in">ls</span> -a /</span><br><span class="line">.   .dockerenv         bin   dev  home  lib64  mnt  proc  run   srv  tmp  var</span><br><span class="line">..  anaconda-post.log  boot  etc  lib   media  opt  root  sbin  sys  usr</span><br><span class="line">[root@92a79e791862 /]# <span class="built_in">ls</span> -a /.dockerenv  </span><br><span class="line">/.dockerenv</span><br></pre></td></tr></table></figure>
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
   </entry>
