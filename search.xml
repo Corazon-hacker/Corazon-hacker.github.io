@@ -380,7 +380,7 @@ $$</p>
       </tags>
   </entry>
   <entry>
-    <title>【Hexo】自定义newp命令及显示当前目录文件</title>
+    <title>【Hexo】自定义newp命令及显示当前文件夹文件</title>
     <url>/posts/60f39975/</url>
     <content><![CDATA[<p>因为我是用了根据路径自动生成分类，但是使用<code>hexo new -p /path/to/filename title</code>命令的时候感觉很不方便，因为我希望我可以在同级目录下生成名字和标题一样的<code>.md</code>文件和文件夹。但是使用<code>-p</code>参数的时候我就得这样：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new -p 渗透测试/弱口令/【渗透测试】弱口令 【渗透测试】弱口令</span><br></pre></td></tr></table></figure>
