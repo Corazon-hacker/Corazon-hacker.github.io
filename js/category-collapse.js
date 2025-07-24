@@ -82,34 +82,19 @@ document.addEventListener('DOMContentLoaded', function() {
       item.classList.remove('active-ancestor');
     });
   
-  // 为当前分类添加激活状态
-  const currentLink = document.querySelector(`.category-list-link[href="${categoryPath}"]`);
-  if (currentLink) {
-    currentLink.classList.add('active-category');
-    
-    // 为当前分类的所有父级添加 active-ancestor
-    let parentItem = currentLink.closest('.category-list-child')?.closest('.category-list-item');
-    let level = 0;
-    
-    while (parentItem) {
-      parentItem.classList.add('active-ancestor');
+    // 为当前分类添加激活状态
+    const currentLink = document.querySelector(`.category-list-link[href="${categoryPath}"]`);
+    if (currentLink) {
+      currentLink.classList.add('active-category');
       
-      // 设置层级标记
-      parentItem.dataset.ancestorLevel = level;
-      
-      // 设置置顶位置
-      const topPosition = level * 40; // 每级间隔40px
-      parentItem.style.setProperty('--sticky-top', `${topPosition}px`);
-      
-      level++;
-      parentItem = parentItem.closest('.category-list-child')?.closest('.category-list-item');
+      // 为当前分类的所有父级添加 active-ancestor
+      let parentItem = currentLink.closest('.category-list-child')?.closest('.category-list-item');
+      while (parentItem) {
+        parentItem.classList.add('active-ancestor');
+        parentItem = parentItem.closest('.category-list-child')?.closest('.category-list-item');
+      }
     }
-    
-    // 为当前分类设置置顶位置
-    const topPosition = level * 40;
-    currentLink.parentElement.style.setProperty('--sticky-top', `${topPosition}px`);
-  }
-    
+
     // 显示当前分类名称
     document.getElementById('currentCategoryName').textContent = categoryName;
     
