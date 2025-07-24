@@ -4755,8 +4755,8 @@ nday 扫框架 组件漏洞未授权 弱口令逻辑漏洞短信轰炸（看能�
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>靶场练习</category>
-        <category>PortSwigger靶场</category>
+        <category>渗透测试</category>
+        <category>反序列化</category>
       </categories>
       <tags>
         <tag>靶场</tag>
@@ -5061,8 +5061,8 @@ nday 扫框架 组件漏洞未授权 弱口令逻辑漏洞短信轰炸（看能�
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>渗透测试</category>
-        <category>反序列化</category>
+        <category>靶场练习</category>
+        <category>PortSwigger靶场</category>
       </categories>
       <tags>
         <tag>靶场</tag>
@@ -5322,8 +5322,8 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>靶场练习</category>
-        <category>PortSwigger靶场</category>
+        <category>渗透测试</category>
+        <category>XSS</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -5510,8 +5510,8 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>渗透测试</category>
-        <category>XSS</category>
+        <category>靶场练习</category>
+        <category>PortSwigger靶场</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -5688,8 +5688,8 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
 <p><a href="https://portswigger.net/web-security/file-path-traversal">Path traversal</a></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>靶场练习</category>
-        <category>PortSwigger靶场</category>
+        <category>渗透测试</category>
+        <category>文件上传</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -5866,8 +5866,8 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
 <p><a href="https://portswigger.net/web-security/file-path-traversal">Path traversal</a></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>渗透测试</category>
-        <category>文件上传</category>
+        <category>靶场练习</category>
+        <category>PortSwigger靶场</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -6388,8 +6388,8 @@ AddType application/x-httpd-php .php</p>
 <p><a href="https://blog.csdn.net/shawdow_bug/article/details/140149569">【Portswigger 学院】文件上传</a></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>靶场练习</category>
-        <category>PortSwigger靶场</category>
+        <category>渗透测试</category>
+        <category>文件上传</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -6910,8 +6910,8 @@ AddType application/x-httpd-php .php</p>
 <p><a href="https://blog.csdn.net/shawdow_bug/article/details/140149569">【Portswigger 学院】文件上传</a></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>渗透测试</category>
-        <category>文件上传</category>
+        <category>靶场练习</category>
+        <category>PortSwigger靶场</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -7244,8 +7244,8 @@ AddType application/x-httpd-php .php</p>
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>靶场练习</category>
-        <category>PortSwigger靶场</category>
+        <category>渗透测试</category>
+        <category>SQL注入</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -7429,8 +7429,8 @@ AddType application/x-httpd-php .php</p>
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>渗透测试</category>
-        <category>SQL注入</category>
+        <category>靶场练习</category>
+        <category>PortSwigger靶场</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
