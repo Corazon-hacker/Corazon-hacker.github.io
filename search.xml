@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>【漏洞案例】sqlmap默认http发80端口导致注入失败</title>
+    <title>【漏洞案例】11111111111111</title>
     <url>/posts/b008c7ca/</url>
     <content><![CDATA[<p>i春秋靶场，编号：CVE-2023-50563。在使用sqlmap跑注入点的时候，将burpsuite的包直接复制到request.txt，由于host没有指定443端口导致注入失败。</p>
 <h2 id="渗透过程">渗透过程</h2>
@@ -10,7 +10,7 @@
 <p>御剑尝试扫描敏感文件和后台，发现敏感路径和文件</p>
 </li>
 </ol>
-<p>​	<img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815100947847.png" alt="image-20250815100947847"></p>
+<p>​	<img src="/posts/b008c7ca//image-20250815100947847.png" alt="image-20250815100947847"></p>
 <ol start="2">
 <li class="lvl-3">
 <p>访问install，将localhost修改为127.0.0.1后可以安装管理后台，并显示默认账户密码和管理员页面路径。</p>
@@ -20,71 +20,71 @@
 </li>
 <li class="lvl-3">
 <p>前端没有使用UTF-8编码导致乱码：</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815101331332.png" alt="image-20250815101331332"></p>
+<p><img src="/posts/b008c7ca//image-20250815101331332.png" alt="image-20250815101331332"></p>
 </li>
 <li class="lvl-3">
 <p>使用burpsuite可以查看原文：</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815101509950.png" alt="image-20250815101509950"></p>
+<p><img src="/posts/b008c7ca//image-20250815101509950.png" alt="image-20250815101509950"></p>
 </li>
 <li class="lvl-3">
 <p>访问/A_Admin路径找到管理员后台页面</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815101621204.png" alt="image-20250815101621204"></p>
+<p><img src="/posts/b008c7ca//image-20250815101621204.png" alt="image-20250815101621204"></p>
 </li>
 <li class="lvl-3">
 <p>经过不断测试（文件上传、目录遍历、SQL注入）发现 POST请求存在时间盲注漏洞，以  产品管理 ==&gt; 批量上架 为例</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815101821114.png" alt="image-20250815101821114"></p>
+<p><img src="/posts/b008c7ca//image-20250815101821114.png" alt="image-20250815101821114"></p>
 </li>
 <li class="lvl-3">
 <p>选中某一个发包，发给重放器。使用<code>) AND (SELECT 6149 FROM (SELECT(SLEEP(5)))pMLn) AND (1646=1646</code>测试，发现SQL注入。</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815102439896.png" alt="image-20250815102439896"></p>
+<p><img src="/posts/b008c7ca//image-20250815102439896.png" alt="image-20250815102439896"></p>
 </li>
 <li class="lvl-3">
 <p>将包复制粘贴至request.txt用sqlmap跑：</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815102756741.png" alt="image-20250815102756741"></p>
+<p><img src="/posts/b008c7ca//image-20250815102756741.png" alt="image-20250815102756741"></p>
 </li>
 <li class="lvl-4">
 <p>结果返回400，没有找到注入点</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815102822596.png" alt="image-20250815102822596"></p>
+<p><img src="/posts/b008c7ca//image-20250815102822596.png" alt="image-20250815102822596"></p>
 </li>
 <li class="lvl-4">
 <p>以为没找到注入点，尝试<code>--level 5</code>  <code>--risk 3</code></p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815103032339.png" alt="image-20250815103032339"></p>
+<p><img src="/posts/b008c7ca//image-20250815103032339.png" alt="image-20250815103032339"></p>
 </li>
 <li class="lvl-4">
 <p>全部返回400，以为后端有防护</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815104259780.png" alt="image-20250815104259780"></p>
+<p><img src="/posts/b008c7ca//image-20250815104259780.png" alt="image-20250815104259780"></p>
 </li>
 <li class="lvl-4">
 <p>尝试<code>--random-agent</code>  <code>--tamper=&quot;space2comment&quot;</code> 绕过技术</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815103356635.png" alt="image-20250815103356635"></p>
+<p><img src="/posts/b008c7ca//image-20250815103356635.png" alt="image-20250815103356635"></p>
 </li>
 <li class="lvl-4">
 <p>依然全部返回400</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815104514392.png" alt="image-20250815104514392"></p>
+<p><img src="/posts/b008c7ca//image-20250815104514392.png" alt="image-20250815104514392"></p>
 </li>
 <li class="lvl-4">
 <p>想起来http访问的时候，前端也会返回400，可能服务端拒绝使用http访问，但sqlmap使用了http协议发起了请求</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815103615568.png" alt="image-20250815103615568"></p>
+<p><img src="/posts/b008c7ca//image-20250815103615568.png" alt="image-20250815103615568"></p>
 </li>
 <li class="lvl-4">
 <p>使用<code>--force-ssl</code>强制使用https协议发起请求</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815104033663.png" alt="image-20250815104033663"></p>
+<p><img src="/posts/b008c7ca//image-20250815104033663.png" alt="image-20250815104033663"></p>
 </li>
 <li class="lvl-4">
 <p>成功找到注入点并获取数据库：</p>
 </li>
 </ol>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815105721217.png" alt="image-20250815105721217"></p>
+<p><img src="/posts/b008c7ca//image-20250815105721217.png" alt="image-20250815105721217"></p>
 <h2 id="原理">原理</h2>
 <ol>
 <li class="lvl-3">
 <p>服务器开启的协议和端口是正常的。80开放http，443开放https</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815104825183.png" alt="image-20250815104825183"></p>
+<p><img src="/posts/b008c7ca//image-20250815104825183.png" alt="image-20250815104825183"></p>
 </li>
 <li class="lvl-3">
 <p>sqlmap请求体中host字段没有指定端口，导致sqlmap使用http协议向80端口发起请求</p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815105042046.png" alt="image-20250815105042046"></p>
-<p><img src="sqlmap%E9%BB%98%E8%AE%A4http%E5%8F%9180%E7%AB%AF%E5%8F%A3%E5%AF%BC%E8%87%B4%E6%B3%A8%E5%85%A5%E5%A4%B1%E8%B4%A5/image-20250815105119000.png" alt="image-20250815105119000"></p>
+<p><img src="/posts/b008c7ca//image-20250815105042046.png" alt="image-20250815105042046"></p>
+<p><img src="/posts/b008c7ca//image-20250815105119000.png" alt="image-20250815105119000"></p>
 </li>
 <li class="lvl-3">
 <p>使用其他方式也能注入成功。重要的是使用https协议</p>
@@ -4972,8 +4972,8 @@ nday 扫框架 组件漏洞未授权 弱口令逻辑漏洞短信轰炸（看能�
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>渗透测试</category>
-        <category>反序列化</category>
+        <category>靶场练习</category>
+        <category>PortSwigger靶场</category>
       </categories>
       <tags>
         <tag>靶场</tag>
@@ -5278,8 +5278,8 @@ nday 扫框架 组件漏洞未授权 弱口令逻辑漏洞短信轰炸（看能�
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>靶场练习</category>
-        <category>PortSwigger靶场</category>
+        <category>渗透测试</category>
+        <category>反序列化</category>
       </categories>
       <tags>
         <tag>靶场</tag>
@@ -5338,8 +5338,196 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
         <category>其他靶场</category>
       </categories>
       <tags>
-        <tag>文件上传</tag>
         <tag>upload-lab靶场</tag>
+        <tag>文件上传</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【PortSwigger学院】跨站脚本（XSS）</title>
+    <url>/posts/cded1aa8/</url>
+    <content><![CDATA[<h2 id="跨站脚本">跨站脚本</h2>
+<h2 id="什么是跨站脚本-XSS-？">什么是跨站脚本 (XSS)？</h2>
+<p>跨站脚本攻击（又称 XSS）是一种网络安全漏洞，它允许攻击者破坏用户与有漏洞的应用程序之间的交互。它允许攻击者规避同源策略，该策略旨在将不同网站相互隔离。跨站脚本漏洞通常允许攻击者伪装成受害用户，执行用户能够执行的任何操作，并访问用户的任何数据。如果受害用户在应用程序中拥有特权访问权限，那么攻击者就可以完全控制应用程序的所有功能和数据。</p>
+<h2 id="XSS-如何工作？">XSS 如何工作？</h2>
+<p>跨站脚本攻击的原理是操纵有漏洞的网站，使其向用户返回恶意 JavaScript。当恶意代码在受害者的浏览器中执行时，攻击者就能完全破坏他们与应用程序的交互。</p>
+<blockquote>
+<p><strong>Labs</strong></p>
+<p>如果您已经熟悉了 XSS 漏洞背后的基本概念，只是想在一些现实的、故意易受攻击的目标上练习利用这些漏洞，您可以通过下面的链接访问本主题中的所有实验室。</p>
+<ul class="lvl-1">
+<li class="lvl-2">
+<p><a href="https://portswigger.net/web-security/all-labs#cross-site-scripting">View all XSS labs</a></p>
+</li>
+</ul>
+</blockquote>
+<h2 id="XSS-概念验证">XSS 概念验证</h2>
+<p>您可以通过注入有效负载，使自己的浏览器执行一些任意 JavaScript 来确认大多数类型的 XSS 漏洞。使用 alert() 函数来实现这一目的早已成为惯例，因为它简短、无害，而且成功调用时很难被忽略。事实上，我们的大多数 XSS 实验都是在模拟受害者的浏览器中调用 alert() 来解决的。</p>
+<p>不幸的是，如果您使用的是 Chrome 浏览器，就会遇到一点小麻烦。从版本 92 开始（2021 年 7 月 20 日），跨源 iframe 无法调用 alert()。由于这些框架用于构建一些更高级的 XSS 攻击，因此有时需要使用其他 PoC 有效负载。在这种情况下，我们推荐使用 print() 函数。如果您有兴趣了解有关这一变更的更多信息，以及我们为什么喜欢 print()，请查看我们有关这一主题的<a href="https://portswigger.net/research/alert-is-dead-long-live-print">博客</a>。</p>
+<h2 id="XSS-攻击有哪些类型？">XSS 攻击有哪些类型？</h2>
+<p>XSS 攻击主要有三种类型。它们是：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>反射 XSS：恶意脚本来自当前 HTTP 请求。</p>
+</li>
+<li class="lvl-2">
+<p>存储型 XSS：恶意脚本来自网站数据库。</p>
+</li>
+<li class="lvl-2">
+<p>基于 DOM 的 XSS，即漏洞存在于客户端代码而非服务器端代码中</p>
+</li>
+</ul>
+<h2 id="反射式跨站脚本">反射式跨站脚本</h2>
+<p>在本节中，我们将解释反射式跨站脚本，描述反射式 XSS 攻击的影响，并说明如何查找反射式 XSS 漏洞。</p>
+<h3 id="什么是反射式跨站脚本？">什么是反射式跨站脚本？</h3>
+<p>反射式 XSS 是跨站脚本攻击中最简单的一种。当应用程序接收 HTTP 请求中的数据，并以不安全的方式将这些数据包含在即时响应中时，就会出现这种情况。</p>
+<p>下面是一个反射 XSS 漏洞的简单示例：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/status?message=All+is+well.</span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Status: All is well.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>应用程序不会对数据进行任何其他处理，因此攻击者可以构建类似的攻击：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/status?message=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/*+Bad+stuff+here...+*/</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Status: <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果用户访问了攻击者构建的 URL，那么攻击者的脚本就会在该用户与应用程序的会话上下文中，在用户的浏览器中执行。此时，脚本可以执行任何操作，并检索用户可以访问的任何数据。</p>
+<p>当应用程序接收 HTTP 请求中的数据，并以不安全的方式将该数据包含在即时响应中时，就会产生反射式跨站脚本攻击（或 XSS）。</p>
+<p>假设一个网站有一个搜索功能，它在 URL 参数中接收用户提供的搜索词：</p>
+<figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">https:</span><span class="comment">//insecure-website.com/search?term=gift</span></span><br></pre></td></tr></table></figure>
+<p>应用程序会在对该 URL 的响应中呼应所提供的搜索词：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>You searched for: gift<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>假定应用程序不对数据进行任何其他处理，攻击者就可以构建这样的攻击：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/search?term=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/*+Bad+stuff+here...+*/</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>该 URL 会得到以下响应：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>You searched for: <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>如果应用程序的其他用户请求攻击者的 URL，那么攻击者提供的脚本就会在受害者用户的浏览器中，在其与应用程序的会话上下文中执行。</p>
+<h3 id="Lab-将-XSS-反映到未编码的-HTML-上下文中">Lab: 将 XSS 反映到未编码的 HTML 上下文中</h3>
+<p>直接在搜索框搜索 <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> 就通关了</p>
+<h3 id="反射式-XSS-攻击的影响">反射式 XSS 攻击的影响</h3>
+<p>如果攻击者可以控制受害者浏览器中执行的脚本，那么他们通常就可以完全控制该用户。其中，攻击者可以：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在应用程序内执行用户可以执行的任何操作。</p>
+</li>
+<li class="lvl-2">
+<p>查看用户可以查看的任何信息。</p>
+</li>
+<li class="lvl-2">
+<p>修改用户可以修改的任何信息。</p>
+</li>
+<li class="lvl-2">
+<p>启动与其他应用程序用户的交互，包括恶意攻击，这些攻击看似来自最初的受害用户。</p>
+</li>
+</ul>
+<p>攻击者可以通过各种手段诱使受害用户发出受其控制的请求，从而实施反射 XSS 攻击。这些手段包括在攻击者控制的网站上或允许生成内容的其他网站上放置链接，或在电子邮件、推特或其他信息中发送链接。攻击可以直接针对已知用户，也可以是针对应用程序任何用户的无差别攻击。</p>
+<p>攻击需要外部传递机制，这意味着反射 XSS 的影响通常不如存储 XSS 严重，因为存储 XSS 可以在易受攻击的应用程序内部传递自带的攻击。</p>
+<h3 id="利用跨站点脚本漏洞">利用跨站点脚本漏洞</h3>
+<p>证明发现跨站脚本漏洞的传统方法是使用 alert() 函数创建一个弹出窗口。这并不是因为 XSS 与弹出窗口有什么关系；这只是一种证明您可以在给定域上执行任意 JavaScript 的方法。您可能会注意到有些人使用 alert(document.domain)。这是一种明确说明 JavaScript 在哪个域上执行的方法。</p>
+<p>有时，你会想更进一步，通过提供一个完整的漏洞利用来证明 XSS 漏洞是一个真正的威胁。在本节中，我们将探讨三种最常用、最强大的 XSS 漏洞利用方法。</p>
+<h4 id="利用跨站脚本窃取-cookie">利用跨站脚本窃取 cookie</h4>
+<p>窃取 cookie 是一种利用 XSS 的传统方法。大多数网络应用程序都使用 cookie 进行会话处理。您可以利用跨站脚本漏洞，将受害者的 cookie 发送到自己的域，然后手动将 cookie 注入浏览器并假冒受害者。</p>
+<p>实际上，这种方法有很大的局限性：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>受害者可能没有登录。</p>
+</li>
+<li class="lvl-2">
+<p>许多应用程序会使用 HttpOnly 标志对 JavaScript 隐藏 cookie。</p>
+</li>
+<li class="lvl-2">
+<p>会话可能被其他因素锁定，如用户的 IP 地址。</p>
+</li>
+<li class="lvl-2">
+<p>会话可能会在你劫持之前超时。</p>
+</li>
+</ul>
+<h4 id="Lab：-利用跨站脚本窃取-cookie">Lab： 利用跨站脚本窃取 cookie</h4>
+<p>本实验室包含博客评论功能中的存储 XSS 漏洞。模拟受害者用户会查看发布后的所有评论。要解决该实验问题，利用该漏洞渗出受害者的会话 cookie，然后使用该 cookie 冒充受害者。</p>
+<h3 id="不同情况下的反射-XSS">不同情况下的反射 XSS</h3>
+<h2 id="存储型XSS">存储型XSS</h2>
+<p>当应用程序从不受信任的来源接收数据，并以不安全的方式将这些数据包含在随后的 HTTP 响应中时，就会产生存储 XSS（也称为持久或二阶 XSS）。</p>
+<p>有关数据可能是通过 HTTP 请求提交给应用程序的；例如，博客文章上的评论、聊天室中的用户昵称或客户订单上的详细联系信息。在其他情况下，数据可能来自其他不受信任的来源；例如，显示通过 SMTP 收到的邮件的网络邮件应用程序、显示社交媒体帖子的营销应用程序或显示网络流量数据包的网络监控应用程序。</p>
+<p>下面是一个存储 XSS 漏洞的简单示例。一个留言板应用程序允许用户提交信息，并显示给其他用户：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Hello, this is my message!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>应用程序不会对数据进行任何其他处理，因此攻击者可以轻松发送攻击其他用户的信息：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="基于-DOM-的跨站点脚本">基于 DOM 的跨站点脚本</h2>
+<p>基于 DOM 的 XSS（也称 DOM XSS）是指应用程序包含一些客户端 JavaScript，这些 JavaScript 以不安全的方式处理来自不信任源的数据，通常是将数据写回 DOM。</p>
+<p>在下面的示例中，应用程序使用 JavaScript 从输入字段读取值，并将该值写入 HTML 中的一个元素：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> search = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;search&#x27;</span>).<span class="property">value</span>;</span><br><span class="line"><span class="keyword">var</span> results = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;results&#x27;</span>);</span><br><span class="line">results.<span class="property">innerHTML</span> = <span class="string">&#x27;You searched for: &#x27;</span> + search;</span><br></pre></td></tr></table></figure>
+<p>如果攻击者可以控制输入字段的值，他们就可以轻松构建一个恶意值，从而执行自己的脚本：</p>
+<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title class_">You</span> searched <span class="attr">for</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">&#x27;/* Bad stuff here... */&#x27;</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>在典型的情况下，输入字段将由 HTTP 请求的一部分填充，如 URL 查询字符串参数，从而允许攻击者使用恶意 URL 进行攻击，其方式与反射 XSS 相同。</p>
+<h2 id="XSS-可以用来做什么？">XSS 可以用来做什么？</h2>
+<p>利用跨站脚本漏洞的攻击者通常能够：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>冒充或伪装成受害用户。</p>
+</li>
+<li class="lvl-2">
+<p>执行用户能够执行的任何操作。</p>
+</li>
+<li class="lvl-2">
+<p>读取用户能够访问的任何数据。</p>
+</li>
+<li class="lvl-2">
+<p>获取用户的登录凭证。</p>
+</li>
+<li class="lvl-2">
+<p>对网站进行虚拟篡改。</p>
+</li>
+<li class="lvl-2">
+<p>在网站中注入木马功能。</p>
+</li>
+</ul>
+<h2 id="XSS-漏洞的影响">XSS 漏洞的影响</h2>
+<p>XSS 攻击的实际影响通常取决于应用程序的性质、功能和数据，以及被攻击用户的状态。例如：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在小册子软件应用程序中，所有用户都是匿名的，所有信息都是公开的，因此影响通常很小。</p>
+</li>
+<li class="lvl-2">
+<p>在持有敏感数据（如银行交易、电子邮件或医疗记录）的应用程序中，影响通常会很严重。</p>
+</li>
+<li class="lvl-2">
+<p>如果被入侵的用户在应用程序中拥有更高的权限，那么影响通常会非常严重，攻击者可以完全控制存在漏洞的应用程序，并入侵所有用户及其数据。</p>
+</li>
+</ul>
+<h2 id="如何查找和测试-XSS-漏洞">如何查找和测试 XSS 漏洞</h2>
+<p>绝大多数 XSS 漏洞都可以通过 Burp Suite 的网络漏洞扫描仪快速、可靠地发现。</p>
+<p>手动测试反射和存储的 XSS 通常涉及向应用程序中的每个入口点提交一些简单的唯一输入（如一个简短的字母数字字符串），识别在 HTTP 响应中返回所提交输入的每个位置，并对每个位置进行单独测试，以确定适当制作的输入是否可用于执行任意 JavaScript。通过这种方法，您可以确定发生 XSS 的上下文，并选择合适的有效载荷加以利用。</p>
+<p>手动测试由 URL 参数引起的基于 DOM 的 XSS 涉及类似的过程：在参数中放置一些简单的唯一输入，使用浏览器的开发工具在 DOM 中搜索该输入，并测试每个位置以确定其是否可被利用。然而，其他类型的 DOM XSS 更难检测。要在非基于 URL 的输入（如 document.cookie）或非基于 HTML 的汇（如 setTimeout）中发现基于 DOM 的漏洞，审查 JavaScript 代码是不可替代的，而审查 JavaScript 代码可能非常耗时。Burp Suite 的网络漏洞扫描器结合了 JavaScript 的静态和动态分析，能够可靠地自动检测基于 DOM 的漏洞。</p>
+<h2 id="内容安全政策">内容安全政策</h2>
+<p>内容安全策略（CSP）是一种浏览器机制，旨在减轻跨站脚本和其他一些漏洞的影响。如果采用 CSP 的应用程序包含类似 XSS 的行为，那么 CSP 可能会阻碍或阻止对漏洞的利用。通常情况下，CSP 可被规避，以便利用底层漏洞。</p>
+<h2 id="悬挂标记注入">悬挂标记注入</h2>
+<p>悬垂标记注入是一种技术，可用于在由于输入过滤器或其他防御措施而无法进行全面跨站脚本攻击的情况下跨域捕获数据。这种技术通常可用于捕获其他用户可见的敏感信息，包括可用于代表用户执行未授权操作的 CSRF 标记。</p>
+<h2 id="如何防止-XSS-攻击">如何防止 XSS 攻击</h2>
+<p>在某些情况下，防止跨站脚本是一件小事，但根据应用程序的复杂程度和处理用户可控数据的方式，防止跨站脚本可能要难得多。</p>
+<p>一般来说，有效防止 XSS 漏洞可能需要结合以下措施：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在输入到达时进行过滤。在接收用户输入时，尽可能严格地根据预期或有效输入进行过滤。</p>
+</li>
+<li class="lvl-2">
+<p>对输出数据进行编码。在 HTTP 响应中输出用户可控数据时，要对输出进行编码，防止其被解释为活动内容。根据输出上下文，这可能需要应用 HTML、URL、JavaScript 和 CSS 编码的组合。</p>
+</li>
+<li class="lvl-2">
+<p>使用适当的响应标头。为防止在不打算包含任何 HTML 或 JavaScript 的 HTTP 响应中出现 XSS，可以使用 <code>Content-Type</code> 和 <code>X-Content-Type-Options</code> 标头，确保浏览器按您的意图解释响应。</p>
+</li>
+<li class="lvl-2">
+<p>内容安全策略。作为最后一道防线，你可以使用内容安全策略（CSP）来降低仍然存在的任何 XSS 漏洞的严重性。</p>
+</li>
+</ul>
+<p>对输出数据进行编码。在 HTTP 响应中输出用户可控数据时，要对输出进行编码，防止其被解释为活动内容。根据输出上下文，这可能需要应用 HTML、URL、JavaScript 和 CSS 编码的组合。</p>
+<h2 id="有关跨站脚本的常见问题">有关跨站脚本的常见问题</h2>
+<p>XSS 漏洞有多常见？XSS 漏洞非常常见，XSS 可能是最常出现的网络安全漏洞。</p>
+<p>XSS 攻击有多常见？很难获得有关真实世界中 XSS 攻击的可靠数据，但它被利用的频率可能低于其他漏洞。</p>
+<p>XSS 和 CSRF 有什么区别？XSS 涉及导致网站返回恶意 JavaScript，而 CSRF 涉及诱使受害用户执行他们无意执行的操作。</p>
+<p>XSS 与 SQL 注入有何区别？XSS 是针对其他应用程序用户的客户端漏洞，而 SQL 注入是针对应用程序数据库的服务器端漏洞。</p>
+<p>如何在 PHP 中防止 XSS？使用允许字符的白名单过滤输入，并使用类型提示或类型转换。在 HTML 上下文中使用 <code>htmlentities</code> 和 <code>ENT_QUOTES</code> 对输出进行转义，在 JavaScript 上下文中使用 JavaScript Unicode 转义。</p>
+<p>如何在 Java 中防止 XSS？使用允许字符白名单过滤输入，使用 Google Guava 等库对 HTML 上下文的输出进行 HTML 编码，或使用 JavaScript Unicode 转义对 JavaScript 上下文进行转义。</p>
+<p>本文参考：</p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>靶场练习</category>
+        <category>PortSwigger靶场</category>
+      </categories>
+      <tags>
+        <tag>PortSwigger靶场</tag>
+        <tag>XSS</tag>
       </tags>
   </entry>
   <entry>
@@ -5531,372 +5719,6 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
       </tags>
   </entry>
   <entry>
-    <title>【PortSwigger学院】跨站脚本（XSS）</title>
-    <url>/posts/cded1aa8/</url>
-    <content><![CDATA[<h2 id="跨站脚本">跨站脚本</h2>
-<h2 id="什么是跨站脚本-XSS-？">什么是跨站脚本 (XSS)？</h2>
-<p>跨站脚本攻击（又称 XSS）是一种网络安全漏洞，它允许攻击者破坏用户与有漏洞的应用程序之间的交互。它允许攻击者规避同源策略，该策略旨在将不同网站相互隔离。跨站脚本漏洞通常允许攻击者伪装成受害用户，执行用户能够执行的任何操作，并访问用户的任何数据。如果受害用户在应用程序中拥有特权访问权限，那么攻击者就可以完全控制应用程序的所有功能和数据。</p>
-<h2 id="XSS-如何工作？">XSS 如何工作？</h2>
-<p>跨站脚本攻击的原理是操纵有漏洞的网站，使其向用户返回恶意 JavaScript。当恶意代码在受害者的浏览器中执行时，攻击者就能完全破坏他们与应用程序的交互。</p>
-<blockquote>
-<p><strong>Labs</strong></p>
-<p>如果您已经熟悉了 XSS 漏洞背后的基本概念，只是想在一些现实的、故意易受攻击的目标上练习利用这些漏洞，您可以通过下面的链接访问本主题中的所有实验室。</p>
-<ul class="lvl-1">
-<li class="lvl-2">
-<p><a href="https://portswigger.net/web-security/all-labs#cross-site-scripting">View all XSS labs</a></p>
-</li>
-</ul>
-</blockquote>
-<h2 id="XSS-概念验证">XSS 概念验证</h2>
-<p>您可以通过注入有效负载，使自己的浏览器执行一些任意 JavaScript 来确认大多数类型的 XSS 漏洞。使用 alert() 函数来实现这一目的早已成为惯例，因为它简短、无害，而且成功调用时很难被忽略。事实上，我们的大多数 XSS 实验都是在模拟受害者的浏览器中调用 alert() 来解决的。</p>
-<p>不幸的是，如果您使用的是 Chrome 浏览器，就会遇到一点小麻烦。从版本 92 开始（2021 年 7 月 20 日），跨源 iframe 无法调用 alert()。由于这些框架用于构建一些更高级的 XSS 攻击，因此有时需要使用其他 PoC 有效负载。在这种情况下，我们推荐使用 print() 函数。如果您有兴趣了解有关这一变更的更多信息，以及我们为什么喜欢 print()，请查看我们有关这一主题的<a href="https://portswigger.net/research/alert-is-dead-long-live-print">博客</a>。</p>
-<h2 id="XSS-攻击有哪些类型？">XSS 攻击有哪些类型？</h2>
-<p>XSS 攻击主要有三种类型。它们是：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>反射 XSS：恶意脚本来自当前 HTTP 请求。</p>
-</li>
-<li class="lvl-2">
-<p>存储型 XSS：恶意脚本来自网站数据库。</p>
-</li>
-<li class="lvl-2">
-<p>基于 DOM 的 XSS，即漏洞存在于客户端代码而非服务器端代码中</p>
-</li>
-</ul>
-<h2 id="反射式跨站脚本">反射式跨站脚本</h2>
-<p>在本节中，我们将解释反射式跨站脚本，描述反射式 XSS 攻击的影响，并说明如何查找反射式 XSS 漏洞。</p>
-<h3 id="什么是反射式跨站脚本？">什么是反射式跨站脚本？</h3>
-<p>反射式 XSS 是跨站脚本攻击中最简单的一种。当应用程序接收 HTTP 请求中的数据，并以不安全的方式将这些数据包含在即时响应中时，就会出现这种情况。</p>
-<p>下面是一个反射 XSS 漏洞的简单示例：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/status?message=All+is+well.</span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Status: All is well.<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>应用程序不会对数据进行任何其他处理，因此攻击者可以构建类似的攻击：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/status?message=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/*+Bad+stuff+here...+*/</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Status: <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>如果用户访问了攻击者构建的 URL，那么攻击者的脚本就会在该用户与应用程序的会话上下文中，在用户的浏览器中执行。此时，脚本可以执行任何操作，并检索用户可以访问的任何数据。</p>
-<p>当应用程序接收 HTTP 请求中的数据，并以不安全的方式将该数据包含在即时响应中时，就会产生反射式跨站脚本攻击（或 XSS）。</p>
-<p>假设一个网站有一个搜索功能，它在 URL 参数中接收用户提供的搜索词：</p>
-<figure class="highlight dts"><table><tr><td class="code"><pre><span class="line"><span class="symbol">https:</span><span class="comment">//insecure-website.com/search?term=gift</span></span><br></pre></td></tr></table></figure>
-<p>应用程序会在对该 URL 的响应中呼应所提供的搜索词：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>You searched for: gift<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>假定应用程序不对数据进行任何其他处理，攻击者就可以构建这样的攻击：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line">https://insecure-website.com/search?term=<span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/*+Bad+stuff+here...+*/</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>该 URL 会得到以下响应：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>You searched for: <span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>如果应用程序的其他用户请求攻击者的 URL，那么攻击者提供的脚本就会在受害者用户的浏览器中，在其与应用程序的会话上下文中执行。</p>
-<h3 id="Lab-将-XSS-反映到未编码的-HTML-上下文中">Lab: 将 XSS 反映到未编码的 HTML 上下文中</h3>
-<p>直接在搜索框搜索 <code>&lt;script&gt;alert(1)&lt;/script&gt;</code> 就通关了</p>
-<h3 id="反射式-XSS-攻击的影响">反射式 XSS 攻击的影响</h3>
-<p>如果攻击者可以控制受害者浏览器中执行的脚本，那么他们通常就可以完全控制该用户。其中，攻击者可以：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>在应用程序内执行用户可以执行的任何操作。</p>
-</li>
-<li class="lvl-2">
-<p>查看用户可以查看的任何信息。</p>
-</li>
-<li class="lvl-2">
-<p>修改用户可以修改的任何信息。</p>
-</li>
-<li class="lvl-2">
-<p>启动与其他应用程序用户的交互，包括恶意攻击，这些攻击看似来自最初的受害用户。</p>
-</li>
-</ul>
-<p>攻击者可以通过各种手段诱使受害用户发出受其控制的请求，从而实施反射 XSS 攻击。这些手段包括在攻击者控制的网站上或允许生成内容的其他网站上放置链接，或在电子邮件、推特或其他信息中发送链接。攻击可以直接针对已知用户，也可以是针对应用程序任何用户的无差别攻击。</p>
-<p>攻击需要外部传递机制，这意味着反射 XSS 的影响通常不如存储 XSS 严重，因为存储 XSS 可以在易受攻击的应用程序内部传递自带的攻击。</p>
-<h3 id="利用跨站点脚本漏洞">利用跨站点脚本漏洞</h3>
-<p>证明发现跨站脚本漏洞的传统方法是使用 alert() 函数创建一个弹出窗口。这并不是因为 XSS 与弹出窗口有什么关系；这只是一种证明您可以在给定域上执行任意 JavaScript 的方法。您可能会注意到有些人使用 alert(document.domain)。这是一种明确说明 JavaScript 在哪个域上执行的方法。</p>
-<p>有时，你会想更进一步，通过提供一个完整的漏洞利用来证明 XSS 漏洞是一个真正的威胁。在本节中，我们将探讨三种最常用、最强大的 XSS 漏洞利用方法。</p>
-<h4 id="利用跨站脚本窃取-cookie">利用跨站脚本窃取 cookie</h4>
-<p>窃取 cookie 是一种利用 XSS 的传统方法。大多数网络应用程序都使用 cookie 进行会话处理。您可以利用跨站脚本漏洞，将受害者的 cookie 发送到自己的域，然后手动将 cookie 注入浏览器并假冒受害者。</p>
-<p>实际上，这种方法有很大的局限性：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>受害者可能没有登录。</p>
-</li>
-<li class="lvl-2">
-<p>许多应用程序会使用 HttpOnly 标志对 JavaScript 隐藏 cookie。</p>
-</li>
-<li class="lvl-2">
-<p>会话可能被其他因素锁定，如用户的 IP 地址。</p>
-</li>
-<li class="lvl-2">
-<p>会话可能会在你劫持之前超时。</p>
-</li>
-</ul>
-<h4 id="Lab：-利用跨站脚本窃取-cookie">Lab： 利用跨站脚本窃取 cookie</h4>
-<p>本实验室包含博客评论功能中的存储 XSS 漏洞。模拟受害者用户会查看发布后的所有评论。要解决该实验问题，利用该漏洞渗出受害者的会话 cookie，然后使用该 cookie 冒充受害者。</p>
-<h3 id="不同情况下的反射-XSS">不同情况下的反射 XSS</h3>
-<h2 id="存储型XSS">存储型XSS</h2>
-<p>当应用程序从不受信任的来源接收数据，并以不安全的方式将这些数据包含在随后的 HTTP 响应中时，就会产生存储 XSS（也称为持久或二阶 XSS）。</p>
-<p>有关数据可能是通过 HTTP 请求提交给应用程序的；例如，博客文章上的评论、聊天室中的用户昵称或客户订单上的详细联系信息。在其他情况下，数据可能来自其他不受信任的来源；例如，显示通过 SMTP 收到的邮件的网络邮件应用程序、显示社交媒体帖子的营销应用程序或显示网络流量数据包的网络监控应用程序。</p>
-<p>下面是一个存储 XSS 漏洞的简单示例。一个留言板应用程序允许用户提交信息，并显示给其他用户：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>Hello, this is my message!<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>应用程序不会对数据进行任何其他处理，因此攻击者可以轻松发送攻击其他用户的信息：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"><span class="comment">/* Bad stuff here... */</span></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<h2 id="基于-DOM-的跨站点脚本">基于 DOM 的跨站点脚本</h2>
-<p>基于 DOM 的 XSS（也称 DOM XSS）是指应用程序包含一些客户端 JavaScript，这些 JavaScript 以不安全的方式处理来自不信任源的数据，通常是将数据写回 DOM。</p>
-<p>在下面的示例中，应用程序使用 JavaScript 从输入字段读取值，并将该值写入 HTML 中的一个元素：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> search = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;search&#x27;</span>).<span class="property">value</span>;</span><br><span class="line"><span class="keyword">var</span> results = <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(<span class="string">&#x27;results&#x27;</span>);</span><br><span class="line">results.<span class="property">innerHTML</span> = <span class="string">&#x27;You searched for: &#x27;</span> + search;</span><br></pre></td></tr></table></figure>
-<p>如果攻击者可以控制输入字段的值，他们就可以轻松构建一个恶意值，从而执行自己的脚本：</p>
-<figure class="highlight javascript"><table><tr><td class="code"><pre><span class="line"><span class="title class_">You</span> searched <span class="attr">for</span>: <span class="language-xml"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">1</span> <span class="attr">onerror</span>=<span class="string">&#x27;/* Bad stuff here... */&#x27;</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
-<p>在典型的情况下，输入字段将由 HTTP 请求的一部分填充，如 URL 查询字符串参数，从而允许攻击者使用恶意 URL 进行攻击，其方式与反射 XSS 相同。</p>
-<h2 id="XSS-可以用来做什么？">XSS 可以用来做什么？</h2>
-<p>利用跨站脚本漏洞的攻击者通常能够：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>冒充或伪装成受害用户。</p>
-</li>
-<li class="lvl-2">
-<p>执行用户能够执行的任何操作。</p>
-</li>
-<li class="lvl-2">
-<p>读取用户能够访问的任何数据。</p>
-</li>
-<li class="lvl-2">
-<p>获取用户的登录凭证。</p>
-</li>
-<li class="lvl-2">
-<p>对网站进行虚拟篡改。</p>
-</li>
-<li class="lvl-2">
-<p>在网站中注入木马功能。</p>
-</li>
-</ul>
-<h2 id="XSS-漏洞的影响">XSS 漏洞的影响</h2>
-<p>XSS 攻击的实际影响通常取决于应用程序的性质、功能和数据，以及被攻击用户的状态。例如：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>在小册子软件应用程序中，所有用户都是匿名的，所有信息都是公开的，因此影响通常很小。</p>
-</li>
-<li class="lvl-2">
-<p>在持有敏感数据（如银行交易、电子邮件或医疗记录）的应用程序中，影响通常会很严重。</p>
-</li>
-<li class="lvl-2">
-<p>如果被入侵的用户在应用程序中拥有更高的权限，那么影响通常会非常严重，攻击者可以完全控制存在漏洞的应用程序，并入侵所有用户及其数据。</p>
-</li>
-</ul>
-<h2 id="如何查找和测试-XSS-漏洞">如何查找和测试 XSS 漏洞</h2>
-<p>绝大多数 XSS 漏洞都可以通过 Burp Suite 的网络漏洞扫描仪快速、可靠地发现。</p>
-<p>手动测试反射和存储的 XSS 通常涉及向应用程序中的每个入口点提交一些简单的唯一输入（如一个简短的字母数字字符串），识别在 HTTP 响应中返回所提交输入的每个位置，并对每个位置进行单独测试，以确定适当制作的输入是否可用于执行任意 JavaScript。通过这种方法，您可以确定发生 XSS 的上下文，并选择合适的有效载荷加以利用。</p>
-<p>手动测试由 URL 参数引起的基于 DOM 的 XSS 涉及类似的过程：在参数中放置一些简单的唯一输入，使用浏览器的开发工具在 DOM 中搜索该输入，并测试每个位置以确定其是否可被利用。然而，其他类型的 DOM XSS 更难检测。要在非基于 URL 的输入（如 document.cookie）或非基于 HTML 的汇（如 setTimeout）中发现基于 DOM 的漏洞，审查 JavaScript 代码是不可替代的，而审查 JavaScript 代码可能非常耗时。Burp Suite 的网络漏洞扫描器结合了 JavaScript 的静态和动态分析，能够可靠地自动检测基于 DOM 的漏洞。</p>
-<h2 id="内容安全政策">内容安全政策</h2>
-<p>内容安全策略（CSP）是一种浏览器机制，旨在减轻跨站脚本和其他一些漏洞的影响。如果采用 CSP 的应用程序包含类似 XSS 的行为，那么 CSP 可能会阻碍或阻止对漏洞的利用。通常情况下，CSP 可被规避，以便利用底层漏洞。</p>
-<h2 id="悬挂标记注入">悬挂标记注入</h2>
-<p>悬垂标记注入是一种技术，可用于在由于输入过滤器或其他防御措施而无法进行全面跨站脚本攻击的情况下跨域捕获数据。这种技术通常可用于捕获其他用户可见的敏感信息，包括可用于代表用户执行未授权操作的 CSRF 标记。</p>
-<h2 id="如何防止-XSS-攻击">如何防止 XSS 攻击</h2>
-<p>在某些情况下，防止跨站脚本是一件小事，但根据应用程序的复杂程度和处理用户可控数据的方式，防止跨站脚本可能要难得多。</p>
-<p>一般来说，有效防止 XSS 漏洞可能需要结合以下措施：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>在输入到达时进行过滤。在接收用户输入时，尽可能严格地根据预期或有效输入进行过滤。</p>
-</li>
-<li class="lvl-2">
-<p>对输出数据进行编码。在 HTTP 响应中输出用户可控数据时，要对输出进行编码，防止其被解释为活动内容。根据输出上下文，这可能需要应用 HTML、URL、JavaScript 和 CSS 编码的组合。</p>
-</li>
-<li class="lvl-2">
-<p>使用适当的响应标头。为防止在不打算包含任何 HTML 或 JavaScript 的 HTTP 响应中出现 XSS，可以使用 <code>Content-Type</code> 和 <code>X-Content-Type-Options</code> 标头，确保浏览器按您的意图解释响应。</p>
-</li>
-<li class="lvl-2">
-<p>内容安全策略。作为最后一道防线，你可以使用内容安全策略（CSP）来降低仍然存在的任何 XSS 漏洞的严重性。</p>
-</li>
-</ul>
-<p>对输出数据进行编码。在 HTTP 响应中输出用户可控数据时，要对输出进行编码，防止其被解释为活动内容。根据输出上下文，这可能需要应用 HTML、URL、JavaScript 和 CSS 编码的组合。</p>
-<h2 id="有关跨站脚本的常见问题">有关跨站脚本的常见问题</h2>
-<p>XSS 漏洞有多常见？XSS 漏洞非常常见，XSS 可能是最常出现的网络安全漏洞。</p>
-<p>XSS 攻击有多常见？很难获得有关真实世界中 XSS 攻击的可靠数据，但它被利用的频率可能低于其他漏洞。</p>
-<p>XSS 和 CSRF 有什么区别？XSS 涉及导致网站返回恶意 JavaScript，而 CSRF 涉及诱使受害用户执行他们无意执行的操作。</p>
-<p>XSS 与 SQL 注入有何区别？XSS 是针对其他应用程序用户的客户端漏洞，而 SQL 注入是针对应用程序数据库的服务器端漏洞。</p>
-<p>如何在 PHP 中防止 XSS？使用允许字符的白名单过滤输入，并使用类型提示或类型转换。在 HTML 上下文中使用 <code>htmlentities</code> 和 <code>ENT_QUOTES</code> 对输出进行转义，在 JavaScript 上下文中使用 JavaScript Unicode 转义。</p>
-<p>如何在 Java 中防止 XSS？使用允许字符白名单过滤输入，使用 Google Guava 等库对 HTML 上下文的输出进行 HTML 编码，或使用 JavaScript Unicode 转义对 JavaScript 上下文进行转义。</p>
-<p>本文参考：</p>
-<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>靶场练习</category>
-        <category>PortSwigger靶场</category>
-      </categories>
-      <tags>
-        <tag>PortSwigger靶场</tag>
-        <tag>XSS</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>【PortSwigger学院】路径遍历</title>
-    <url>/posts/15b3971d/</url>
-    <content><![CDATA[<h2 id="什么是路径遍历">什么是路径遍历</h2>
-<p>路径遍历也称为目录遍历。这些漏洞可使攻击者在运行应用程序的服务器上读取任意文件。这可能包括：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>应用程序代码和数据</p>
-</li>
-<li class="lvl-2">
-<p>后端系统的凭证</p>
-</li>
-<li class="lvl-2">
-<p>敏感的操作系统文件。</p>
-</li>
-</ul>
-<p>在某些情况下，攻击者可能能够写入服务器上的任意文件，从而修改应用程序数据或行为，并最终完全控制服务器。</p>
-<span id="more"></span>
-<h2 id="通过路径遍历读取任意文件">通过路径遍历读取任意文件</h2>
-<h3 id="Lab-File-path-traversal-simple-case">Lab: File path traversal, simple case</h3>
-<p>想象一下，一个购物应用程序会显示待售商品的图片。可以使用以下 HTML 加载图片：</p>
-<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;/loadImage?filename=218.png&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p><code>loadImage </code>URL 接收一个<code>filename</code>参数，并返回指定文件的内容。图像文件存储在磁盘的 <code>/var/www/images/</code>  目录中。要返回图像，应用程序会将请求的文件名追加到该基本目录，并使用文件系统 API 读取文件内容。换句话说，应用程序会从以下文件路径读取内容：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/var/www/images/218.png</span><br></pre></td></tr></table></figure>
-<p>该应用程序没有针对路径遍历攻击实施任何防御措施。因此，攻击者可以请求以下 URL，从服务器文件系统中检索 /etc/passwd 文件：</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//i</span>nsecure-website.com<span class="regexp">/loadImage?filename=../</span>..<span class="regexp">/../</span>etc/passwd</span><br></pre></td></tr></table></figure>
-<p>这将导致应用程序从以下文件路径读取数据：</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/var/</span>www<span class="regexp">/images/</span>..<span class="regexp">/../</span>..<span class="regexp">/etc/</span>passwd</span><br></pre></td></tr></table></figure>
-<p><code>../</code>序列在文件路径中有效，表示在目录结构中上移一级。连续三个<code>../</code>顺序从 <code>/var/www/images/ </code>上移到文件系统根目录，因此实际读取的文件是：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/passwd</span><br></pre></td></tr></table></figure>
-<p>在基于 Unix 的操作系统上，这是一个标准文件，包含服务器上注册用户的详细信息，但攻击者可以使用相同的技术检索其他任意文件。</p>
-<p>在 Windows 系统中，…/ 和 …\都是有效的目录遍历序列。下面是一个针对基于 Windows 的服务器的等效攻击示例：</p>
-<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line">https:<span class="string">//insecure-website.com/loadImage</span>?filename=<span class="string">..</span>\<span class="string">..</span>\<span class="string">..</span>\windows\win.ini</span><br></pre></td></tr></table></figure>
-<p>该实验室在显示产品图像时存在路径遍历漏洞。要解决该实验问题，请检索 <code>/etc/passwd </code>文件的内容。</p>
-<p><img src="/posts/15b3971d//image-20250430160204983.png" alt="image-20250430160204983"></p>
-<p>这一题很简单。把参数改一下就可以了。</p>
-<h2 id="利用路径遍历漏洞的常见障碍">利用路径遍历漏洞的常见障碍</h2>
-<h3 id="Lab-File-path-traversal-traversal-sequences-blocked-with-absolute-path-bypass">Lab: File path traversal, traversal sequences blocked with absolute path bypass</h3>
-<p>许多将用户输入置入文件路径的应用程序都有针对路径遍历攻击的防御措施。这些防御措施往往可以被绕过。</p>
-<p>如果应用程序从用户提供的文件名中删除或阻止目录遍历序列，就有可能利用各种技术绕过防御。</p>
-<p>您可以使用文件系统根目录下的绝对路径（如 <code>filename=/etc/passwd</code>）来直接引用文件，而无需使用任何遍历序列。</p>
-<p>该实验室在显示产品图像时存在路径遍历漏洞。应用程序会阻止遍历序列，但会将所提供的文件名视为默认工作目录的相对文件名。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>这道题阻止了相对目录遍历序列，但是可以用绝对路径</p>
-</li>
-</ul>
-<p><img src="/posts/15b3971d//image-20250430162204471.png" alt="image-20250430162204471"></p>
-<h3 id="Lab-File-path-traversal-traversal-sequences-stripped-non-recursively">Lab: File path traversal, traversal sequences stripped non-recursively</h3>
-<p>您或许可以使用嵌套遍历序列，如 …// 或 …//。当内部序列被剥离时，这些序列会恢复为简单的遍历序列。</p>
-<p>该实验室在显示产品图像时存在路径遍历漏洞。在使用用户提供的文件名之前，应用程序会从该文件名中删除路径遍历序列。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>使用<code>....//....//....//etc//passwd</code>遍历是可以的，但是<code>//etc//passwd</code>不行。</p>
-</li>
-</ul>
-<p><img src="/posts/15b3971d//image-20250430163057050.png" alt="image-20250430163057050"></p>
-<h3 id="Lab-File-path-traversal-traversal-sequences-stripped-with-superfluous-URL-decode">Lab: File path traversal, traversal sequences stripped with superfluous URL-decode</h3>
-<p>在某些情况下，例如在 URL 路径或<code>multipart/form-data</code>  请求的<code>filename</code>参数中，网络服务器可能会在将您的输入传递给应用程序之前去掉任何目录遍历序列。有时，您可以通过 URL 编码，甚至是双重 URL  编码来绕过这种清理。这将分别导致 <code>%2e%2e%2f</code> 和 <code>%252e%252e%252f</code>。各种非标准编码，如 <code>..%c0%af</code> 或  <code>..%ef%bc%8f</code> 也可以使用。</p>
-<p>该实验室在显示产品图像时存在路径遍历漏洞。应用程序会阻止包含路径遍历序列的输入。然后在使用输入之前对其进行 URL 解码。要解决本实验问题，请检索 /etc/passwd 文件的内容。</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>url单层编码访问失败，双重编码成功。服务器会对HTTP请求双重url解码。这里把<code>../</code>换成<code>%252e%252e%252f</code>或者<code>..%252f</code>就可以了。</p>
-</li>
-</ul>
-<p><img src="/posts/15b3971d//image-20250430165746276.png" alt="image-20250430165746276"></p>
-<div class="spoiler collapsed">
-    <div class="spoiler-title">
-        为什么服务器会进行双重解码？
-    </div>
-    <div class="spoiler-content">
-        <p>可能的情况是，服务器在处理请求的时候，可能在不同的层次上多次进行URL解码。比如，Web服务器（如Apache或Nginx）可能先进行一次解码，然后应用框架（如PHP、Python的Flask等）可能再进行一次解码。如果两次解码之间没有对路径进行正确的规范化或安全检查，就会导致攻击者通过双重编码绕过一些安全检测。</p>
-
-    </div>
-</div>
-<div class="spoiler collapsed">
-    <div class="spoiler-title">
-        有没有可能只解码一次或者更多次？
-    </div>
-    <div class="spoiler-content">
-        <p>当然有可能。这取决于服务器的配置和代码实现。如果服务器只进行一次解码，那么攻击者需要直接使用单次编码的字符，例如<code>%2e%2f%2e%2e</code>等。而如果服务器解码次数超过两次，比如三次，那么攻击者可能需要使用三重编码，比如<code>%2525252e</code>（假设三重编码的话）。不过这种情况比较少见，因为通常服务器不会多次解码。</p>
-
-    </div>
-</div>
-<h3 id="Lab-File-path-traversal-validation-of-start-of-path">Lab: File path traversal, validation of start of path</h3>
-<p>应用程序可能要求用户提供的文件名以预期的基本文件夹开始，如 <code>/var/www/images</code>。在这种情况下，可以在所需的基本文件夹后加上适当的遍历序列。例如：<code>filename=/var/www/images/.../.../.../etc/passwd</code></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>我用了url编码，不使用url编码也是可以的，这里单层解码，双层就不行了</p>
-</li>
-</ul>
-<p><img src="/posts/15b3971d//image-20250430171637924.png" alt="image-20250430171637924"></p>
-<h3 id="Lab-File-path-traversal-validation-of-file-extension-with-null-byte-bypass">Lab: File path traversal, validation of file extension with null byte bypass</h3>
-<p>应用程序可能要求用户提供的文件名以预期的文件扩展名结尾，如 .png。在这种情况下，可以使用空字节在所需扩展名之前有效地终止文件路径。例如：filename=…/…/…/etc/passwd%00.png。</p>
-<p>本实验室在显示产品图像时存在路径遍历漏洞。应用程序会验证所提供的文件名是否以预期的文件扩展名结尾。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
-<p>这个感觉好牛啊，希望自己慢慢积累，积跬步至千里吧。</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>相对路径后加<code>%00.png</code>绕过文件后缀验证</p>
-</li>
-</ul>
-<p><img src="/posts/15b3971d//image-20250430172259167.png" alt="image-20250430172259167"></p>
-<h2 id="如何防止路径遍历攻击">如何防止路径遍历攻击</h2>
-<p>防止路径遍历漏洞的最有效方法是完全避免将用户提供的输入传递给文件系统 API。许多这样做的应用程序函数都可以重写，以更安全的方式提供相同的行为。</p>
-<p>如果无法避免将用户提供的输入传递给文件系统 API，我们建议使用两层防御来防止攻击：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>在处理用户输入之前对其进行验证。理想情况下，将用户输入与允许值白名单进行比较。如果做不到这一点，则要验证输入是否只包含允许的内容，例如只包含字母数字字符。</p>
-</li>
-<li class="lvl-2">
-<p>验证所提供的输入后，将输入追加到基本目录，并使用平台文件系统 API 对路径进行规范化。验证规范化路径是否以预期的基本目录开始。</p>
-</li>
-</ul>
-<p>下面是一个根据用户输入验证文件规范路径的简单 Java 代码示例：</p>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(BASE_DIRECTORY, userInput);</span><br><span class="line"><span class="keyword">if</span> (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) &#123;</span><br><span class="line">    <span class="comment">// process file</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>代码逐行解析：</strong></p>
-<ol>
-<li class="lvl-3">
-<p>创建文件对象</p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(BASE_DIRECTORY, userInput);</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><strong><code>File</code>类</strong>：Java中用于表示文件或目录路径的类。</p>
-</li>
-<li class="lvl-2">
-<p><strong>构造函数参数</strong>：</p>
-<ul class="lvl-2">
-<li class="lvl-4"><code>BASE_DIRECTORY</code>：预定义的基础目录（如<code>/safe/path</code>），用于限制文件访问范围。</li>
-<li class="lvl-4"><code>userInput</code>：用户输入的路径（如<code>data.txt</code>或<code>../../secret.txt</code>）。</li>
-</ul>
-</li>
-<li class="lvl-2">
-<p><strong>作用</strong>：将两者拼接成完整路径。例如：</p>
-<ul class="lvl-2">
-<li class="lvl-4">若<code>BASE_DIRECTORY</code>是<code>/safe</code>，<code>userInput</code>是<code>file.txt</code>，则拼接为<code>/safe/file.txt</code>。</li>
-<li class="lvl-4">若<code>userInput</code>是<code>../etc/passwd</code>，则拼接为<code>/safe/../etc/passwd</code>。</li>
-</ul>
-</li>
-</ul>
-<ol start="2">
-<li class="lvl-3">
-<p>路径规范化验证</p>
-</li>
-</ol>
-<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) &#123;</span><br><span class="line">    <span class="comment">// 处理文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><strong><code>getCanonicalPath()</code></strong>：将路径转换为<strong>绝对且唯一</strong>的规范形式：</p>
-<ul class="lvl-2">
-<li class="lvl-4">解析<code>.</code>（当前目录）和<code>..</code>（上级目录）。</li>
-<li class="lvl-4">去除多余的斜杠（如<code>/safe//file</code>变为<code>/safe/file</code>）。</li>
-<li class="lvl-4">解析符号链接（如将快捷方式转为真实路径）。</li>
-</ul>
-<p>例如：<code>/safe/../etc/passwd</code> 会被规范化为 <code>/etc/passwd</code>。</p>
-</li>
-<li class="lvl-2">
-<p><strong><code>startsWith(BASE_DIRECTORY)</code></strong>：检查规范路径是否以<code>BASE_DIRECTORY</code>开头。</p>
-<ul class="lvl-2">
-<li class="lvl-4">若用户输入合法（如<code>data.txt</code>），规范路径为<code>/safe/data.txt</code>，验证通过。</li>
-<li class="lvl-4">若用户输入非法（如<code>../../etc/passwd</code>），规范路径为<code>/etc/passwd</code>，验证失败。</li>
-</ul>
-</li>
-</ul>
-<p>但是这段代码应该有一定的问题，就是只要保证文件路径与<code>BASE_DIRECTORY</code>一致即可。比如说，如果<code>BASE_DIRECTORY</code>是<code>/base</code>便可以构造<code>/baseXXXX</code>越权访问与文件开头与<code>BASE_DIRECTORY</code>一致的同级目录。</p>
-<p>本文参考：</p>
-<p><a href="https://portswigger.net/web-security/file-path-traversal">Path traversal</a></p>
-<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
-      <categories>
-        <category>渗透测试</category>
-        <category>文件上传</category>
-      </categories>
-      <tags>
-        <tag>PortSwigger靶场</tag>
-        <tag>路径遍历</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>【PortSwigger学院】路径遍历</title>
     <url>/posts/15b3971d/</url>
     <content><![CDATA[<h2 id="什么是路径遍历">什么是路径遍历</h2>
@@ -6075,517 +5897,173 @@ jpg上传成功，php上传失败，随便后缀上传成功，因此后端黑�
       </tags>
   </entry>
   <entry>
-    <title>【PortSwigger学院】文件上传</title>
-    <url>/posts/34bab347/</url>
-    <content><![CDATA[<h2 id="原理与危害">原理与危害</h2>
-<p>文件上传漏洞是指网络服务器允许用户上传文件到其文件系统，而未对文件名、类型、内容或大小等进行充分验证。这就可能导致允许攻击者上传有潜在危险的文件，甚至可能包括支持远程代码执行的服务器端脚本文件。</p>
-<p>在某些情况下，上传文件本身就足以造成破坏。其他攻击可能涉及对文件的后续 HTTP 请求，通常是为了触发服务器执行文件。</p>
+    <title>【PortSwigger学院】路径遍历</title>
+    <url>/posts/15b3971d/</url>
+    <content><![CDATA[<h2 id="什么是路径遍历">什么是路径遍历</h2>
+<p>路径遍历也称为目录遍历。这些漏洞可使攻击者在运行应用程序的服务器上读取任意文件。这可能包括：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>应用程序代码和数据</p>
+</li>
+<li class="lvl-2">
+<p>后端系统的凭证</p>
+</li>
+<li class="lvl-2">
+<p>敏感的操作系统文件。</p>
+</li>
+</ul>
+<p>在某些情况下，攻击者可能能够写入服务器上的任意文件，从而修改应用程序数据或行为，并最终完全控制服务器。</p>
 <span id="more"></span>
-<h2 id="文件上传漏洞的影响">文件上传漏洞的影响</h2>
-<p>文件上传漏洞的影响通常取决于两个关键因素：</p>
+<h2 id="通过路径遍历读取任意文件">通过路径遍历读取任意文件</h2>
+<h3 id="Lab-File-path-traversal-simple-case">Lab: File path traversal, simple case</h3>
+<p>想象一下，一个购物应用程序会显示待售商品的图片。可以使用以下 HTML 加载图片：</p>
+<figure class="highlight html"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;/loadImage?filename=218.png&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><code>loadImage </code>URL 接收一个<code>filename</code>参数，并返回指定文件的内容。图像文件存储在磁盘的 <code>/var/www/images/</code>  目录中。要返回图像，应用程序会将请求的文件名追加到该基本目录，并使用文件系统 API 读取文件内容。换句话说，应用程序会从以下文件路径读取内容：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/var/www/images/218.png</span><br></pre></td></tr></table></figure>
+<p>该应用程序没有针对路径遍历攻击实施任何防御措施。因此，攻击者可以请求以下 URL，从服务器文件系统中检索 /etc/passwd 文件：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">https:<span class="regexp">//i</span>nsecure-website.com<span class="regexp">/loadImage?filename=../</span>..<span class="regexp">/../</span>etc/passwd</span><br></pre></td></tr></table></figure>
+<p>这将导致应用程序从以下文件路径读取数据：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line"><span class="regexp">/var/</span>www<span class="regexp">/images/</span>..<span class="regexp">/../</span>..<span class="regexp">/etc/</span>passwd</span><br></pre></td></tr></table></figure>
+<p><code>../</code>序列在文件路径中有效，表示在目录结构中上移一级。连续三个<code>../</code>顺序从 <code>/var/www/images/ </code>上移到文件系统根目录，因此实际读取的文件是：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">/etc/passwd</span><br></pre></td></tr></table></figure>
+<p>在基于 Unix 的操作系统上，这是一个标准文件，包含服务器上注册用户的详细信息，但攻击者可以使用相同的技术检索其他任意文件。</p>
+<p>在 Windows 系统中，…/ 和 …\都是有效的目录遍历序列。下面是一个针对基于 Windows 的服务器的等效攻击示例：</p>
+<figure class="highlight jboss-cli"><table><tr><td class="code"><pre><span class="line">https:<span class="string">//insecure-website.com/loadImage</span>?filename=<span class="string">..</span>\<span class="string">..</span>\<span class="string">..</span>\windows\win.ini</span><br></pre></td></tr></table></figure>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。要解决该实验问题，请检索 <code>/etc/passwd </code>文件的内容。</p>
+<p><img src="/posts/15b3971d//image-20250430160204983.png" alt="image-20250430160204983"></p>
+<p>这一题很简单。把参数改一下就可以了。</p>
+<h2 id="利用路径遍历漏洞的常见障碍">利用路径遍历漏洞的常见障碍</h2>
+<h3 id="Lab-File-path-traversal-traversal-sequences-blocked-with-absolute-path-bypass">Lab: File path traversal, traversal sequences blocked with absolute path bypass</h3>
+<p>许多将用户输入置入文件路径的应用程序都有针对路径遍历攻击的防御措施。这些防御措施往往可以被绕过。</p>
+<p>如果应用程序从用户提供的文件名中删除或阻止目录遍历序列，就有可能利用各种技术绕过防御。</p>
+<p>您可以使用文件系统根目录下的绝对路径（如 <code>filename=/etc/passwd</code>）来直接引用文件，而无需使用任何遍历序列。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。应用程序会阻止遍历序列，但会将所提供的文件名视为默认工作目录的相对文件名。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>网站未能正确验证文件的哪个方面，无论是文件大小、类型还是内容等。</p>
-</li>
-<li class="lvl-2">
-<p>文件上传成功后，对文件施加了哪些限制。</p>
+<p>这道题阻止了相对目录遍历序列，但是可以用绝对路径</p>
 </li>
 </ul>
-<p>在最坏的情况下，文件类型没有得到正确验证，服务器配置允许某些类型的文件（如 .php 和 .jsp）作为代码执行。在这种情况下，攻击者有可能上传一个服务器端代码文件，该文件可作为 web shell 使用，就可以完全控制服务器。</p>
-<p>如果文件名没有得到正确验证，攻击者只需上传同名文件，就能覆盖关键文件。如果服务器还存在目录遍历漏洞，这就意味着攻击者甚至可以将文件上传到意想不到的位置，比如覆盖服务器的系统文件。</p>
-<p>如果不能确保文件大小在预期的阈值范围内，还可能导致某种形式的拒绝服务（DoS）攻击，即攻击者填满可用磁盘空间。</p>
-<h2 id="文件上传漏洞是如何产生的">文件上传漏洞是如何产生的</h2>
-<p>因为文件上传漏洞巨大的危害性，网站很少会对允许用户上传的文件不加任何限制。更常见的情况是，开发人员实施他们认为强大的验证，但这种验证要么存在固有缺陷，要么很容易被绕过。</p>
-<p>例如，它们可能试图将危险文件类型列入黑名单，但在检查文件扩展名时却没有考虑到解析差异。与任何黑名单一样，黑名单也很容易不小心遗漏更隐蔽的文件类型，而这些文件类型可能仍然具有危险性。</p>
-<p>在其他情况下，网站可能会尝试通过验证属性来检查文件类型，而这些属性很容易被使用 Burp Proxy 或 Repeater 等工具的攻击者操纵。</p>
-<p>最后，即使是强大的验证措施，在构成网站的主机和目录网络中的应用也可能不一致，从而导致可被利用的差异。</p>
-<h2 id="网络服务器如何处理静态文件请求">网络服务器如何处理静态文件请求</h2>
-<p>在了解如何利用文件上传漏洞之前，您必须对服务器如何处理静态文件请求有一个基本的了解。</p>
-<p>过去，网站几乎完全由静态文件组成，当用户提出请求时，网站就会向用户提供静态文件。因此，每个请求的路径都可以与服务器文件系统中的目录和文件层次结构进行 1:1  的映射。如今，网站越来越动态化，请求的路径往往与文件系统没有任何直接关系。不过，网络服务器仍然要处理一些静态文件的请求，包括样式表、图像等。</p>
-<p>处理这些静态文件的流程大致相同。服务器会解析请求中的路径，以确定文件扩展名。然后，服务器根据扩展名和 MIME 类型之间的预配置映射列表来确定请求的文件类型。接下来会发生什么取决于文件类型和服务器配置。</p>
+<p><img src="/posts/15b3971d//image-20250430162204471.png" alt="image-20250430162204471"></p>
+<h3 id="Lab-File-path-traversal-traversal-sequences-stripped-non-recursively">Lab: File path traversal, traversal sequences stripped non-recursively</h3>
+<p>您或许可以使用嵌套遍历序列，如 …// 或 …//。当内部序列被剥离时，这些序列会恢复为简单的遍历序列。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。在使用用户提供的文件名之前，应用程序会从该文件名中删除路径遍历序列。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>如果该文件类型不可执行，如图像或静态 HTML 页面，服务器可能只会在 HTTP 响应中向客户端发送文件内容。</p>
-</li>
-<li class="lvl-2">
-<p>如果文件类型是可执行的，如 PHP 文件，且服务器被配置为执行此类文件，那么在运行脚本之前，服务器会根据 HTTP 请求中的头和参数来分配变量。由此产生的输出结果会在 HTTP 响应中发送给客户端。</p>
-</li>
-<li class="lvl-2">
-<p>如果文件类型是可执行的，但服务器未配置为执行该类型的文件，则通常会响应错误。不过，在某些情况下，文件内容仍会以纯文本形式提供给客户端。这种错误配置偶尔会被利用来泄露源代码和其他敏感信息。</p>
+<p>使用<code>....//....//....//etc//passwd</code>遍历是可以的，但是<code>//etc//passwd</code>不行。</p>
 </li>
 </ul>
+<p><img src="/posts/15b3971d//image-20250430163057050.png" alt="image-20250430163057050"></p>
+<h3 id="Lab-File-path-traversal-traversal-sequences-stripped-with-superfluous-URL-decode">Lab: File path traversal, traversal sequences stripped with superfluous URL-decode</h3>
+<p>在某些情况下，例如在 URL 路径或<code>multipart/form-data</code>  请求的<code>filename</code>参数中，网络服务器可能会在将您的输入传递给应用程序之前去掉任何目录遍历序列。有时，您可以通过 URL 编码，甚至是双重 URL  编码来绕过这种清理。这将分别导致 <code>%2e%2e%2f</code> 和 <code>%252e%252e%252f</code>。各种非标准编码，如 <code>..%c0%af</code> 或  <code>..%ef%bc%8f</code> 也可以使用。</p>
+<p>该实验室在显示产品图像时存在路径遍历漏洞。应用程序会阻止包含路径遍历序列的输入。然后在使用输入之前对其进行 URL 解码。要解决本实验问题，请检索 /etc/passwd 文件的内容。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>url单层编码访问失败，双重编码成功。服务器会对HTTP请求双重url解码。这里把<code>../</code>换成<code>%252e%252e%252f</code>或者<code>..%252f</code>就可以了。</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430165746276.png" alt="image-20250430165746276"></p>
 <div class="spoiler collapsed">
     <div class="spoiler-title">
-        TIPS
+        为什么服务器会进行双重解码？
     </div>
     <div class="spoiler-content">
-        <p><code>Content-Type</code> 响应头可提供服务器认为它已提供的文件类型的线索。如果应用程序代码没有明确设置该标头，它通常包含文件扩展名/MIME 类型映射的结果。</p>
+        <p>可能的情况是，服务器在处理请求的时候，可能在不同的层次上多次进行URL解码。比如，Web服务器（如Apache或Nginx）可能先进行一次解码，然后应用框架（如PHP、Python的Flask等）可能再进行一次解码。如果两次解码之间没有对路径进行正确的规范化或安全检查，就会导致攻击者通过双重编码绕过一些安全检测。</p>
 
     </div>
 </div>
-<h2 id="利用不受限制的文件上传部署网络外壳">利用不受限制的文件上传部署网络外壳</h2>
-<p>从安全角度来看，最糟糕的情况是网站允许您上传服务器端脚本（如 PHP、Java 或 Python 文件），并将其配置为代码执行。这样，在服务器上创建自己的网络外壳就变得轻而易举了。</p>
-<blockquote>
-<p>Web shell</p>
-<p>Web shell是一种恶意脚本，攻击者只需向正确的端点发送 HTTP 请求，就能在远程网络服务器上执行任意命令</p>
-</blockquote>
-<p>如果你能成功上传Web shell，你实际上就拥有了对服务器的完全控制权。这意味着你可以读写任意文件、外泄敏感数据，甚至利用服务器对内部基础架构和网络外的其他服务器进行透视攻击。例如，可以使用下面的 PHP 单行程序从服务器的文件系统中读取任意文件：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/target/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p>一旦上传，发送对该恶意文件的请求就会在响应中返回目标文件的内容。</p>
-<h4 id="Lab-通过Web-shell-上传远程执行代码">Lab: 通过Web shell 上传远程执行代码</h4>
-<p>本实验室包含一个易受攻击的图片上传功能。在将用户上传的文件存储到服务器文件系统之前，它没有对这些文件执行任何验证。</p>
-<p>要解决该实验问题，请上传一个基本的<code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
-<p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
-<p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        有没有可能只解码一次或者更多次？
+    </div>
+    <div class="spoiler-content">
+        <p>当然有可能。这取决于服务器的配置和代码实现。如果服务器只进行一次解码，那么攻击者需要直接使用单次编码的字符，例如<code>%2e%2f%2e%2e</code>等。而如果服务器解码次数超过两次，比如三次，那么攻击者可能需要使用三重编码，比如<code>%2525252e</code>（假设三重编码的话）。不过这种情况比较少见，因为通常服务器不会多次解码。</p>
+
+    </div>
+</div>
+<h3 id="Lab-File-path-traversal-validation-of-start-of-path">Lab: File path traversal, validation of start of path</h3>
+<p>应用程序可能要求用户提供的文件名以预期的基本文件夹开始，如 <code>/var/www/images</code>。在这种情况下，可以在所需的基本文件夹后加上适当的遍历序列。例如：<code>filename=/var/www/images/.../.../.../etc/passwd</code></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>我用了url编码，不使用url编码也是可以的，这里单层解码，双层就不行了</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430171637924.png" alt="image-20250430171637924"></p>
+<h3 id="Lab-File-path-traversal-validation-of-file-extension-with-null-byte-bypass">Lab: File path traversal, validation of file extension with null byte bypass</h3>
+<p>应用程序可能要求用户提供的文件名以预期的文件扩展名结尾，如 .png。在这种情况下，可以使用空字节在所需扩展名之前有效地终止文件路径。例如：filename=…/…/…/etc/passwd%00.png。</p>
+<p>本实验室在显示产品图像时存在路径遍历漏洞。应用程序会验证所提供的文件名是否以预期的文件扩展名结尾。要解决该实验问题，请检索 /etc/passwd 文件的内容。</p>
+<p>这个感觉好牛啊，希望自己慢慢积累，积跬步至千里吧。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>相对路径后加<code>%00.png</code>绕过文件后缀验证</p>
+</li>
+</ul>
+<p><img src="/posts/15b3971d//image-20250430172259167.png" alt="image-20250430172259167"></p>
+<h2 id="如何防止路径遍历攻击">如何防止路径遍历攻击</h2>
+<p>防止路径遍历漏洞的最有效方法是完全避免将用户提供的输入传递给文件系统 API。许多这样做的应用程序函数都可以重写，以更安全的方式提供相同的行为。</p>
+<p>如果无法避免将用户提供的输入传递给文件系统 API，我们建议使用两层防御来防止攻击：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>在处理用户输入之前对其进行验证。理想情况下，将用户输入与允许值白名单进行比较。如果做不到这一点，则要验证输入是否只包含允许的内容，例如只包含字母数字字符。</p>
+</li>
+<li class="lvl-2">
+<p>验证所提供的输入后，将输入追加到基本目录，并使用平台文件系统 API 对路径进行规范化。验证规范化路径是否以预期的基本目录开始。</p>
+</li>
+</ul>
+<p>下面是一个根据用户输入验证文件规范路径的简单 Java 代码示例：</p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(BASE_DIRECTORY, userInput);</span><br><span class="line"><span class="keyword">if</span> (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) &#123;</span><br><span class="line">    <span class="comment">// process file</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>代码逐行解析：</strong></p>
 <ol>
 <li class="lvl-3">
-<p>登录题目给的账户后，可以上传头像</p>
+<p>创建文件对象</p>
 </li>
 </ol>
-<p><img src="/posts/34bab347//image-20250430120836773.png" alt="image-20250430120836773"></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="type">File</span> <span class="variable">file</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">File</span>(BASE_DIRECTORY, userInput);</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong><code>File</code>类</strong>：Java中用于表示文件或目录路径的类。</p>
+</li>
+<li class="lvl-2">
+<p><strong>构造函数参数</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-4"><code>BASE_DIRECTORY</code>：预定义的基础目录（如<code>/safe/path</code>），用于限制文件访问范围。</li>
+<li class="lvl-4"><code>userInput</code>：用户输入的路径（如<code>data.txt</code>或<code>../../secret.txt</code>）。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p><strong>作用</strong>：将两者拼接成完整路径。例如：</p>
+<ul class="lvl-2">
+<li class="lvl-4">若<code>BASE_DIRECTORY</code>是<code>/safe</code>，<code>userInput</code>是<code>file.txt</code>，则拼接为<code>/safe/file.txt</code>。</li>
+<li class="lvl-4">若<code>userInput</code>是<code>../etc/passwd</code>，则拼接为<code>/safe/../etc/passwd</code>。</li>
+</ul>
+</li>
+</ul>
 <ol start="2">
 <li class="lvl-3">
-<p>上传1.php文件</p>
+<p>路径规范化验证</p>
 </li>
 </ol>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/home/carlos/secret&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p><img src="/posts/34bab347//image-20250430120903346.png" alt="image-20250430120903346"></p>
-<ol start="3">
-<li class="lvl-3">
-<p>打开图像</p>
-</li>
-</ol>
-<p><img src="/posts/34bab347//image-20250430121009450.png" alt="image-20250430121009450"></p>
-<p>总结：前端无防护、后端无防护、服务器具备执行条件。</p>
-<h2 id="利用文件上传验证的缺陷">利用文件上传验证的缺陷</h2>
-<p>在网络中，你不太可能发现一个网站像我们在上一个实验室中看到的那样，对文件上传攻击没有任何防护措施。但是，有了防御措施，并不意味着它们就是强大的。有时，你仍然可以利用这些机制中的漏洞来获取网络外壳，从而远程执行代码。</p>
-<h2 id="文件类型验证存在缺陷"><strong>文件类型验证存在缺陷</strong></h2>
-<p>在提交 HTML 表单时，浏览器通常会在 <code>POST </code>请求中发送所提供的数据，内容类型为  <code>application/x-www-form-url-encoded</code>。这对于发送简单的文本（如姓名或地址）很合适。但它不适合发送大量二进制数据，如整个图像文件或 PDF 文档。在这种情况下，首选内容类型为 <code>multipart/form-data</code>。</p>
-<p>考虑一个包含上传图片、提供图片说明和输入用户名等字段的表单。提交这样的表单后，可能会得到类似下面的请求：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">POST /images HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line">    Content-Length: <span class="number">12345</span></span><br><span class="line">    Content-<span class="type">Type</span>: multipart/form-data; boundary=---------------------------012345678901234567890123456</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;image&quot;</span>; filename=<span class="string">&quot;example.jpg&quot;</span></span><br><span class="line">    Content-<span class="type">Type</span>: image/jpeg</span><br><span class="line"></span><br><span class="line">    [...binary content of example.jpg...]</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;description&quot;</span></span><br><span class="line"></span><br><span class="line">    This <span class="keyword">is</span> an interesting description of my image.</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;username&quot;</span></span><br><span class="line"></span><br><span class="line">    wiener</span><br><span class="line">    ---------------------------012345678901234567890123456--</span><br></pre></td></tr></table></figure>
-<p>正如你所看到的，消息正文被分割成不同的部分，分别用于表单的每个输入。每个部分都包含一个 <code>Content-Disposition</code>  标头，它提供了与输入字段相关的一些基本信息。这些单独的部分还包含自己的 <code>Content-Type</code> 标头，告诉服务器使用此输入提交的数据的  MIME 类型。</p>
-<p>网站尝试验证文件上传的一种方法是检查特定于输入的 Content-Type 标头是否与预期的 MIME  类型相匹配。例如，如果服务器只接收图像文件，它可能只允许图像/jpeg 和图像/png  等类型。当服务器默认信任该标头的值时，就会出现问题。如果不执行进一步的验证来检查文件内容是否真的与假定的 MIME 类型相匹配，就可以使用  Burp Repeater 等工具轻松绕过这一防御。</p>
-<p><strong>Lab: 绕过内容类型限制上传网络外壳</strong></p>
-<p>本实验室包含一个易受攻击的图片上传功能。它试图防止用户上传意外的文件类型，但需要依靠检查用户可控输入来验证。</p>
-<p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
-<p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
-<ol>
-<li class="lvl-3">
-<p>上传PHP代码发现进行了前端防护</p>
-</li>
-</ol>
-<p><img src="/posts/34bab347//image-20250430123852944.png" alt="image-20250430123852944"></p>
-<ol start="2">
-<li class="lvl-3">
-<p>将Content-Type修改为符合规定的内容，php代码不变，即可上传成功</p>
-</li>
-</ol>
-<p><img src="/posts/34bab347//image-20250430123908753.png" alt="image-20250430123908753"></p>
-<ol start="3">
-<li class="lvl-3">
-<p>访问账户的头像通关</p>
-</li>
-</ol>
-<p><img src="/posts/34bab347//image-20250430123725160.png" alt="image-20250430123725160"></p>
-<p>总结：前端防护，限制上传的文件类型，通过Burp Suitte 修改文件名绕过检测。后端无防护，服务器具备执行条件。</p>
-<h3 id="防止在用户可访问的目录中执行文件">防止在用户可访问的目录中执行文件</h3>
-<p>虽然从一开始就防止上传危险文件类型显然更好，但第二道防线阻止服务器执行任何漏网脚本。</p>
-<p>为谨慎起见，服务器通常只运行其 MIME 类型已明确配置为可执行的脚本。否则，它们可能只会返回某种错误信息，或者在某些情况下，以纯文本形式提供文件内容：</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">GET /static/exploit.php?command=<span class="built_in">id</span> HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">    Content-<span class="type">Type</span>: text/plain</span><br><span class="line">    Content-Length: <span class="number">39</span></span><br><span class="line"></span><br><span class="line">    &lt;?php echo system($_GET[<span class="string">&#x27;command&#x27;</span>]); ?&gt;</span><br></pre></td></tr></table></figure>
-<p>这种行为本身可能很有趣，因为它提供了一种泄漏源代码的方法，但它使任何创建网络 shell 的尝试都化为乌有。</p>
-<p>这种配置通常因目录而异。上传用户提供文件的目录可能比文件系统中其他位置的控制要严格得多，因为其他位置被认为是最终用户无法访问的。如果你能找到一种方法，将脚本上传到另一个不应该包含用户提供文件的目录，那么服务器终究可能会执行你的脚本。</p>
-<p><font class="notice">注意：网络服务器通常使用<code>multipart/form-data</code>请求中的文件名字段来确定文件的名称和保存位置。</font></p>
-<h4 id="Lab：通过路径遍历上传网络-shell">Lab：通过路径遍历上传网络 shell</h4>
-<p>该实验室包含一个易受攻击的图片上传功能。服务器被配置为防止执行用户提供的文件，但可通过利用次要漏洞（文件路径遍历）绕过此限制。要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<figure class="highlight java"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> (file.getCanonicalPath().startsWith(BASE_DIRECTORY)) &#123;</span><br><span class="line">    <span class="comment">// 处理文件</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <ul class="lvl-0">
 <li class="lvl-2">
-<p>按照以往的方式访问自己上传的php代码，服务器直接将php代码以文本方式返回</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250430183245601.png" alt="image-20250430183245601"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>修改<code>filename</code>目录遍历语句被服务器清理</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250430183451599.png" alt="image-20250430183451599"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>使用url编码上传成功</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250430183708967.png" alt="image-20250430183708967"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>访问即可</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250430183739696.png" alt="image-20250430183739696"></p>
-<p>您还应注意，尽管您可能会将所有请求发送到同一域名，但这通常指向某种反向代理服务器，如负载平衡器。您的请求通常会由其他服务器在幕后处理，这些服务器的配置也可能不同。</p>
-<h3 id="危险文件类型黑名单不足">危险文件类型黑名单不足</h3>
-<p>防止用户上传恶意脚本的一个比较明显的方法是将 <code>.php</code>  等潜在危险的文件扩展名列入黑名单。黑名单的做法本质上是有缺陷的，因为很难明确阻止每一个可能用于执行代码的文件扩展名。有时可以通过使用较不知名的、仍可执行的替代文件扩展名（如 <code>.php5</code>、<code>.shtml</code> 等）来绕过此类黑名单。针对这种防护，可以尝试以下几种方式进行绕过：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>使用不常见的后缀名：<code>php5,pht,phpt,phtml,php3,php4,php5,php6</code></p>
-</li>
-<li class="lvl-2">
-<p>使用大小写：<code>.pHp</code></p>
-</li>
-<li class="lvl-2">
-<p>重写服务器配置文件：apache的<code>.htaccess</code>或者IIS的<code>web.config</code></p>
-</li>
-<li class="lvl-2">
-<p>使用多扩展名，譬如<code>example.php.jpg</code>，这种方式依赖于服务器如何解析文件，如果服务器<strong>从前往后解析，并且解析到第一个扩展名就停止解析</strong>，则该文件会被当作<code>example.php</code>存储</p>
-</li>
-<li class="lvl-2">
-<p>添加尾随字符，有些组件可能会过滤或忽视文件名末尾的空格或小数点，譬如<code>example.php.</code>或<code>example.php </code> (末尾有一个空格)</p>
-</li>
-<li class="lvl-2">
-<p>尝试使用url编码，譬如：<code>example%2ephp</code></p>
-</li>
-<li class="lvl-2">
-<p>再文件扩展名前添加分号或者url编码的空字符，譬如：<code>example.php;jpg</code>或<code>example.php%00.jpg</code></p>
-</li>
-<li class="lvl-2">
-<p>使用多字节Unicode字符，譬如Unicode字符序列：<code>xC0 xAE</code>，<code>xC4 xAE</code>，<code>xC0 x2E</code>再utf-8编码下可能转化为<code>x2E</code>，然后转化为ASCII字符使用</p>
-</li>
-</ul>
-<h4 id="覆盖服务器配置">覆盖服务器配置</h4>
-<p>正如我们在上一节所讨论的，除非经过配置，否则服务器通常不会执行文件。例如，若允许 Apache 服务器执行客户端请求的 PHP 文件，开发人员需要在 <code>/etc/apache2/apache2.conf</code> 文件中添加以下指令：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">LoadModule php_module /usr/lib/apache2/modules/libphp.so</span><br><span class="line">    AddType application/x-httpd-php .php</span><br></pre></td></tr></table></figure>
-<p>许多服务器还允许开发人员在个别目录中创建特殊配置文件，以覆盖或添加一个或多个全局设置。例如，Apache 服务器会从名为 <code>.htaccess</code> 的文件中加载特定目录的配置（如果有的话）。</p>
-<p>同样，开发人员可以使用 <code>web.config</code> 文件对 IIS 服务器进行特定目录配置。这可能包括以下指令，在本例中，这些指令允许向用户提供 JSON 文件：</p>
-<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">staticContent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mimeMap</span> <span class="attr">fileExtension</span>=<span class="string">&quot;.json&quot;</span> <span class="attr">mimeType</span>=<span class="string">&quot;application/json&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">staticContent</span>&gt;</span></span><br></pre></td></tr></table></figure>
-<p>网络服务器会使用这类配置文件，但通常不允许使用 HTTP 请求访问它们。不过，你偶尔会发现服务器无法阻止你上传自己的恶意配置文件。在这种情况下，即使你需要的文件扩展名被列入了黑名单，你也可以欺骗服务器将任意的自定义文件扩展名映射到可执行的 MIME 类型。</p>
-<h5 id="Lab：通过扩展黑名单绕过网络外壳上传">Lab：通过扩展黑名单绕过网络外壳上传</h5>
-<p>本实验室包含一个易受攻击的图片上传功能。某些文件扩展名被列入了黑名单，但由于该黑名单配置中的一个基本缺陷，这一防御可被绕过。要解决该实验问题，请上传一个基本的 PHP web shell，然后使用它渗出文件 /home/carlos/secret 的内容。使用实验横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter。</p>
-<div class="spoiler collapsed">
-    <div class="spoiler-title">
-        Hint
-    </div>
-    <div class="spoiler-content">
-        <p>You need to upload two different files to solve this lab.</p>
-
-    </div>
-</div>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>直接上传php文件失败，服务采用了黑名单防护机制</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250505174128331.png" alt="image-20250505174128331"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>尝试上传Apache的配置文件<code>htaccess</code>，将文件扩展名 <strong><code>.l33t</code></strong> 关联到PHP解析器，，提醒上传成功</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250505174603001.png" alt="image-20250505174603001"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>再试上传恶意文件成功</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250505175302956.png" alt="image-20250505175302956"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>访问即可获得密码</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250505175433671.png" alt="image-20250505175433671"></p>
-<p><strong>代码解释：</strong></p>
-<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">AddType <span class="built_in">application</span>/x-httpd-php .l33t</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><strong><code>AddType</code></strong>：Apache指令，用于将特定文件扩展名映射到对应的MIME类型。</p>
-</li>
-<li class="lvl-2">
-<p><strong><code>application/x-httpd-php</code></strong>：PHP脚本的MIME类型，告诉服务器使用PHP解析器处理该文件。</p>
-</li>
-<li class="lvl-2">
-<p><strong><code>.l33t</code></strong>：自定义的文件扩展名（通常用于替代常见的 <code>.php</code>）。</p>
-</li>
-</ul>
-<p><strong>作用：</strong></p>
-<ol>
-<li class="lvl-3">
-<p><strong>PHP解析</strong>：所有以 <code>.l33t</code> 结尾的文件会被Apache视为PHP脚本，<strong>其中的PHP代码会被服务器解析执行</strong>。</p>
-</li>
-<li class="lvl-3">
-<p><strong>隐藏技术栈</strong>：通过非标准扩展名（如 <code>.l33t</code>）隐藏网站使用的PHP技术，增加攻击者识别难度（但实际安全提升有限，需配合其他措施）。</p>
-</li>
-</ol>
-<h4 id="混淆文件扩展名">混淆文件扩展名</h4>
-<p>即使是最详尽的黑名单，也有可能被经典的混淆技术绕过。假设验证代码对大小写敏感，无法识别 exploit.pHp 实际上是 .php  文件。如果随后将文件扩展名映射到 MIME 类型的代码对大小写不敏感，这种差异就会使恶意 PHP 文件偷偷通过验证，最终被服务器执行。</p>
-<p>您还可以使用以下技术实现类似的效果：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>提供多种扩展名。根据解析文件名所使用的算法，以下文件可能被解释为 PHP 文件或 JPG 图像：exploit.php.jpg</p>
-</li>
-<li class="lvl-2">
-<p>添加尾部字符。某些组件会删除或忽略尾部空格、点等类似字符： exploit.php.jpg。</p>
-</li>
-<li class="lvl-2">
-<p>尝试使用 URL 编码（或双 URL 编码）来处理点、正斜线和反斜线。如果在验证文件扩展名时未对该值进行解码，但随后在服务器端进行了解码，这样也可以上传恶意文件，否则会被阻止： exploit%2Ephp在文件扩展名前添加分号或 URL 编码的空字节字符。</p>
-</li>
-<li class="lvl-2">
-<p>如果验证是用 PHP 或 Java 等高级语言编写的，但服务器使用 C/C++  等低级函数处理文件，这可能会导致文件名末尾的处理不一致：exploit.asp;.jpg 或 exploit.asp%00.jpg尝试使用多字节 unicode 字符，这些字符可能在 unicode 转换或规范化后被转换为空字节和点。</p>
-</li>
-<li class="lvl-2">
-<p>如果文件名被解析为 UTF-8 字符串，xC0  x2E、xC4 xAE 或 xC0 xAE 等序列可能会被转换为 x2E，但在路径中使用前又会被转换为 ASCII 字符。</p>
-</li>
-</ul>
-<p>其他防御措施包括删除或替换危险的扩展名，以防止文件被执行。如果这种转换不是递归应用的，你可以将禁止的字符串定位在这样一种方式，即删除它仍然会留下一个有效的文件扩展名。例如，如果从以下文件名中删除 .php 会发生什么情况：</p>
-<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">exploit<span class="selector-class">.p</span>.phphp</span><br></pre></td></tr></table></figure>
-<p>这只是混淆文件扩展名的众多方法中的一小部分。</p>
-<h5 id="Lab：通过混淆文件扩展名上传网络外壳">Lab：通过混淆文件扩展名上传网络外壳</h5>
-<p>该实验室包含一个易受攻击的图片上传功能。某些文件扩展名被列入了黑名单，但可以使用经典的混淆技术绕过这一防御。要解决该实验问题，请上传一个基本的 PHP web shell，然后用它来外泄文件 /home/carlos/secret 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>直接上传失败，提示只能传JPG和PNG</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250505184603898.png" alt="image-20250505184603898"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><s>啊，这就过啦</s>   添加后缀，文件的后缀并没有变，考虑添加空字节</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250505184818551.png" alt="image-20250505184818551"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>这就可以了</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250505214317371.png" alt="image-20250505214317371"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>访问就可以得到密码</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250505214506196.png" alt="image-20250505214506196"></p>
-<div class="spoiler collapsed">
-    <div class="spoiler-title">
-        补充
-    </div>
-    <div class="spoiler-content">
-        <ul class="lvl-0">
-<li class="lvl-2">
-<p><code>%00</code> 是 <strong>URL编码的空字符（Null Character）</strong>，对应 ASCII 码中的 <code>0x00</code>。它在计算机系统中通常表示字符串的<strong>结束符</strong>，但在不同场景下可能引发安全问题或功能异常。</p>
-</li>
-<li class="lvl-2">
-<p>旧版PHP（5.3之前）存在空字节阶段漏洞，PHP&gt;=5.3版本中已将其修复</p>
-</li>
-<li class="lvl-2">
-<p>如 PHP 的 <code>basename()</code> 会自动过滤空字符。</p>
-</li>
-<li class="lvl-2">
-<p>在路径遍历在也可以利用 <code>%00</code> 截断路径，访问非授权文件（如 <code>../../secret.log%00</code>）。</p>
-</li>
-<li class="lvl-2">
-<p>大多数 Web 服务器并不是在一开始安装成功后就能执行文件的，像 Apache，要执行 PHP 脚本，需要在 <code>/etc/apache2/apache2.conf</code> 配置文件中添加如下指令加载 php 模块，以及当访问后缀名为 <code>.php</code> 的文件时，作为 php 脚本执行。：</p>
-</li>
-</ul>
-<blockquote>
-<p>LoadModule php_module /usr/lib/apache2/modules/libphp.so<br>
-AddType application/x-httpd-php .php</p>
-</blockquote>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>不止 Apache，Nginx 和 IIS 也都是要做一些配置才能执行脚本。</p>
+<p><strong><code>getCanonicalPath()</code></strong>：将路径转换为<strong>绝对且唯一</strong>的规范形式：</p>
 <ul class="lvl-2">
-<li class="lvl-4">
-<p>除了 apache2.conf 这个系统级的配置文件，Apache 服务器允许在每个目录下放置一个 <code>.htaccess</code> 文件，在该文件中添加的指令可以覆盖和补充 apache2.conf 的配置。如果应用程序允许上传 <code>.htaccess</code> ，那么就能利用它绕过安全防护，执行代码。</p>
-</li>
-<li class="lvl-4">
-<p>IIS 服务器也有一个类似的配置文件，名为 <code>web.config</code>，它的指令示例：</p>
-<ul class="lvl-4">
-<li class="lvl-6">
-<p>//.json 文件被当成 json 发送给客户端。</p>
-<blockquote>
-<staticContent>
-    <mimeMap fileextension=".json" mimetype="application/json">
-    </mimeMap></staticContent>
-</blockquote>
-</li>
+<li class="lvl-4">解析<code>.</code>（当前目录）和<code>..</code>（上级目录）。</li>
+<li class="lvl-4">去除多余的斜杠（如<code>/safe//file</code>变为<code>/safe/file</code>）。</li>
+<li class="lvl-4">解析符号链接（如将快捷方式转为真实路径）。</li>
 </ul>
+<p>例如：<code>/safe/../etc/passwd</code> 会被规范化为 <code>/etc/passwd</code>。</p>
 </li>
-</ul>
-</li>
-</ul>
-
-    </div>
-</div>
-<h3 id="文件内容验证存在缺陷">文件内容验证存在缺陷</h3>
-<p>更安全的服务器会尝试验证文件内容是否与预期相符，而不是隐含地信任请求中指定的 <code>Content-Type</code>。</p>
-<p>在图像上传功能中，服务器可能会尝试验证图像的某些固有属性，如尺寸。例如，如果您尝试上传一个 PHP 脚本，它根本不会有任何尺寸。因此，服务器会推断它不可能是图像，并相应地拒绝上传。</p>
-<p>同样，某些文件类型的页眉或页脚可能总是包含特定的字节序列。这些序列就像指纹或签名一样，可用于确定文件内容是否与预期类型相符。例如，JPEG 文件总是以 <code>FF D8 FF</code> 字节开始。</p>
-<p>这是验证文件类型的一种更稳健的方法，但即便如此也并非万无一失。使用 ExifTool 等特殊工具（Exiftool 工具在 kali 系统中已默认安装），可以轻而易举地创建一个在元数据中包含恶意代码的多格式 JPEG 文件。</p>
-<p><strong>Lab: 通过多语言网络外壳上传远程执行代码</strong></p>
-<p>本实验室包含一个易受攻击的图片上传功能。虽然它会检查文件内容以验证其是否为真正的图片，但仍有可能上传并执行服务器端代码。要解决该实验问题，请上传一个基本的 PHP web shell，然后用它来外泄文件 /home/carlos/secret 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter</p>
-<p>这道题web应用对上传的文件头做了校验，如果没有识别到预期的特征码就会报错，这种情况下，可以通过exiftool或其他工具来修改文件元数据，插入脚本生成多态jpeg文件进行绕过 exiftool命令：</p>
-<ul class="lvl-0">
 <li class="lvl-2">
-<p>不管是直接上传php脚本，还是尝试其他在之前实验室里用过的技术都已经不行了。</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250506154133865.png" alt="image-20250506154133865"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>创建一个多语 PHP/JPG 文件，该文件从根本上说是一个普通图像，但在元数据中包含了 PHP 有效载荷。一种简单的方法是下载并从命令行运行 ExifTool，将 PHP 有效载荷添加到图片的注释字段，以 .php 扩展名保存图片，然后上传。如下所示：</p>
-</li>
-</ul>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">exiftool -Comment=<span class="string">&quot;&lt;?php echo &#x27;START &#x27; . file_get_contents(&#x27;/home/carlos/secret&#x27;) . &#x27; END&#x27;; ?&gt;&quot;</span> NiuBi.jpg -o polyglot.php</span><br></pre></td></tr></table></figure>
-<p><img src="/posts/34bab347//image-20250506160513314.png" alt="image-20250506160513314"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>将<code>polyglot</code> 上传</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250506160911322.png" alt="image-20250506160911322"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p><s>访问就行啦</s>   我靠咋不行，网上的都是jpg，应该是文件格式的问题吧，再用jpg试一下</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250506163353446.png" alt="image-20250506163353446"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>果然可以了。。。网络的世界真是奇妙</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250506163844566.png" alt="image-20250506163844566"></p>
-<div class="spoiler collapsed">
-    <div class="spoiler-title">
-        补充
-    </div>
-    <div class="spoiler-content">
-        <ul class="lvl-0">
-<li class="lvl-2">
-<p>exiftool命令的含义</p>
+<p><strong><code>startsWith(BASE_DIRECTORY)</code></strong>：检查规范路径是否以<code>BASE_DIRECTORY</code>开头。</p>
 <ul class="lvl-2">
-<li class="lvl-4"><strong><code>exiftool</code></strong>：一个用于读写文件元数据（如EXIF信息）的命令行工具，常用于处理图片的拍摄参数、注释等。</li>
-<li class="lvl-4"><strong><code>-Comment=&quot;&lt;?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?&gt;&quot;</code></strong>
-<ul class="lvl-4">
-<li class="lvl-6">将JPEG图片的**注释字段（Comment）**修改为一段PHP代码。</li>
-<li class="lvl-6">代码功能：读取服务器上**<code>/home/carlos/secret</code>**文件的内容，并包裹在<code>START</code>和<code>END</code>之间输出。</li>
+<li class="lvl-4">若用户输入合法（如<code>data.txt</code>），规范路径为<code>/safe/data.txt</code>，验证通过。</li>
+<li class="lvl-4">若用户输入非法（如<code>../../etc/passwd</code>），规范路径为<code>/etc/passwd</code>，验证失败。</li>
 </ul>
 </li>
-<li class="lvl-4"><strong><code>-o polyglot.php</code>：<strong>将处理后的文件输出为</strong><code>polyglot.php</code></strong>。生成的文件既是合法图片（保留原JPEG数据），又是PHP脚本（因扩展名为<code>.php</code>且包含可执行代码）。</li>
 </ul>
-</li>
-<li class="lvl-2">
-<p>此题上传的文件为 <code>polyglot.php</code> ，当然大部分服务器是不能上传php文件的，但是如果能采用某些方法将jpg解析为php，这段代码依然是可以执行的</p>
-</li>
-</ul>
-
-    </div>
-</div>
-<div class="spoiler collapsed">
-    <div class="spoiler-title">
-        为什么上传png会失败
-    </div>
-    <div class="spoiler-content">
-        <ol>
-<li class="lvl-3">
-<p><strong>元数据结构的本质差异</strong>：</p>
-<ul class="lvl-2">
-<li class="lvl-5"><strong>JPG（JPEG）</strong>：使用 <strong>EXIF 标准</strong>存储元数据，允许直接将PHP代码写入<code>Comment</code>字段。ExifTool修改后，文件仍保持有效的JPEG结构，同时代码位于可被PHP解析的位置。</li>
-<li class="lvl-5"><strong>PNG</strong>：元数据存储在 <strong>“数据块”（Chunks）</strong> 中（如<code>tEXt</code>、<code>iTXt</code>等）。直接通过<code>-Comment</code>参数注入代码可能破坏PNG文件结构，或代码未存储在服务器会解析的位置。</li>
-</ul>
-</li>
-<li class="lvl-3">
-<p><strong>PHP执行逻辑的差异</strong>：</p>
-<ul class="lvl-2">
-<li class="lvl-5">即使成功注入代码到PNG中，PHP解析器可能不会执行位于PNG数据块中的代码，因为PHP默认从文件开头解析，遇到非PHP标签（如PNG的二进制头<code>‰PNG</code>）会直接终止执行。</li>
-</ul>
-</li>
-<li class="lvl-3">
-<p><strong>服务器对文件扩展名的处理</strong>：</p>
-<ul class="lvl-2">
-<li class="lvl-5">如果上传的PNG文件保留<code>.png</code>扩展名，服务器可能不会调用PHP解析器，即使内容包含PHP代码。而<code>.php</code>扩展名的文件（如你生成的<code>polyglot.php</code>）会被强制用PHP解析。</li>
-</ul>
-</li>
-<li class="lvl-3">
-<p>我按照deepseek给我的方法用png进行了尝试，依然失败了。首先我的PHP代码没能写进去（检查时发现的），然后服务端依然没能解析后缀php的png图片。感觉png的安全性应该是比jpg高的。</p>
-</li>
-<li class="lvl-3">
-<p><strong>总的来说：</strong></p>
-<ul class="lvl-2">
-<li class="lvl-5"><strong>JPG成功</strong>：因其元数据允许直接注入PHP代码，且生成文件扩展名为<code>.php</code>触发服务器解析。</li>
-<li class="lvl-5"><strong>PNG失败</strong>：元数据存储方式不同，且默认扩展名（<code>.png</code>）不触发PHP解析。需调整注入位置或文件结构才能成功。</li>
-</ul>
-</li>
-</ol>
-
-    </div>
-</div>
-<h3 id="利用文件上传竞赛条件">利用文件上传竞赛条件</h3>
-<p>现代框架对此类攻击的防御能力更强。它们通常不会直接将文件上传到文件系统上的目标位置。相反，它们会采取一些预防措施，比如先上传至一个临时的沙盒目录，并随机化名称以避免覆盖现有文件。然后，它们对临时文件进行验证，只有在认为安全后才将文件传输到目的地。</p>
-<p>尽管如此，开发人员有时会独立于任何框架实现自己的文件上传处理。要做好这一点不仅相当复杂，还可能引入危险的竞赛条件，使攻击者能够完全绕过最强大的验证。</p>
-<p>例如，有些网站会将文件直接上传到主文件系统，如果没有通过验证，就会再次删除。这种行为在依赖反病毒软件等检查恶意软件的网站中非常典型。这可能只需要几毫秒，但在文件存在于服务器上的短时间内，攻击者仍有可能执行该文件。</p>
-<p>这些漏洞往往非常隐蔽，因此很难在黑盒测试中发现，除非你能找到泄露相关源代码的方法。</p>
-<p>总的来说啊就是：很多文件上传功能不会先将上传的文件上传到目标位置，而是先送去沙盒化临时目录做检查，并随机化它的名称，看看他是不是恶意文件，然后再传到最终目录。但是有的开发者比较疏忽，把文件传到自己的框架目录对它检查。虽然检查的时间很短，但是黑客依然可能利用短短的几毫秒时间搞事情。</p>
-<p>另外，还有一种情况可能发生条件竞争文件上传漏洞，就是让用户提供一个 URL 来保存文件，这一般只能由开发人员自己编写处理程序，也必须先下载一份文件副本到本地，然后再做安全性验证，所以这种情况很容易出现漏洞。如果上传的文件或通过 URL 下载的文件保存到一个具有随机名称的临时目录，这一般不太可能被攻击者知道，但如果临时目录是伪随机数，那么仍然有可能被攻击者用暴力破解的方法知道。</p>
-<p>为了让条件竞争上传文件的攻击更容易，攻击者会上传一个恶意的大文件，里面填充大量无用字符，但不会影响到里面的代码被执行，应用程序处理这类大文件会处理得更久，那么文件在文件系统上停留的时间更久，也就更容易被攻击者趁机访问。</p>
-<h4 id="Lab：-通过竞赛条件上传网络外壳">Lab： 通过竞赛条件上传网络外壳</h4>
-<p>该实验室包含一个易受攻击的图片上传功能。虽然它对上传的任何文件都执行了稳健的验证，但利用其处理文件方式中的竞赛条件，完全可以绕过验证。引入这一竞赛条件的脆弱代码如下：</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//存储目标文件夹名 &#x27;avatars/&#x27;</span></span><br><span class="line"><span class="variable">$target_dir</span> = <span class="string">&quot;avatars/&quot;</span>;</span><br><span class="line"><span class="comment">//$target_file 是最终保存文件的路径。</span></span><br><span class="line"><span class="comment">//$_FILES[&quot;avatar&quot;][&quot;name&quot;] 是用户上传文件的原始名字（比如用户上传的文件叫 cat.jpg，这里就是 cat.jpg）。</span></span><br><span class="line"><span class="variable">$target_file</span> = <span class="variable">$target_dir</span> . <span class="variable">$_FILES</span>[<span class="string">&quot;avatar&quot;</span>][<span class="string">&quot;name&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// temporary move</span></span><br><span class="line"><span class="comment">//$_FILES[&quot;avatar&quot;][&quot;tmp_name&quot;] 是文件上传到服务器后的临时存储路径（比如 &#x27;/tmp/php123.tmp&#x27;）。</span></span><br><span class="line"><span class="comment">//move_uploaded_file 的作用是将临时文件移动到目标路径 $target_file。</span></span><br><span class="line"><span class="title function_ invoke__">move_uploaded_file</span>(<span class="variable">$_FILES</span>[<span class="string">&quot;avatar&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>], <span class="variable">$target_file</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果文件通过了病毒检查(checkViruses)和文件类型检查(checkFileType)，显示上传成功；否则删除文件，显示错误。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">checkViruses</span>(<span class="variable">$target_file</span>) &amp;&amp; <span class="title function_ invoke__">checkFileType</span>(<span class="variable">$target_file</span>)) &#123;</span><br><span class="line">    <span class="comment">//htmlspecialchars：防止文件名中的特殊字符引发安全问题（比如 &lt;script&gt; 这类代码）。</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;The file &quot;</span>. <span class="title function_ invoke__">htmlspecialchars</span>( <span class="variable">$target_file</span>). <span class="string">&quot; has been uploaded.&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">unlink</span>(<span class="variable">$target_file</span>);<span class="comment">//删除文件。</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Sorry, there was an error uploading your file.&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);<span class="comment">//返回“禁止访问”的状态码。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkViruses</span>(<span class="params"><span class="variable">$fileName</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// checking for viruses</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//检查文件扩展名（后缀）是否是 jpg 或 png。</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkFileType</span>(<span class="params"><span class="variable">$fileName</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//pathinfo($fileName, PATHINFO_EXTENSION)：提取文件名的后缀（比如 cat.jpg 提取出 jpg）。</span></span><br><span class="line">    <span class="comment">//strtolower：将后缀转为小写（防止 JPG 和 jpg 不一致）。</span></span><br><span class="line">    <span class="variable">$imageFileType</span> = <span class="title function_ invoke__">strtolower</span>(<span class="title function_ invoke__">pathinfo</span>(<span class="variable">$fileName</span>,PATHINFO_EXTENSION));</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$imageFileType</span> != <span class="string">&quot;jpg&quot;</span> &amp;&amp; <span class="variable">$imageFileType</span> != <span class="string">&quot;png&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Sorry, only JPG &amp; PNG files are allowed\n&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<p><font class="notice">注：我php太菜，直接上注释了</font></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>首先上传图片，然后添加路径访问图片，确保访问路径正确</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250507101849368.png" alt="image-20250507101849368"></p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>然后构造Tburbo Intruder文件上传竞赛脚本进行攻击，脚本如下</p>
-</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">queueRequests</span>(<span class="params">target, wordlists</span>):</span><br><span class="line">    engine = RequestEngine(endpoint=target.endpoint, concurrentConnections=<span class="number">10</span>,)</span><br><span class="line"></span><br><span class="line">    request1 = <span class="string">&#x27;&#x27;&#x27;&lt;YOUR-POST-REQUEST&gt;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    request2 = <span class="string">&#x27;&#x27;&#x27;&lt;YOUR-GET-REQUEST&gt;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># the &#x27;gate&#x27; argument blocks the final byte of each request until openGate is invoked</span></span><br><span class="line">    engine.queue(request1, gate=<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        engine.queue(request2, gate=<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># wait until every &#x27;race1&#x27; tagged request is ready</span></span><br><span class="line">    <span class="comment"># then send the final byte of each request</span></span><br><span class="line">    <span class="comment"># (this method is non-blocking, just like queue)</span></span><br><span class="line">    engine.openGate(<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    engine.complete(timeout=<span class="number">60</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handleResponse</span>(<span class="params">req, interesting</span>):</span><br><span class="line">    table.add(req)</span><br></pre></td></tr></table></figure>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>将request1设置为上传php代码的包，将request2设置为上传的php代码的路径。</p>
-</li>
-</ul>
-<p><img src="/posts/34bab347//image-20250507102639395.png" alt="image-20250507102639395"></p>
-<h4 id="基于-URL-的文件上传中的竞赛条件">基于 URL 的文件上传中的竞赛条件</h4>
-<p>在允许您通过提供 URL 上传文件的函数中，也会出现类似的竞赛条件。在这种情况下，服务器必须通过互联网获取文件并创建本地副本，然后才能执行任何验证。</p>
-<p>由于文件是使用 HTTP 加载的，开发人员无法使用框架的内置机制来安全地验证文件。相反，他们可能会手动创建自己的流程来临时存储和验证文件，但这样可能不太安全。</p>
-<p>例如，如果文件被加载到一个名称随机的临时目录中，理论上攻击者就不可能利用任何竞赛条件。如果攻击者不知道目录名，就无法请求文件以触发文件的执行。另一方面，如果使用伪随机函数（如 PHP 的 uniqid()）生成随机目录名，就有可能被暴力破解。</p>
-<p>为了让这种攻击更容易得手，可以尝试延长处理文件的时间，从而延长暴力破解目录名的时间窗口。一种方法是上传较大的文件。如果文件是分块处理的，你就有可能利用这一点，创建一个恶意文件，在文件开头添加有效载荷，然后添加大量任意填充字节。</p>
-<h2 id="利用文件上传漏洞而不执行远程代码">利用文件上传漏洞而不执行远程代码</h2>
-<p>在我们迄今为止看过的示例中，我们可以上传服务器端脚本以远程执行代码。这是文件上传功能不安全造成的最严重后果，但这些漏洞仍然可以通过其他方式被利用。</p>
-<h3 id="上传恶意客户端脚本">上传恶意客户端脚本</h3>
-<p>虽然您可能无法在服务器上执行脚本，但您仍然可以上传脚本进行客户端攻击。例如，如果可以上传 HTML 文件或 SVG 图像，就有可能使用 &lt;script&gt; 标记创建存储的 XSS 有效载荷。</p>
-<p>如果上传的文件出现在其他用户访问的页面上，他们的浏览器在尝试呈现页面时就会执行脚本。请注意，由于同源策略的限制，这类攻击只有在上传的文件和您上传文件的同一源提供时才会起作用。</p>
-<p>能上传带有恶意代码的文件是最严重的漏洞，这是针对服务器的攻击，但文件上传也能用于针对客户端攻击。上传一个 HTML  文件或 SVG 图像，里面包含 XSS 代码，那么就相当于是一个存储型 XSS 漏洞了，然后把文件的 URL  发给受害者，因为域名是合法的，所以更容易被信任。（注意，上传的文件如果被保存到另一个网站，那么要考虑同源策略的影响）</p>
-<h3 id="使用-PUT-上传文件">使用 PUT 上传文件</h3>
-<p>值得注意的是，某些网络服务器可能被配置为支持 PUT 请求。如果没有适当的防御措施，即使网络接口没有上传功能，也可以通过这种方式上传恶意文件。</p>
-<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">PUT /images/exploit.php HTTP/<span class="number">1.1</span></span><br><span class="line">Host: vulnerable-website.com</span><br><span class="line">Content-Type: application/x-httpd-php</span><br><span class="line">Content-Length: <span class="number">49</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
-<h3 id="Tip">Tip</h3>
-<p>您可以尝试向不同的端点发送 OPTIONS 请求，以测试是否有任何端点宣布支持 PUT 方法。</p>
-<h2 id="如何防止文件上传漏洞">如何防止文件上传漏洞</h2>
-<p>允许用户上传文件已是司空见惯的事情，只要采取正确的预防措施，就不会有什么危险。一般来说，保护自己的网站免受这些漏洞攻击的最有效方法是实施以下所有做法：</p>
-<ul class="lvl-0">
-<li class="lvl-2">
-<p>对照允许扩展名的白名单而不是禁止扩展名的黑名单检查文件扩展名。猜测你可能希望允许哪些扩展名要比猜测攻击者可能试图上传哪些扩展名容易得多。</p>
-</li>
-<li class="lvl-2">
-<p>确保文件名不包含任何可能被解释为目录或遍历序列（…/）的子串。</p>
-</li>
-<li class="lvl-2">
-<p>重新命名上传的文件，避免可能导致现有文件被覆盖的碰撞。</p>
-</li>
-<li class="lvl-2">
-<p>在完全验证之前，不要将文件上传到服务器的永久文件系统。</p>
-</li>
-<li class="lvl-2">
-<p>尽可能使用已建立的框架来预处理文件上传，而不是尝试编写自己的验证机制。</p>
-</li>
-</ul>
+<p>但是这段代码应该有一定的问题，就是只要保证文件路径与<code>BASE_DIRECTORY</code>一致即可。比如说，如果<code>BASE_DIRECTORY</code>是<code>/base</code>便可以构造<code>/baseXXXX</code>越权访问与文件开头与<code>BASE_DIRECTORY</code>一致的同级目录。</p>
 <p>本文参考：</p>
-<p><a href="https://blog.csdn.net/shawdow_bug/article/details/140149569">【Portswigger 学院】文件上传</a></p>
+<p><a href="https://portswigger.net/web-security/file-path-traversal">Path traversal</a></p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
         <category>渗透测试</category>
@@ -6593,7 +6071,7 @@ AddType application/x-httpd-php .php</p>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
-        <tag>文件上传</tag>
+        <tag>路径遍历</tag>
       </tags>
   </entry>
   <entry>
@@ -7114,8 +6592,530 @@ AddType application/x-httpd-php .php</p>
         <category>PortSwigger靶场</category>
       </categories>
       <tags>
-        <tag>PortSwigger靶场</tag>
         <tag>文件上传</tag>
+        <tag>PortSwigger靶场</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>【PortSwigger学院】文件上传</title>
+    <url>/posts/34bab347/</url>
+    <content><![CDATA[<h2 id="原理与危害">原理与危害</h2>
+<p>文件上传漏洞是指网络服务器允许用户上传文件到其文件系统，而未对文件名、类型、内容或大小等进行充分验证。这就可能导致允许攻击者上传有潜在危险的文件，甚至可能包括支持远程代码执行的服务器端脚本文件。</p>
+<p>在某些情况下，上传文件本身就足以造成破坏。其他攻击可能涉及对文件的后续 HTTP 请求，通常是为了触发服务器执行文件。</p>
+<span id="more"></span>
+<h2 id="文件上传漏洞的影响">文件上传漏洞的影响</h2>
+<p>文件上传漏洞的影响通常取决于两个关键因素：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>网站未能正确验证文件的哪个方面，无论是文件大小、类型还是内容等。</p>
+</li>
+<li class="lvl-2">
+<p>文件上传成功后，对文件施加了哪些限制。</p>
+</li>
+</ul>
+<p>在最坏的情况下，文件类型没有得到正确验证，服务器配置允许某些类型的文件（如 .php 和 .jsp）作为代码执行。在这种情况下，攻击者有可能上传一个服务器端代码文件，该文件可作为 web shell 使用，就可以完全控制服务器。</p>
+<p>如果文件名没有得到正确验证，攻击者只需上传同名文件，就能覆盖关键文件。如果服务器还存在目录遍历漏洞，这就意味着攻击者甚至可以将文件上传到意想不到的位置，比如覆盖服务器的系统文件。</p>
+<p>如果不能确保文件大小在预期的阈值范围内，还可能导致某种形式的拒绝服务（DoS）攻击，即攻击者填满可用磁盘空间。</p>
+<h2 id="文件上传漏洞是如何产生的">文件上传漏洞是如何产生的</h2>
+<p>因为文件上传漏洞巨大的危害性，网站很少会对允许用户上传的文件不加任何限制。更常见的情况是，开发人员实施他们认为强大的验证，但这种验证要么存在固有缺陷，要么很容易被绕过。</p>
+<p>例如，它们可能试图将危险文件类型列入黑名单，但在检查文件扩展名时却没有考虑到解析差异。与任何黑名单一样，黑名单也很容易不小心遗漏更隐蔽的文件类型，而这些文件类型可能仍然具有危险性。</p>
+<p>在其他情况下，网站可能会尝试通过验证属性来检查文件类型，而这些属性很容易被使用 Burp Proxy 或 Repeater 等工具的攻击者操纵。</p>
+<p>最后，即使是强大的验证措施，在构成网站的主机和目录网络中的应用也可能不一致，从而导致可被利用的差异。</p>
+<h2 id="网络服务器如何处理静态文件请求">网络服务器如何处理静态文件请求</h2>
+<p>在了解如何利用文件上传漏洞之前，您必须对服务器如何处理静态文件请求有一个基本的了解。</p>
+<p>过去，网站几乎完全由静态文件组成，当用户提出请求时，网站就会向用户提供静态文件。因此，每个请求的路径都可以与服务器文件系统中的目录和文件层次结构进行 1:1  的映射。如今，网站越来越动态化，请求的路径往往与文件系统没有任何直接关系。不过，网络服务器仍然要处理一些静态文件的请求，包括样式表、图像等。</p>
+<p>处理这些静态文件的流程大致相同。服务器会解析请求中的路径，以确定文件扩展名。然后，服务器根据扩展名和 MIME 类型之间的预配置映射列表来确定请求的文件类型。接下来会发生什么取决于文件类型和服务器配置。</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>如果该文件类型不可执行，如图像或静态 HTML 页面，服务器可能只会在 HTTP 响应中向客户端发送文件内容。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件类型是可执行的，如 PHP 文件，且服务器被配置为执行此类文件，那么在运行脚本之前，服务器会根据 HTTP 请求中的头和参数来分配变量。由此产生的输出结果会在 HTTP 响应中发送给客户端。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件类型是可执行的，但服务器未配置为执行该类型的文件，则通常会响应错误。不过，在某些情况下，文件内容仍会以纯文本形式提供给客户端。这种错误配置偶尔会被利用来泄露源代码和其他敏感信息。</p>
+</li>
+</ul>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        TIPS
+    </div>
+    <div class="spoiler-content">
+        <p><code>Content-Type</code> 响应头可提供服务器认为它已提供的文件类型的线索。如果应用程序代码没有明确设置该标头，它通常包含文件扩展名/MIME 类型映射的结果。</p>
+
+    </div>
+</div>
+<h2 id="利用不受限制的文件上传部署网络外壳">利用不受限制的文件上传部署网络外壳</h2>
+<p>从安全角度来看，最糟糕的情况是网站允许您上传服务器端脚本（如 PHP、Java 或 Python 文件），并将其配置为代码执行。这样，在服务器上创建自己的网络外壳就变得轻而易举了。</p>
+<blockquote>
+<p>Web shell</p>
+<p>Web shell是一种恶意脚本，攻击者只需向正确的端点发送 HTTP 请求，就能在远程网络服务器上执行任意命令</p>
+</blockquote>
+<p>如果你能成功上传Web shell，你实际上就拥有了对服务器的完全控制权。这意味着你可以读写任意文件、外泄敏感数据，甚至利用服务器对内部基础架构和网络外的其他服务器进行透视攻击。例如，可以使用下面的 PHP 单行程序从服务器的文件系统中读取任意文件：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/target/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>一旦上传，发送对该恶意文件的请求就会在响应中返回目标文件的内容。</p>
+<h4 id="Lab-通过Web-shell-上传远程执行代码">Lab: 通过Web shell 上传远程执行代码</h4>
+<p>本实验室包含一个易受攻击的图片上传功能。在将用户上传的文件存储到服务器文件系统之前，它没有对这些文件执行任何验证。</p>
+<p>要解决该实验问题，请上传一个基本的<code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ol>
+<li class="lvl-3">
+<p>登录题目给的账户后，可以上传头像</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430120836773.png" alt="image-20250430120836773"></p>
+<ol start="2">
+<li class="lvl-3">
+<p>上传1.php文件</p>
+</li>
+</ol>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/home/carlos/secret&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="/posts/34bab347//image-20250430120903346.png" alt="image-20250430120903346"></p>
+<ol start="3">
+<li class="lvl-3">
+<p>打开图像</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430121009450.png" alt="image-20250430121009450"></p>
+<p>总结：前端无防护、后端无防护、服务器具备执行条件。</p>
+<h2 id="利用文件上传验证的缺陷">利用文件上传验证的缺陷</h2>
+<p>在网络中，你不太可能发现一个网站像我们在上一个实验室中看到的那样，对文件上传攻击没有任何防护措施。但是，有了防御措施，并不意味着它们就是强大的。有时，你仍然可以利用这些机制中的漏洞来获取网络外壳，从而远程执行代码。</p>
+<h2 id="文件类型验证存在缺陷"><strong>文件类型验证存在缺陷</strong></h2>
+<p>在提交 HTML 表单时，浏览器通常会在 <code>POST </code>请求中发送所提供的数据，内容类型为  <code>application/x-www-form-url-encoded</code>。这对于发送简单的文本（如姓名或地址）很合适。但它不适合发送大量二进制数据，如整个图像文件或 PDF 文档。在这种情况下，首选内容类型为 <code>multipart/form-data</code>。</p>
+<p>考虑一个包含上传图片、提供图片说明和输入用户名等字段的表单。提交这样的表单后，可能会得到类似下面的请求：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">POST /images HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line">    Content-Length: <span class="number">12345</span></span><br><span class="line">    Content-<span class="type">Type</span>: multipart/form-data; boundary=---------------------------012345678901234567890123456</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;image&quot;</span>; filename=<span class="string">&quot;example.jpg&quot;</span></span><br><span class="line">    Content-<span class="type">Type</span>: image/jpeg</span><br><span class="line"></span><br><span class="line">    [...binary content of example.jpg...]</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;description&quot;</span></span><br><span class="line"></span><br><span class="line">    This <span class="keyword">is</span> an interesting description of my image.</span><br><span class="line"></span><br><span class="line">    ---------------------------012345678901234567890123456</span><br><span class="line">    Content-Disposition: form-data; name=<span class="string">&quot;username&quot;</span></span><br><span class="line"></span><br><span class="line">    wiener</span><br><span class="line">    ---------------------------012345678901234567890123456--</span><br></pre></td></tr></table></figure>
+<p>正如你所看到的，消息正文被分割成不同的部分，分别用于表单的每个输入。每个部分都包含一个 <code>Content-Disposition</code>  标头，它提供了与输入字段相关的一些基本信息。这些单独的部分还包含自己的 <code>Content-Type</code> 标头，告诉服务器使用此输入提交的数据的  MIME 类型。</p>
+<p>网站尝试验证文件上传的一种方法是检查特定于输入的 Content-Type 标头是否与预期的 MIME  类型相匹配。例如，如果服务器只接收图像文件，它可能只允许图像/jpeg 和图像/png  等类型。当服务器默认信任该标头的值时，就会出现问题。如果不执行进一步的验证来检查文件内容是否真的与假定的 MIME 类型相匹配，就可以使用  Burp Repeater 等工具轻松绕过这一防御。</p>
+<p><strong>Lab: 绕过内容类型限制上传网络外壳</strong></p>
+<p>本实验室包含一个易受攻击的图片上传功能。它试图防止用户上传意外的文件类型，但需要依靠检查用户可控输入来验证。</p>
+<p>要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。</p>
+<p>您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ol>
+<li class="lvl-3">
+<p>上传PHP代码发现进行了前端防护</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123852944.png" alt="image-20250430123852944"></p>
+<ol start="2">
+<li class="lvl-3">
+<p>将Content-Type修改为符合规定的内容，php代码不变，即可上传成功</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123908753.png" alt="image-20250430123908753"></p>
+<ol start="3">
+<li class="lvl-3">
+<p>访问账户的头像通关</p>
+</li>
+</ol>
+<p><img src="/posts/34bab347//image-20250430123725160.png" alt="image-20250430123725160"></p>
+<p>总结：前端防护，限制上传的文件类型，通过Burp Suitte 修改文件名绕过检测。后端无防护，服务器具备执行条件。</p>
+<h3 id="防止在用户可访问的目录中执行文件">防止在用户可访问的目录中执行文件</h3>
+<p>虽然从一开始就防止上传危险文件类型显然更好，但第二道防线阻止服务器执行任何漏网脚本。</p>
+<p>为谨慎起见，服务器通常只运行其 MIME 类型已明确配置为可执行的脚本。否则，它们可能只会返回某种错误信息，或者在某些情况下，以纯文本形式提供文件内容：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">GET /static/exploit.php?command=<span class="built_in">id</span> HTTP/<span class="number">1.1</span></span><br><span class="line">    Host: normal-website.com</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    HTTP/<span class="number">1.1</span> <span class="number">200</span> OK</span><br><span class="line">    Content-<span class="type">Type</span>: text/plain</span><br><span class="line">    Content-Length: <span class="number">39</span></span><br><span class="line"></span><br><span class="line">    &lt;?php echo system($_GET[<span class="string">&#x27;command&#x27;</span>]); ?&gt;</span><br></pre></td></tr></table></figure>
+<p>这种行为本身可能很有趣，因为它提供了一种泄漏源代码的方法，但它使任何创建网络 shell 的尝试都化为乌有。</p>
+<p>这种配置通常因目录而异。上传用户提供文件的目录可能比文件系统中其他位置的控制要严格得多，因为其他位置被认为是最终用户无法访问的。如果你能找到一种方法，将脚本上传到另一个不应该包含用户提供文件的目录，那么服务器终究可能会执行你的脚本。</p>
+<p><font class="notice">注意：网络服务器通常使用<code>multipart/form-data</code>请求中的文件名字段来确定文件的名称和保存位置。</font></p>
+<h4 id="Lab：通过路径遍历上传网络-shell">Lab：通过路径遍历上传网络 shell</h4>
+<p>该实验室包含一个易受攻击的图片上传功能。服务器被配置为防止执行用户提供的文件，但可通过利用次要漏洞（文件路径遍历）绕过此限制。要解决该实验问题，请上传一个基本的 <code>PHP web shell</code>，并使用它来外泄文件 <code>/home/carlos/secret</code> 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户： <code>wiener:peter</code></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>按照以往的方式访问自己上传的php代码，服务器直接将php代码以文本方式返回</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183245601.png" alt="image-20250430183245601"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>修改<code>filename</code>目录遍历语句被服务器清理</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183451599.png" alt="image-20250430183451599"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用url编码上传成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183708967.png" alt="image-20250430183708967"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问即可</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250430183739696.png" alt="image-20250430183739696"></p>
+<p>您还应注意，尽管您可能会将所有请求发送到同一域名，但这通常指向某种反向代理服务器，如负载平衡器。您的请求通常会由其他服务器在幕后处理，这些服务器的配置也可能不同。</p>
+<h3 id="危险文件类型黑名单不足">危险文件类型黑名单不足</h3>
+<p>防止用户上传恶意脚本的一个比较明显的方法是将 <code>.php</code>  等潜在危险的文件扩展名列入黑名单。黑名单的做法本质上是有缺陷的，因为很难明确阻止每一个可能用于执行代码的文件扩展名。有时可以通过使用较不知名的、仍可执行的替代文件扩展名（如 <code>.php5</code>、<code>.shtml</code> 等）来绕过此类黑名单。针对这种防护，可以尝试以下几种方式进行绕过：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>使用不常见的后缀名：<code>php5,pht,phpt,phtml,php3,php4,php5,php6</code></p>
+</li>
+<li class="lvl-2">
+<p>使用大小写：<code>.pHp</code></p>
+</li>
+<li class="lvl-2">
+<p>重写服务器配置文件：apache的<code>.htaccess</code>或者IIS的<code>web.config</code></p>
+</li>
+<li class="lvl-2">
+<p>使用多扩展名，譬如<code>example.php.jpg</code>，这种方式依赖于服务器如何解析文件，如果服务器<strong>从前往后解析，并且解析到第一个扩展名就停止解析</strong>，则该文件会被当作<code>example.php</code>存储</p>
+</li>
+<li class="lvl-2">
+<p>添加尾随字符，有些组件可能会过滤或忽视文件名末尾的空格或小数点，譬如<code>example.php.</code>或<code>example.php </code> (末尾有一个空格)</p>
+</li>
+<li class="lvl-2">
+<p>尝试使用url编码，譬如：<code>example%2ephp</code></p>
+</li>
+<li class="lvl-2">
+<p>再文件扩展名前添加分号或者url编码的空字符，譬如：<code>example.php;jpg</code>或<code>example.php%00.jpg</code></p>
+</li>
+<li class="lvl-2">
+<p>使用多字节Unicode字符，譬如Unicode字符序列：<code>xC0 xAE</code>，<code>xC4 xAE</code>，<code>xC0 x2E</code>再utf-8编码下可能转化为<code>x2E</code>，然后转化为ASCII字符使用</p>
+</li>
+</ul>
+<h4 id="覆盖服务器配置">覆盖服务器配置</h4>
+<p>正如我们在上一节所讨论的，除非经过配置，否则服务器通常不会执行文件。例如，若允许 Apache 服务器执行客户端请求的 PHP 文件，开发人员需要在 <code>/etc/apache2/apache2.conf</code> 文件中添加以下指令：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">LoadModule php_module /usr/lib/apache2/modules/libphp.so</span><br><span class="line">    AddType application/x-httpd-php .php</span><br></pre></td></tr></table></figure>
+<p>许多服务器还允许开发人员在个别目录中创建特殊配置文件，以覆盖或添加一个或多个全局设置。例如，Apache 服务器会从名为 <code>.htaccess</code> 的文件中加载特定目录的配置（如果有的话）。</p>
+<p>同样，开发人员可以使用 <code>web.config</code> 文件对 IIS 服务器进行特定目录配置。这可能包括以下指令，在本例中，这些指令允许向用户提供 JSON 文件：</p>
+<figure class="highlight xml"><table><tr><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">staticContent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">mimeMap</span> <span class="attr">fileExtension</span>=<span class="string">&quot;.json&quot;</span> <span class="attr">mimeType</span>=<span class="string">&quot;application/json&quot;</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">staticContent</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>网络服务器会使用这类配置文件，但通常不允许使用 HTTP 请求访问它们。不过，你偶尔会发现服务器无法阻止你上传自己的恶意配置文件。在这种情况下，即使你需要的文件扩展名被列入了黑名单，你也可以欺骗服务器将任意的自定义文件扩展名映射到可执行的 MIME 类型。</p>
+<h5 id="Lab：通过扩展黑名单绕过网络外壳上传">Lab：通过扩展黑名单绕过网络外壳上传</h5>
+<p>本实验室包含一个易受攻击的图片上传功能。某些文件扩展名被列入了黑名单，但由于该黑名单配置中的一个基本缺陷，这一防御可被绕过。要解决该实验问题，请上传一个基本的 PHP web shell，然后使用它渗出文件 /home/carlos/secret 的内容。使用实验横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter。</p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        Hint
+    </div>
+    <div class="spoiler-content">
+        <p>You need to upload two different files to solve this lab.</p>
+
+    </div>
+</div>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>直接上传php文件失败，服务采用了黑名单防护机制</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505174128331.png" alt="image-20250505174128331"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>尝试上传Apache的配置文件<code>htaccess</code>，将文件扩展名 <strong><code>.l33t</code></strong> 关联到PHP解析器，，提醒上传成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505174603001.png" alt="image-20250505174603001"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>再试上传恶意文件成功</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505175302956.png" alt="image-20250505175302956"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问即可获得密码</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505175433671.png" alt="image-20250505175433671"></p>
+<p><strong>代码解释：</strong></p>
+<figure class="highlight applescript"><table><tr><td class="code"><pre><span class="line">AddType <span class="built_in">application</span>/x-httpd-php .l33t</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><strong><code>AddType</code></strong>：Apache指令，用于将特定文件扩展名映射到对应的MIME类型。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>application/x-httpd-php</code></strong>：PHP脚本的MIME类型，告诉服务器使用PHP解析器处理该文件。</p>
+</li>
+<li class="lvl-2">
+<p><strong><code>.l33t</code></strong>：自定义的文件扩展名（通常用于替代常见的 <code>.php</code>）。</p>
+</li>
+</ul>
+<p><strong>作用：</strong></p>
+<ol>
+<li class="lvl-3">
+<p><strong>PHP解析</strong>：所有以 <code>.l33t</code> 结尾的文件会被Apache视为PHP脚本，<strong>其中的PHP代码会被服务器解析执行</strong>。</p>
+</li>
+<li class="lvl-3">
+<p><strong>隐藏技术栈</strong>：通过非标准扩展名（如 <code>.l33t</code>）隐藏网站使用的PHP技术，增加攻击者识别难度（但实际安全提升有限，需配合其他措施）。</p>
+</li>
+</ol>
+<h4 id="混淆文件扩展名">混淆文件扩展名</h4>
+<p>即使是最详尽的黑名单，也有可能被经典的混淆技术绕过。假设验证代码对大小写敏感，无法识别 exploit.pHp 实际上是 .php  文件。如果随后将文件扩展名映射到 MIME 类型的代码对大小写不敏感，这种差异就会使恶意 PHP 文件偷偷通过验证，最终被服务器执行。</p>
+<p>您还可以使用以下技术实现类似的效果：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>提供多种扩展名。根据解析文件名所使用的算法，以下文件可能被解释为 PHP 文件或 JPG 图像：exploit.php.jpg</p>
+</li>
+<li class="lvl-2">
+<p>添加尾部字符。某些组件会删除或忽略尾部空格、点等类似字符： exploit.php.jpg。</p>
+</li>
+<li class="lvl-2">
+<p>尝试使用 URL 编码（或双 URL 编码）来处理点、正斜线和反斜线。如果在验证文件扩展名时未对该值进行解码，但随后在服务器端进行了解码，这样也可以上传恶意文件，否则会被阻止： exploit%2Ephp在文件扩展名前添加分号或 URL 编码的空字节字符。</p>
+</li>
+<li class="lvl-2">
+<p>如果验证是用 PHP 或 Java 等高级语言编写的，但服务器使用 C/C++  等低级函数处理文件，这可能会导致文件名末尾的处理不一致：exploit.asp;.jpg 或 exploit.asp%00.jpg尝试使用多字节 unicode 字符，这些字符可能在 unicode 转换或规范化后被转换为空字节和点。</p>
+</li>
+<li class="lvl-2">
+<p>如果文件名被解析为 UTF-8 字符串，xC0  x2E、xC4 xAE 或 xC0 xAE 等序列可能会被转换为 x2E，但在路径中使用前又会被转换为 ASCII 字符。</p>
+</li>
+</ul>
+<p>其他防御措施包括删除或替换危险的扩展名，以防止文件被执行。如果这种转换不是递归应用的，你可以将禁止的字符串定位在这样一种方式，即删除它仍然会留下一个有效的文件扩展名。例如，如果从以下文件名中删除 .php 会发生什么情况：</p>
+<figure class="highlight stylus"><table><tr><td class="code"><pre><span class="line">exploit<span class="selector-class">.p</span>.phphp</span><br></pre></td></tr></table></figure>
+<p>这只是混淆文件扩展名的众多方法中的一小部分。</p>
+<h5 id="Lab：通过混淆文件扩展名上传网络外壳">Lab：通过混淆文件扩展名上传网络外壳</h5>
+<p>该实验室包含一个易受攻击的图片上传功能。某些文件扩展名被列入了黑名单，但可以使用经典的混淆技术绕过这一防御。要解决该实验问题，请上传一个基本的 PHP web shell，然后用它来外泄文件 /home/carlos/secret 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>直接上传失败，提示只能传JPG和PNG</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505184603898.png" alt="image-20250505184603898"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><s>啊，这就过啦</s>   添加后缀，文件的后缀并没有变，考虑添加空字节</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505184818551.png" alt="image-20250505184818551"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>这就可以了</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505214317371.png" alt="image-20250505214317371"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>访问就可以得到密码</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250505214506196.png" alt="image-20250505214506196"></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        补充
+    </div>
+    <div class="spoiler-content">
+        <ul class="lvl-0">
+<li class="lvl-2">
+<p><code>%00</code> 是 <strong>URL编码的空字符（Null Character）</strong>，对应 ASCII 码中的 <code>0x00</code>。它在计算机系统中通常表示字符串的<strong>结束符</strong>，但在不同场景下可能引发安全问题或功能异常。</p>
+</li>
+<li class="lvl-2">
+<p>旧版PHP（5.3之前）存在空字节阶段漏洞，PHP&gt;=5.3版本中已将其修复</p>
+</li>
+<li class="lvl-2">
+<p>如 PHP 的 <code>basename()</code> 会自动过滤空字符。</p>
+</li>
+<li class="lvl-2">
+<p>在路径遍历在也可以利用 <code>%00</code> 截断路径，访问非授权文件（如 <code>../../secret.log%00</code>）。</p>
+</li>
+<li class="lvl-2">
+<p>大多数 Web 服务器并不是在一开始安装成功后就能执行文件的，像 Apache，要执行 PHP 脚本，需要在 <code>/etc/apache2/apache2.conf</code> 配置文件中添加如下指令加载 php 模块，以及当访问后缀名为 <code>.php</code> 的文件时，作为 php 脚本执行。：</p>
+</li>
+</ul>
+<blockquote>
+<p>LoadModule php_module /usr/lib/apache2/modules/libphp.so<br>
+AddType application/x-httpd-php .php</p>
+</blockquote>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>不止 Apache，Nginx 和 IIS 也都是要做一些配置才能执行脚本。</p>
+<ul class="lvl-2">
+<li class="lvl-4">
+<p>除了 apache2.conf 这个系统级的配置文件，Apache 服务器允许在每个目录下放置一个 <code>.htaccess</code> 文件，在该文件中添加的指令可以覆盖和补充 apache2.conf 的配置。如果应用程序允许上传 <code>.htaccess</code> ，那么就能利用它绕过安全防护，执行代码。</p>
+</li>
+<li class="lvl-4">
+<p>IIS 服务器也有一个类似的配置文件，名为 <code>web.config</code>，它的指令示例：</p>
+<ul class="lvl-4">
+<li class="lvl-6">
+<p>//.json 文件被当成 json 发送给客户端。</p>
+<blockquote>
+<staticContent>
+    <mimeMap fileextension=".json" mimetype="application/json">
+    </mimeMap></staticContent>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</div>
+<h3 id="文件内容验证存在缺陷">文件内容验证存在缺陷</h3>
+<p>更安全的服务器会尝试验证文件内容是否与预期相符，而不是隐含地信任请求中指定的 <code>Content-Type</code>。</p>
+<p>在图像上传功能中，服务器可能会尝试验证图像的某些固有属性，如尺寸。例如，如果您尝试上传一个 PHP 脚本，它根本不会有任何尺寸。因此，服务器会推断它不可能是图像，并相应地拒绝上传。</p>
+<p>同样，某些文件类型的页眉或页脚可能总是包含特定的字节序列。这些序列就像指纹或签名一样，可用于确定文件内容是否与预期类型相符。例如，JPEG 文件总是以 <code>FF D8 FF</code> 字节开始。</p>
+<p>这是验证文件类型的一种更稳健的方法，但即便如此也并非万无一失。使用 ExifTool 等特殊工具（Exiftool 工具在 kali 系统中已默认安装），可以轻而易举地创建一个在元数据中包含恶意代码的多格式 JPEG 文件。</p>
+<p><strong>Lab: 通过多语言网络外壳上传远程执行代码</strong></p>
+<p>本实验室包含一个易受攻击的图片上传功能。虽然它会检查文件内容以验证其是否为真正的图片，但仍有可能上传并执行服务器端代码。要解决该实验问题，请上传一个基本的 PHP web shell，然后用它来外泄文件 /home/carlos/secret 的内容。使用实验室横幅中提供的按钮提交此秘密。您可以使用以下凭据登录自己的账户：wiener:peter</p>
+<p>这道题web应用对上传的文件头做了校验，如果没有识别到预期的特征码就会报错，这种情况下，可以通过exiftool或其他工具来修改文件元数据，插入脚本生成多态jpeg文件进行绕过 exiftool命令：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>不管是直接上传php脚本，还是尝试其他在之前实验室里用过的技术都已经不行了。</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506154133865.png" alt="image-20250506154133865"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>创建一个多语 PHP/JPG 文件，该文件从根本上说是一个普通图像，但在元数据中包含了 PHP 有效载荷。一种简单的方法是下载并从命令行运行 ExifTool，将 PHP 有效载荷添加到图片的注释字段，以 .php 扩展名保存图片，然后上传。如下所示：</p>
+</li>
+</ul>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">exiftool -Comment=<span class="string">&quot;&lt;?php echo &#x27;START &#x27; . file_get_contents(&#x27;/home/carlos/secret&#x27;) . &#x27; END&#x27;; ?&gt;&quot;</span> NiuBi.jpg -o polyglot.php</span><br></pre></td></tr></table></figure>
+<p><img src="/posts/34bab347//image-20250506160513314.png" alt="image-20250506160513314"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将<code>polyglot</code> 上传</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506160911322.png" alt="image-20250506160911322"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p><s>访问就行啦</s>   我靠咋不行，网上的都是jpg，应该是文件格式的问题吧，再用jpg试一下</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506163353446.png" alt="image-20250506163353446"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>果然可以了。。。网络的世界真是奇妙</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250506163844566.png" alt="image-20250506163844566"></p>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        补充
+    </div>
+    <div class="spoiler-content">
+        <ul class="lvl-0">
+<li class="lvl-2">
+<p>exiftool命令的含义</p>
+<ul class="lvl-2">
+<li class="lvl-4"><strong><code>exiftool</code></strong>：一个用于读写文件元数据（如EXIF信息）的命令行工具，常用于处理图片的拍摄参数、注释等。</li>
+<li class="lvl-4"><strong><code>-Comment=&quot;&lt;?php echo 'START ' . file_get_contents('/home/carlos/secret') . ' END'; ?&gt;&quot;</code></strong>
+<ul class="lvl-4">
+<li class="lvl-6">将JPEG图片的**注释字段（Comment）**修改为一段PHP代码。</li>
+<li class="lvl-6">代码功能：读取服务器上**<code>/home/carlos/secret</code>**文件的内容，并包裹在<code>START</code>和<code>END</code>之间输出。</li>
+</ul>
+</li>
+<li class="lvl-4"><strong><code>-o polyglot.php</code>：<strong>将处理后的文件输出为</strong><code>polyglot.php</code></strong>。生成的文件既是合法图片（保留原JPEG数据），又是PHP脚本（因扩展名为<code>.php</code>且包含可执行代码）。</li>
+</ul>
+</li>
+<li class="lvl-2">
+<p>此题上传的文件为 <code>polyglot.php</code> ，当然大部分服务器是不能上传php文件的，但是如果能采用某些方法将jpg解析为php，这段代码依然是可以执行的</p>
+</li>
+</ul>
+
+    </div>
+</div>
+<div class="spoiler collapsed">
+    <div class="spoiler-title">
+        为什么上传png会失败
+    </div>
+    <div class="spoiler-content">
+        <ol>
+<li class="lvl-3">
+<p><strong>元数据结构的本质差异</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5"><strong>JPG（JPEG）</strong>：使用 <strong>EXIF 标准</strong>存储元数据，允许直接将PHP代码写入<code>Comment</code>字段。ExifTool修改后，文件仍保持有效的JPEG结构，同时代码位于可被PHP解析的位置。</li>
+<li class="lvl-5"><strong>PNG</strong>：元数据存储在 <strong>“数据块”（Chunks）</strong> 中（如<code>tEXt</code>、<code>iTXt</code>等）。直接通过<code>-Comment</code>参数注入代码可能破坏PNG文件结构，或代码未存储在服务器会解析的位置。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p><strong>PHP执行逻辑的差异</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5">即使成功注入代码到PNG中，PHP解析器可能不会执行位于PNG数据块中的代码，因为PHP默认从文件开头解析，遇到非PHP标签（如PNG的二进制头<code>‰PNG</code>）会直接终止执行。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p><strong>服务器对文件扩展名的处理</strong>：</p>
+<ul class="lvl-2">
+<li class="lvl-5">如果上传的PNG文件保留<code>.png</code>扩展名，服务器可能不会调用PHP解析器，即使内容包含PHP代码。而<code>.php</code>扩展名的文件（如你生成的<code>polyglot.php</code>）会被强制用PHP解析。</li>
+</ul>
+</li>
+<li class="lvl-3">
+<p>我按照deepseek给我的方法用png进行了尝试，依然失败了。首先我的PHP代码没能写进去（检查时发现的），然后服务端依然没能解析后缀php的png图片。感觉png的安全性应该是比jpg高的。</p>
+</li>
+<li class="lvl-3">
+<p><strong>总的来说：</strong></p>
+<ul class="lvl-2">
+<li class="lvl-5"><strong>JPG成功</strong>：因其元数据允许直接注入PHP代码，且生成文件扩展名为<code>.php</code>触发服务器解析。</li>
+<li class="lvl-5"><strong>PNG失败</strong>：元数据存储方式不同，且默认扩展名（<code>.png</code>）不触发PHP解析。需调整注入位置或文件结构才能成功。</li>
+</ul>
+</li>
+</ol>
+
+    </div>
+</div>
+<h3 id="利用文件上传竞赛条件">利用文件上传竞赛条件</h3>
+<p>现代框架对此类攻击的防御能力更强。它们通常不会直接将文件上传到文件系统上的目标位置。相反，它们会采取一些预防措施，比如先上传至一个临时的沙盒目录，并随机化名称以避免覆盖现有文件。然后，它们对临时文件进行验证，只有在认为安全后才将文件传输到目的地。</p>
+<p>尽管如此，开发人员有时会独立于任何框架实现自己的文件上传处理。要做好这一点不仅相当复杂，还可能引入危险的竞赛条件，使攻击者能够完全绕过最强大的验证。</p>
+<p>例如，有些网站会将文件直接上传到主文件系统，如果没有通过验证，就会再次删除。这种行为在依赖反病毒软件等检查恶意软件的网站中非常典型。这可能只需要几毫秒，但在文件存在于服务器上的短时间内，攻击者仍有可能执行该文件。</p>
+<p>这些漏洞往往非常隐蔽，因此很难在黑盒测试中发现，除非你能找到泄露相关源代码的方法。</p>
+<p>总的来说啊就是：很多文件上传功能不会先将上传的文件上传到目标位置，而是先送去沙盒化临时目录做检查，并随机化它的名称，看看他是不是恶意文件，然后再传到最终目录。但是有的开发者比较疏忽，把文件传到自己的框架目录对它检查。虽然检查的时间很短，但是黑客依然可能利用短短的几毫秒时间搞事情。</p>
+<p>另外，还有一种情况可能发生条件竞争文件上传漏洞，就是让用户提供一个 URL 来保存文件，这一般只能由开发人员自己编写处理程序，也必须先下载一份文件副本到本地，然后再做安全性验证，所以这种情况很容易出现漏洞。如果上传的文件或通过 URL 下载的文件保存到一个具有随机名称的临时目录，这一般不太可能被攻击者知道，但如果临时目录是伪随机数，那么仍然有可能被攻击者用暴力破解的方法知道。</p>
+<p>为了让条件竞争上传文件的攻击更容易，攻击者会上传一个恶意的大文件，里面填充大量无用字符，但不会影响到里面的代码被执行，应用程序处理这类大文件会处理得更久，那么文件在文件系统上停留的时间更久，也就更容易被攻击者趁机访问。</p>
+<h4 id="Lab：-通过竞赛条件上传网络外壳">Lab： 通过竞赛条件上传网络外壳</h4>
+<p>该实验室包含一个易受攻击的图片上传功能。虽然它对上传的任何文件都执行了稳健的验证，但利用其处理文件方式中的竞赛条件，完全可以绕过验证。引入这一竞赛条件的脆弱代码如下：</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="comment">//存储目标文件夹名 &#x27;avatars/&#x27;</span></span><br><span class="line"><span class="variable">$target_dir</span> = <span class="string">&quot;avatars/&quot;</span>;</span><br><span class="line"><span class="comment">//$target_file 是最终保存文件的路径。</span></span><br><span class="line"><span class="comment">//$_FILES[&quot;avatar&quot;][&quot;name&quot;] 是用户上传文件的原始名字（比如用户上传的文件叫 cat.jpg，这里就是 cat.jpg）。</span></span><br><span class="line"><span class="variable">$target_file</span> = <span class="variable">$target_dir</span> . <span class="variable">$_FILES</span>[<span class="string">&quot;avatar&quot;</span>][<span class="string">&quot;name&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="comment">// temporary move</span></span><br><span class="line"><span class="comment">//$_FILES[&quot;avatar&quot;][&quot;tmp_name&quot;] 是文件上传到服务器后的临时存储路径（比如 &#x27;/tmp/php123.tmp&#x27;）。</span></span><br><span class="line"><span class="comment">//move_uploaded_file 的作用是将临时文件移动到目标路径 $target_file。</span></span><br><span class="line"><span class="title function_ invoke__">move_uploaded_file</span>(<span class="variable">$_FILES</span>[<span class="string">&quot;avatar&quot;</span>][<span class="string">&quot;tmp_name&quot;</span>], <span class="variable">$target_file</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//如果文件通过了病毒检查(checkViruses)和文件类型检查(checkFileType)，显示上传成功；否则删除文件，显示错误。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">checkViruses</span>(<span class="variable">$target_file</span>) &amp;&amp; <span class="title function_ invoke__">checkFileType</span>(<span class="variable">$target_file</span>)) &#123;</span><br><span class="line">    <span class="comment">//htmlspecialchars：防止文件名中的特殊字符引发安全问题（比如 &lt;script&gt; 这类代码）。</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;The file &quot;</span>. <span class="title function_ invoke__">htmlspecialchars</span>( <span class="variable">$target_file</span>). <span class="string">&quot; has been uploaded.&quot;</span>;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="title function_ invoke__">unlink</span>(<span class="variable">$target_file</span>);<span class="comment">//删除文件。</span></span><br><span class="line">    <span class="keyword">echo</span> <span class="string">&quot;Sorry, there was an error uploading your file.&quot;</span>;</span><br><span class="line">    <span class="title function_ invoke__">http_response_code</span>(<span class="number">403</span>);<span class="comment">//返回“禁止访问”的状态码。</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkViruses</span>(<span class="params"><span class="variable">$fileName</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// checking for viruses</span></span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//检查文件扩展名（后缀）是否是 jpg 或 png。</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">checkFileType</span>(<span class="params"><span class="variable">$fileName</span></span>) </span>&#123;</span><br><span class="line">    <span class="comment">//pathinfo($fileName, PATHINFO_EXTENSION)：提取文件名的后缀（比如 cat.jpg 提取出 jpg）。</span></span><br><span class="line">    <span class="comment">//strtolower：将后缀转为小写（防止 JPG 和 jpg 不一致）。</span></span><br><span class="line">    <span class="variable">$imageFileType</span> = <span class="title function_ invoke__">strtolower</span>(<span class="title function_ invoke__">pathinfo</span>(<span class="variable">$fileName</span>,PATHINFO_EXTENSION));</span><br><span class="line">    <span class="keyword">if</span>(<span class="variable">$imageFileType</span> != <span class="string">&quot;jpg&quot;</span> &amp;&amp; <span class="variable">$imageFileType</span> != <span class="string">&quot;png&quot;</span>) &#123;</span><br><span class="line">        <span class="keyword">echo</span> <span class="string">&quot;Sorry, only JPG &amp; PNG files are allowed\n&quot;</span>;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p><font class="notice">注：我php太菜，直接上注释了</font></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>首先上传图片，然后添加路径访问图片，确保访问路径正确</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250507101849368.png" alt="image-20250507101849368"></p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>然后构造Tburbo Intruder文件上传竞赛脚本进行攻击，脚本如下</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">queueRequests</span>(<span class="params">target, wordlists</span>):</span><br><span class="line">    engine = RequestEngine(endpoint=target.endpoint, concurrentConnections=<span class="number">10</span>,)</span><br><span class="line"></span><br><span class="line">    request1 = <span class="string">&#x27;&#x27;&#x27;&lt;YOUR-POST-REQUEST&gt;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    request2 = <span class="string">&#x27;&#x27;&#x27;&lt;YOUR-GET-REQUEST&gt;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># the &#x27;gate&#x27; argument blocks the final byte of each request until openGate is invoked</span></span><br><span class="line">    engine.queue(request1, gate=<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> x <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">5</span>):</span><br><span class="line">        engine.queue(request2, gate=<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment"># wait until every &#x27;race1&#x27; tagged request is ready</span></span><br><span class="line">    <span class="comment"># then send the final byte of each request</span></span><br><span class="line">    <span class="comment"># (this method is non-blocking, just like queue)</span></span><br><span class="line">    engine.openGate(<span class="string">&#x27;race1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    engine.complete(timeout=<span class="number">60</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">handleResponse</span>(<span class="params">req, interesting</span>):</span><br><span class="line">    table.add(req)</span><br></pre></td></tr></table></figure>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>将request1设置为上传php代码的包，将request2设置为上传的php代码的路径。</p>
+</li>
+</ul>
+<p><img src="/posts/34bab347//image-20250507102639395.png" alt="image-20250507102639395"></p>
+<h4 id="基于-URL-的文件上传中的竞赛条件">基于 URL 的文件上传中的竞赛条件</h4>
+<p>在允许您通过提供 URL 上传文件的函数中，也会出现类似的竞赛条件。在这种情况下，服务器必须通过互联网获取文件并创建本地副本，然后才能执行任何验证。</p>
+<p>由于文件是使用 HTTP 加载的，开发人员无法使用框架的内置机制来安全地验证文件。相反，他们可能会手动创建自己的流程来临时存储和验证文件，但这样可能不太安全。</p>
+<p>例如，如果文件被加载到一个名称随机的临时目录中，理论上攻击者就不可能利用任何竞赛条件。如果攻击者不知道目录名，就无法请求文件以触发文件的执行。另一方面，如果使用伪随机函数（如 PHP 的 uniqid()）生成随机目录名，就有可能被暴力破解。</p>
+<p>为了让这种攻击更容易得手，可以尝试延长处理文件的时间，从而延长暴力破解目录名的时间窗口。一种方法是上传较大的文件。如果文件是分块处理的，你就有可能利用这一点，创建一个恶意文件，在文件开头添加有效载荷，然后添加大量任意填充字节。</p>
+<h2 id="利用文件上传漏洞而不执行远程代码">利用文件上传漏洞而不执行远程代码</h2>
+<p>在我们迄今为止看过的示例中，我们可以上传服务器端脚本以远程执行代码。这是文件上传功能不安全造成的最严重后果，但这些漏洞仍然可以通过其他方式被利用。</p>
+<h3 id="上传恶意客户端脚本">上传恶意客户端脚本</h3>
+<p>虽然您可能无法在服务器上执行脚本，但您仍然可以上传脚本进行客户端攻击。例如，如果可以上传 HTML 文件或 SVG 图像，就有可能使用 &lt;script&gt; 标记创建存储的 XSS 有效载荷。</p>
+<p>如果上传的文件出现在其他用户访问的页面上，他们的浏览器在尝试呈现页面时就会执行脚本。请注意，由于同源策略的限制，这类攻击只有在上传的文件和您上传文件的同一源提供时才会起作用。</p>
+<p>能上传带有恶意代码的文件是最严重的漏洞，这是针对服务器的攻击，但文件上传也能用于针对客户端攻击。上传一个 HTML  文件或 SVG 图像，里面包含 XSS 代码，那么就相当于是一个存储型 XSS 漏洞了，然后把文件的 URL  发给受害者，因为域名是合法的，所以更容易被信任。（注意，上传的文件如果被保存到另一个网站，那么要考虑同源策略的影响）</p>
+<h3 id="使用-PUT-上传文件">使用 PUT 上传文件</h3>
+<p>值得注意的是，某些网络服务器可能被配置为支持 PUT 请求。如果没有适当的防御措施，即使网络接口没有上传功能，也可以通过这种方式上传恶意文件。</p>
+<figure class="highlight php"><table><tr><td class="code"><pre><span class="line">PUT /images/exploit.php HTTP/<span class="number">1.1</span></span><br><span class="line">Host: vulnerable-website.com</span><br><span class="line">Content-Type: application/x-httpd-php</span><br><span class="line">Content-Length: <span class="number">49</span></span><br><span class="line"></span><br><span class="line"><span class="meta">&lt;?php</span> <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="string">&#x27;/path/to/file&#x27;</span>); <span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Tip">Tip</h3>
+<p>您可以尝试向不同的端点发送 OPTIONS 请求，以测试是否有任何端点宣布支持 PUT 方法。</p>
+<h2 id="如何防止文件上传漏洞">如何防止文件上传漏洞</h2>
+<p>允许用户上传文件已是司空见惯的事情，只要采取正确的预防措施，就不会有什么危险。一般来说，保护自己的网站免受这些漏洞攻击的最有效方法是实施以下所有做法：</p>
+<ul class="lvl-0">
+<li class="lvl-2">
+<p>对照允许扩展名的白名单而不是禁止扩展名的黑名单检查文件扩展名。猜测你可能希望允许哪些扩展名要比猜测攻击者可能试图上传哪些扩展名容易得多。</p>
+</li>
+<li class="lvl-2">
+<p>确保文件名不包含任何可能被解释为目录或遍历序列（…/）的子串。</p>
+</li>
+<li class="lvl-2">
+<p>重新命名上传的文件，避免可能导致现有文件被覆盖的碰撞。</p>
+</li>
+<li class="lvl-2">
+<p>在完全验证之前，不要将文件上传到服务器的永久文件系统。</p>
+</li>
+<li class="lvl-2">
+<p>尽可能使用已建立的框架来预处理文件上传，而不是尝试编写自己的验证机制。</p>
+</li>
+</ul>
+<p>本文参考：</p>
+<p><a href="https://blog.csdn.net/shawdow_bug/article/details/140149569">【Portswigger 学院】文件上传</a></p>
+<link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
+      <categories>
+        <category>渗透测试</category>
+        <category>文件上传</category>
+      </categories>
+      <tags>
+        <tag>文件上传</tag>
+        <tag>PortSwigger靶场</tag>
       </tags>
   </entry>
   <entry>
@@ -8277,8 +8277,8 @@ AddType application/x-httpd-php .php</p>
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>渗透测试</category>
-        <category>SQL注入</category>
+        <category>靶场练习</category>
+        <category>PortSwigger靶场</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
@@ -8462,8 +8462,8 @@ AddType application/x-httpd-php .php</p>
 <p>本文参考：</p>
 <link rel="stylesheet" href="/css/spoiler.css" type="text/css"><script src="/js/spoiler.js" type="text/javascript" async></script>]]></content>
       <categories>
-        <category>靶场练习</category>
-        <category>PortSwigger靶场</category>
+        <category>渗透测试</category>
+        <category>SQL注入</category>
       </categories>
       <tags>
         <tag>PortSwigger靶场</tag>
