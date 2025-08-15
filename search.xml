@@ -3,7 +3,7 @@
   <entry>
     <title>【漏洞案例】sqlmap默认http协议发80端口导致注入失败</title>
     <url>/posts/b008c7ca/</url>
-    <content><![CDATA[<p>i春秋靶场，编号：CVE-2023-50563。在使用sqlmap跑注入点的时候，将burpsuite的包直接复制到request.txt，由于host没有指定443端口导致注入失败。</p>
+    <content><![CDATA[<p>i春秋靶场，编号：CVE-2023-50563。在使用sqlmap跑注入点的时候，将burpsuite的包直接复制到request.txt，由于host没有指定443端口导致sqlmap使用http协议向80端口发起请求，而服务器禁止http请求，导致注入失败。</p>
 <h2 id="渗透过程">渗透过程</h2>
 <ol>
 <li class="lvl-3">
