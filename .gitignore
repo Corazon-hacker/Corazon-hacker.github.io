@@ -1,0 +1,17 @@
+# 依赖
+node_modules/
+
+# 生成文件
+public/
+.deploy*/
+
+# 日志和数据库
+*.log
+db.json
+
+# 环境文件
+.env
+
+# 系统文件
+.DS_Store
+Thumbs.db

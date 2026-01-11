@@ -1,0 +1,434 @@
+//在themes/next/layout/_macro/post.swig中去除#more。取消阅读全文自动跳转至more
+//反正没人给我评论，为防止丢人，取消valine在post-mata显示评论数，删除next\layout\_macro\post.swig第142行{{- next_inject('postMeta') }}。
+
+//body的背景以及各模块的透明度在
+body{
+  color:#333333;//全局颜色更改（标题、段落、文字...）
+}
+//菜单顶部背景颜色
+.site-brand-container{
+  background: #333333;
+}
+.book-mark-link{
+  color:#00ffff;
+}
+//左下框
+.sidebar{
+  background:rgba(255,255,255,0.6);
+}
+
+//文章展示部分
+.content-wrap{
+  background:rgba(255,255,255,0.8)
+}
+//菜单目录部分字体调整
+.site-nav a{
+  color:#333333;
+}
+//博客首页文章标题颜色//注释了themes\next\source\css\_common\components\post\post-header.styl中color属性
+.post-title-link{
+  color:#111111;
+}
+//文章信息
+.post-meta-item{
+ color:#333333;
+}
+//文章描述
+.post-description{
+  color:#444444;
+}
+post-meta-item
+//阅读时浮动目录和站点概览
+.affix{
+  background: rgba(255,255,255,0.6);//修改透明度
+}
+//目录颜色修改
+.sidebar a{
+  color: #000000;
+}
+//affix的站点信息文字颜色修改（头像下的日志、标签）
+.site-state-item-name{
+  color:#000000;//颜色修改
+}
+//affix头部更改
+.sidebar-nav li{
+  color: #000000;
+}
+//返回首页样式修改
+.back-to-top{
+      background: rgba(0,0,0,0.9);
+      color: #ffffff;
+}
+//代码块透明
+//1.容器半透明
+.highlight{
+  background:rgba(255,255,255,0.4);
+  border:1px solid #ddd;
+  border-radius: 10px;
+}
+//2.透明化继承表格的hover
+.highlight tbody tr:hover {
+  background:rgba(255,255,255,0);
+}
+.highlight tbody td:hover {
+  background:rgba(255,255,255,0);
+}
+//3.行数槽高亮
+.highlight .gutter pre{
+  background:rgba(255,255,255,0.3);
+  color:#000000;
+  border-radius: 10px 0px 0px 10px;
+}
+//4.容器已经半透明，代码设置全透明
+.highlight .code pre{
+  background:rgba(255,255,255,0);
+}
+
+//为表格添加hover，注释了themes\next\source\css\_common\scaffolding\tables.styl中tbody tr
+tbody tr:hover {
+  background: rgba(255,255,255,0.4);
+}
+tbody td:hover {
+  background: rgba(255,255,200,0.2);
+}
+th{
+  background:rgba(255,255,255,0.2);
+}
+//行间代码透明，注释themes\next\source\css\_common\scaffolding\highlight\highlight.styl的code样式
+code {
+  background: rgba(100,180,200,0.6);
+  border-radius: 3px;
+  color: #111111;
+  padding: 2px 4px;
+  word-wrap();
+}
+//引用样式修改
+blockquote{
+  color:#333333;
+  background: rgba(255,255,255,0.4);
+  border-left:4px solid #eee;
+}
+//注意的font标签
+.notice{
+  font-size:0.85em;
+  font-style:oblique;
+}
+//为调节ifame的大小和位置，注释了themes\next\source\css\_common\components\post\post-expand.styl中video-container的部分代码
+//此功能依旧没有调整成功
+.video-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+//img标签的class
+.imgcls{
+  
+}
+body {
+ 	background:url(/images/background.jpg);
+ 	background-repeat: no-repeat;
+  background-attachment:fixed;
+  background-size:cover;	
+  background-position:50% 50%;
+}
+
+
+/* 分类页面布局 */
+/* ===================== 滚动条美化 ===================== */
+/* 左侧分类树滚动条 */
+.category-tree::-webkit-scrollbar {
+  width: 6px; /* 垂直滚动条宽度 */
+  height: 6px; /* 水平滚动条高度 */
+}
+
+/* 右侧文章列表滚动条 */
+.category-posts-container::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* 滚动条轨道 */
+.category-tree::-webkit-scrollbar-track,
+.category-posts-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05); /* 半透明轨道 */
+  border-radius: 3px;
+}
+
+/* 滚动条滑块 */
+.category-tree::-webkit-scrollbar-thumb,
+.category-posts-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.15); /* 半透明滑块 */
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+
+/* 滚动条滑块悬停效果 */
+.category-tree::-webkit-scrollbar-thumb:hover,
+.category-posts-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* Firefox 滚动条美化 */
+@supports (scrollbar-color: auto) {
+  .category-tree,
+  .category-posts-container {
+    scrollbar-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.05);
+    scrollbar-width: thin;
+  }
+}
+
+/* ===================== 布局优化 ===================== */
+.category-container {
+  display: flex;
+  margin-top: 20px;
+  gap: 30px;
+  height: 70vh;
+  
+  .category-tree {
+    flex: 1;
+    min-width: 50%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 10px; /* 减少右侧内边距 */
+    border-right: 1px solid #eee;
+    max-height: 100%;
+    
+    /* 防止文本换行 */
+    .category-list-link {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  
+  .category-posts-container {
+    flex: 2;
+    display: none;
+    overflow-y: auto;
+    max-height: 100%;
+    padding-left: 15px; /* 增加左侧内边距 */
+  }
+}
+
+/* 分类项样式优化 */
+.category-list-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  position: relative;
+  
+  .category-toggle-icon {
+    flex-shrink: 0;
+    width: 16px;
+    text-align: center;
+    margin-right: 8px;
+    cursor: pointer;
+  }
+  
+  .category-list-link {
+    flex-grow: 1;
+    padding: 6px 12px;
+    border-radius: 4px;
+    color: #2c3e50;
+    text-decoration: none !important;
+    transition: all 0.3s;
+    
+    &:hover {
+      background-color: #f0f7ff;
+      color: #4b6cb7;
+    }
+  }
+  
+  .category-list-count {
+    flex-shrink: 0;
+    background: #eaeef5;
+    color: #6c757d;
+    font-size: 0.85rem;
+    padding: 2px 8px;
+    border-radius: 20px;
+    margin-left: 8px;
+    transition: all 0.3s;
+  }
+  
+  &:hover .category-list-count {
+    background: #d1e0ff;
+    color: #4b6cb7;
+  }
+}
+
+/* 响应式设计优化 */
+@media (max-width: 768px) {
+  .category-container {
+    flex-direction: column;
+    height: auto;
+    
+    .category-tree {
+      border-right: none;
+      border-bottom: 1px solid #eee;
+      padding-right: 0;
+      padding-bottom: 20px;
+      margin-bottom: 20px;
+      max-height: 40vh; /* 降低移动端最大高度 */
+      min-width: 100%;
+    }
+
+    .category-posts-container {
+      max-height: none;
+      min-width: 100%;
+      padding-left: 0; /* 移动端去除左侧内边距 */
+    }
+  }
+}
+
+/* 文章列表视觉优化 */
+#categoryPostsList {
+  .post-title-link, 
+  .post-title-link span {
+    color: #2c3e50 !important;
+    opacity: 1 !important;
+    font-weight: 500; /* 增加字体权重 */
+    font-size: 80% !important; /* 调整为80% */
+    
+    &:hover {
+      color: #4b6cb7 !important;
+      text-decoration: underline;
+    }
+  }
+
+  /* 日期样式优化 */
+  .post-meta {
+    color: #6c757d !important;
+    opacity: 1 !important;
+    font-size: 75% !important;
+    min-width: 55px; /* 调整日期宽度 */
+  }
+  
+  .post-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    padding: 5px 0;
+    border-bottom: 1px solid #f5f5f5; /* 添加分隔线 */
+  }
+  
+  .post-title {
+    flex-grow: 1;
+  }
+}
+
+/* 加载动画优化 */
+.loading-spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(75, 108, 183, 0.2);
+  border-radius: 50%;
+  border-top-color: #4b6cb7;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+/* 分类树层级缩进 */
+.category-list-child {
+  padding-left: 20px; /* 子分类缩进 */
+  margin-top: 5px;
+  border-left: 1px dashed #eaeaea; /* 添加虚线引导线 */
+}
+
+/* 第一层分类特殊样式 */
+#categoryContainer > .category-list > .category-list-item {
+  font-weight: 600; /* 加粗显示 */
+  margin-bottom: 12px;
+  
+  > .category-list-link {
+    font-size: 1.05em; /* 稍大字体 */
+  }
+}
+
+/* 当前选中分类样式 */
+.category-list-link.active-category {
+  background-color: #4b6cb7 !important;
+  color: white !important;
+  
+  & + .category-list-count {
+    background: white !important;
+    color: #4b6cb7 !important;
+  }
+}
+/* 添加到分类页面布局部分 */
+.category-all-page {
+  .content-wrap {
+    background: rgba(255, 255, 255, 0.8); // 确保背景半透明
+  }
+  
+  // 确保分类页面字体可见
+  .category-all-title, 
+  .category-list-link,
+  .category-list-count,
+  #currentCategoryName,
+  .post-title-link,
+  .post-meta {
+    color: #333 !important; // 使用深色确保可读性
+    text-shadow: 0 0 1px rgba(255, 255, 255, 0.5); // 添加文字阴影增强对比度
+  }
+  
+  // 特别确保文章标题可见
+  .post-title-link span {
+    font-size: 90% !important; // 调整为90%
+    font-weight: 600 !important; // 增加字体权重
+  }
+  
+  // 日期样式增强
+  .post-meta {
+    color: #666 !important;
+    font-size: 80% !important;
+    min-width: 60px;
+    background: rgba(255, 255, 255, 0.3); // 添加半透明背景
+    padding: 2px 5px;
+    border-radius: 3px;
+  }
+}
+
+/* 确保滚动条在透明背景下可见 */
+.category-tree::-webkit-scrollbar-thumb,
+.category-posts-container::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.25); // 增加滑块透明度
+  border: 1px solid rgba(255, 255, 255, 0.3); // 添加白色边框增强可见性
+}
+
+/* 当前选中分类在透明背景下的可见性 */
+.category-list-link.active-category {
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); // 添加阴影增强对比
+  text-shadow: none !important; // 移除文字阴影
+  
+  & + .category-list-count {
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3);
+  }
+}
+/* 添加分类层级指示线 */
+.category-list-child {
+  position: relative;
+  padding-left: 20px;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, #ddd, transparent);
+  }
+}
+
+/* 添加悬停动画 */
+.category-list-link {
+  transition: transform 0.2s ease;
+  
+  &:hover {
+    transform: translateX(3px);
+  }
+}

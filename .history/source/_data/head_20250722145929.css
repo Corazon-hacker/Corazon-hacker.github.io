@@ -1,0 +1,23 @@
+/* 隐藏所有图片的 alt 文本 */
+img::after {
+    content: none !important;
+  }
+/* 隐藏可能的标题标签 */
+figcaption, .image-caption {
+  display: none !important;
+}
+
+/* 分类页面整体缩进 */
+.category-all-page {
+  padding-left: 25px !important;
+}
+
+/* 分类项加粗 */
+.category-all-list li a {
+  font-weight: 600 !important;
+}
+
+/* 子分类缩进 */
+.category-list-child {
+  padding-left: 20px !important;
+}

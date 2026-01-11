@@ -1,0 +1,207 @@
+//在themes/next/layout/_macro/post.swig中去除#more。取消阅读全文自动跳转至more
+//反正没人给我评论，为防止丢人，取消valine在post-mata显示评论数，删除next\layout\_macro\post.swig第142行{{- next_inject('postMeta') }}。
+
+//body的背景以及各模块的透明度在
+body{
+  color:#333333;//全局颜色更改（标题、段落、文字...）
+}
+//菜单顶部背景颜色
+.site-brand-container{
+  background: #333333;
+}
+.book-mark-link{
+  color:#00ffff;
+}
+//左下框
+.sidebar{
+  background:rgba(255,255,255,0.6);
+}
+
+//文章展示部分
+.content-wrap{
+  background:rgba(255,255,255,0.8)
+}
+//菜单目录部分字体调整
+.site-nav a{
+  color:#333333;
+}
+//博客首页文章标题颜色//注释了themes\next\source\css\_common\components\post\post-header.styl中color属性
+.post-title-link{
+  color:#111111;
+}
+//文章信息
+.post-meta-item{
+ color:#333333;
+}
+//文章描述
+.post-description{
+  color:#444444;
+}
+post-meta-item
+//阅读时浮动目录和站点概览
+.affix{
+  background: rgba(255,255,255,0.6);//修改透明度
+}
+//目录颜色修改
+.sidebar a{
+  color: #000000;
+}
+//affix的站点信息文字颜色修改（头像下的日志、标签）
+.site-state-item-name{
+  color:#000000;//颜色修改
+}
+//affix头部更改
+.sidebar-nav li{
+  color: #000000;
+}
+//返回首页样式修改
+.back-to-top{
+      background: rgba(0,0,0,0.9);
+      color: #ffffff;
+}
+//代码块透明
+//1.容器半透明
+.highlight{
+  background:rgba(255,255,255,0.4);
+  border:1px solid #ddd;
+  border-radius: 10px;
+}
+//2.透明化继承表格的hover
+.highlight tbody tr:hover {
+  background:rgba(255,255,255,0);
+}
+.highlight tbody td:hover {
+  background:rgba(255,255,255,0);
+}
+//3.行数槽高亮
+.highlight .gutter pre{
+  background:rgba(255,255,255,0.3);
+  color:#000000;
+  border-radius: 10px 0px 0px 10px;
+}
+//4.容器已经半透明，代码设置全透明
+.highlight .code pre{
+  background:rgba(255,255,255,0);
+}
+
+//为表格添加hover，注释了themes\next\source\css\_common\scaffolding\tables.styl中tbody tr
+tbody tr:hover {
+  background: rgba(255,255,255,0.4);
+}
+tbody td:hover {
+  background: rgba(255,255,200,0.2);
+}
+th{
+  background:rgba(255,255,255,0.2);
+}
+//行间代码透明，注释themes\next\source\css\_common\scaffolding\highlight\highlight.styl的code样式
+code {
+  background: rgba(100,180,200,0.6);
+  border-radius: 3px;
+  color: #111111;
+  padding: 2px 4px;
+  word-wrap();
+}
+//引用样式修改
+blockquote{
+  color:#333333;
+  background: rgba(255,255,255,0.4);
+  border-left:4px solid #eee;
+}
+//注意的font标签
+.notice{
+  font-size:0.85em;
+  font-style:oblique;
+}
+//为调节ifame的大小和位置，注释了themes\next\source\css\_common\components\post\post-expand.styl中video-container的部分代码
+//此功能依旧没有调整成功
+.video-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+//img标签的class
+.imgcls{
+  
+}
+body {
+ 	background:url(/images/background.jpg);
+ 	background-repeat: no-repeat;
+  background-attachment:fixed;
+  background-size:cover;	
+  background-position:50% 50%;
+}
+
+/* 分类页面整体缩进 */
+.category-all-page {
+  padding-left: 25px !important;
+}
+
+/* 子分类缩进 */
+.category-list-child {
+  padding-left: 30px !important;
+}
+/* 分类页面层级颜色渐变 */
+.category-list {
+  // 第一级分类（最顶层）
+  > .category-list-item > .category-list-link {
+    color: #333; // 深黑色
+    font-weight: 600;
+  }
+
+  // 第二级分类
+  .category-list-child > .category-list-item > .category-list-link {
+    color: #444; // 深灰色
+    font-weight: 550;
+  }
+
+  // 第三级分类
+  .category-list-child .category-list-child > .category-list-item > .category-list-link {
+    color: #555; // 中灰色
+    font-weight: 550;
+  }
+
+  // 第四级分类（如有更多层级）
+  .category-list-child .category-list-child .category-list-child > .category-list-item > .category-list-link {
+    color: #666; // 浅灰色
+    font-weight: 550;
+  }
+
+  // 分类计数样式
+  .category-list-count {
+    color: #aaa; // 计数数字颜色
+    font-size: 0.85em;
+    margin-left: 5px;
+    &::before {
+      content: "(";
+    }
+    &::after {
+      content: ")";
+    }
+  }
+}
+
+/* 添加层级缩进效果 */
+.category-list-child {
+  padding-left: 25px !important; // 每层增加25px缩进
+  border-left: 1px dashed #e0e; // 添加虚线分隔线
+  margin: 5px 0;
+}
+/* 添加分类图标 */
+.category-list-item > .category-list-link::before {
+  content: "📁 ";
+  font-size: 0.9em;
+}
+
+/* 悬停效果 */
+.category-list-link:hover {
+  color: #1890ff !important; // 悬停时变为主题蓝色
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+/* 当前激活分类 */
+.category-list-link.active {
+  color: #ff4d4f !important; // 激活状态用红色
+  font-weight: 700;
+}

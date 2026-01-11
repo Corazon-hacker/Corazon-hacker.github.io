@@ -1,0 +1,205 @@
+//在themes/next/layout/_macro/post.swig中去除#more。取消阅读全文自动跳转至more
+//反正没人给我评论，为防止丢人，取消valine在post-mata显示评论数，删除next\layout\_macro\post.swig第142行{{- next_inject('postMeta') }}。
+
+//body的背景以及各模块的透明度在
+body{
+  color:#333333;//全局颜色更改（标题、段落、文字...）
+}
+//菜单顶部背景颜色
+.site-brand-container{
+  background: #333333;
+}
+.book-mark-link{
+  color:#00ffff;
+}
+//左下框
+.sidebar{
+  background:rgba(255,255,255,0.6);
+}
+
+//文章展示部分
+.content-wrap{
+  background:rgba(255,255,255,0.8)
+}
+//菜单目录部分字体调整
+.site-nav a{
+  color:#333333;
+}
+//博客首页文章标题颜色//注释了themes\next\source\css\_common\components\post\post-header.styl中color属性
+.post-title-link{
+  color:#111111;
+}
+//文章信息
+.post-meta-item{
+ color:#333333;
+}
+//文章描述
+.post-description{
+  color:#444444;
+}
+post-meta-item
+//阅读时浮动目录和站点概览
+.affix{
+  background: rgba(255,255,255,0.6);//修改透明度
+}
+//目录颜色修改
+.sidebar a{
+  color: #000000;
+}
+//affix的站点信息文字颜色修改（头像下的日志、标签）
+.site-state-item-name{
+  color:#000000;//颜色修改
+}
+//affix头部更改
+.sidebar-nav li{
+  color: #000000;
+}
+//返回首页样式修改
+.back-to-top{
+      background: rgba(0,0,0,0.9);
+      color: #ffffff;
+}
+//代码块透明
+//1.容器半透明
+.highlight{
+  background:rgba(255,255,255,0.4);
+  border:1px solid #ddd;
+  border-radius: 10px;
+}
+//2.透明化继承表格的hover
+.highlight tbody tr:hover {
+  background:rgba(255,255,255,0);
+}
+.highlight tbody td:hover {
+  background:rgba(255,255,255,0);
+}
+//3.行数槽高亮
+.highlight .gutter pre{
+  background:rgba(255,255,255,0.3);
+  color:#000000;
+  border-radius: 10px 0px 0px 10px;
+}
+//4.容器已经半透明，代码设置全透明
+.highlight .code pre{
+  background:rgba(255,255,255,0);
+}
+
+//为表格添加hover，注释了themes\next\source\css\_common\scaffolding\tables.styl中tbody tr
+tbody tr:hover {
+  background: rgba(255,255,255,0.4);
+}
+tbody td:hover {
+  background: rgba(255,255,200,0.2);
+}
+th{
+  background:rgba(255,255,255,0.2);
+}
+//行间代码透明，注释themes\next\source\css\_common\scaffolding\highlight\highlight.styl的code样式
+code {
+  background: rgba(100,180,200,0.6);
+  border-radius: 3px;
+  color: #111111;
+  padding: 2px 4px;
+  word-wrap();
+}
+//引用样式修改
+blockquote{
+  color:#333333;
+  background: rgba(255,255,255,0.4);
+  border-left:4px solid #eee;
+}
+//注意的font标签
+.notice{
+  font-size:0.85em;
+  font-style:oblique;
+}
+//为调节ifame的大小和位置，注释了themes\next\source\css\_common\components\post\post-expand.styl中video-container的部分代码
+//此功能依旧没有调整成功
+.video-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+//img标签的class
+.imgcls{
+  
+}
+body {
+ 	background:url(/images/background.jpg);
+ 	background-repeat: no-repeat;
+  background-attachment:fixed;
+  background-size:cover;	
+  background-position:50% 50%;
+}
+
+
+/* 分类折叠样式 */
+/* 分类折叠样式 */
+.category-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.3s;
+  
+  &:hover {
+    background: #f0f7ff;
+  }
+}
+
+.toggle-icon {
+  width: 20px;
+  text-align: center;
+  margin-right: 8px;
+  
+  i {
+    font-size: 14px;
+    color: #6c757d;
+    transition: color 0.3s, transform 0.3s;
+  }
+}
+
+.category-header:hover .toggle-icon i {
+  color: #4b6cb7;
+}
+
+.category-list-link {
+  text-decoration: none !important;
+  color: #2c3e50;
+  font-weight: 600;
+  flex-grow: 1;
+  transition: color 0.3s;
+  
+  &:hover {
+    text-decoration: none !important;
+    color: #4b6cb7;
+  }
+}
+
+.category-list-count {
+  background: #eaeef5;
+  color: #6c757d;
+  font-size: 0.85rem;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-left: 10px;
+  transition: all 0.3s;
+}
+
+.category-header:hover .category-list-count {
+  background: #d1e0ff;
+  color: #4b6cb7;
+}
+
+.category-list-child {
+  padding-left: 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, padding-top 0.4s ease;
+}
+
+.category-list-child.expanded {
+  max-height: 2000px;
+  padding-top: 8px;
+}

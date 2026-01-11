@@ -1,0 +1,9 @@
+/* 隐藏所有图片的 alt 文本 */
+img::after {
+    content: none !important;
+  }
+/* 隐藏可能的标题标签 */
+figcaption, .image-caption {
+  display: none !important;
+}
+
