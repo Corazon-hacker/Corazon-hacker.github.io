@@ -313,3 +313,5 @@ auto_category:
  enable: true
  multiple: false
  depth: 
+
+cache: true
