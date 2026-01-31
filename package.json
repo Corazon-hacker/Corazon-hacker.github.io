@@ -42,6 +42,7 @@
     "hexo-symbols-count-time": "^0.7.1",
     "hexo-tag-cloud": "^2.1.2",
     "hexo-tag-embed": "^1.0.0",
+    "hexo-tag-plugins": "^1.0.5",
     "hexo-theme-landscape": "^1.0.0",
     "hexo-wordcount": "^6.0.1",
     "markdown-it-checkbox": "^1.1.0",

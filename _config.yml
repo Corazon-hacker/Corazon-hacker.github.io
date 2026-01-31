@@ -121,14 +121,22 @@ theme: next
 ## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   - type: git
-    repo: 
-      git@github.com:Corazon-hacker/Corazon-hacker.github.io.git
+    repo: git@github.com:Corazon-hacker/Corazon-hacker.github.io.git
     branch: master
+    message: "Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}"
+    # 同步删除文件（推荐开启）
+    sync: true
   #已经连接好了coding，但是coding没有静态网页，就关了
   #- type: git
   #  repo: https://e.coding.net/g-pkbx0046/mcorazon/mcorazon.git
   #  branch: master
-
+  #个人的阿里云服务器
+  - type: git
+    repo: git@47.121.28.192:/home/git/repos/hexo.git
+    branch: master
+    message: "Site updated: {{ now('YYYY-MM-DD HH:mm:ss') }}"
+    # 同步删除文件（推荐开启）
+    sync: true
   - type: baidu_url_submitter                         # 这是新加的主动推送
 
 #站点统计
@@ -315,3 +323,8 @@ auto_category:
  depth: 
 
 cache: true
+
+# 新增批量处理配置，限制文件读取并发数
+batch_processing:
+  concurrency: 10  # 建议设10-20，越小越不容易超限，生成速度略慢但稳定
+  
