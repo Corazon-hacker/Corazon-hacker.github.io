@@ -4,7 +4,6 @@ categories:
   - 博客相关
   - Hexo
 tags:
-  - private
 description:
 comments: true
 abbrlink: 1e0c055a

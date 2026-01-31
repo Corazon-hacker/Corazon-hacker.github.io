@@ -2,8 +2,10 @@
 title: 【Hexo】Github仓库迁移至阿里云
 comments: true
 abbrlink: 5be5b614
-date: 2026-01-31 12:40:36
 categories:
+  - 博客相关
+  - Hexo
+date: 2026-01-31 12:40:36
 tags:
 description:
 top:
@@ -57,320 +59,328 @@ rm -rf hexo
 ```bash
 #!/bin/bash
 
-# ========== 样式定义 ==========
-# 颜色定义
-RED='\033[1;31m'
-GREEN='\033[1;32m'
-YELLOW='\033[1;33m'
-BLUE='\033[1;34m'
-PURPLE='\033[1;35m'
-CYAN='\033[1;36m'
-WHITE='\033[1;37m'
-NC='\033[0m'
-
-# 字符样式
-CHECK="[✓]"
-CROSS="[✗]"
-INFO="[i]"
-WARN="[!]"
-ARROW="->"
-BRANCH="branch:"
-CLOCK="time:"
-FOLDER="dir:"
-GLOBE="url:"
-FILE="file:"
-USER="user:"
-GEAR="config:"
-ROCKET="DEPLOY"
-SUCCESS="[OK]"
-ERROR="[ERR]"
-
-# 进度条函数
-progress_bar() {
-    local width=50
-    local percent=$1
-    local filled=$((width * percent / 100))
-    local empty=$((width - filled))
-    
-    printf "\["
-    for ((i=0; i<filled; i++)); do printf "="; done
-    for ((i=0; i<empty; i++)); do printf " "; done
-    printf "] %3d%%" $percent
-}
-
-# ========== 配置区域 ==========
+# ========== 安全配置 ==========
+# 目录配置（必须确保git用户有权限）
 GIT_REPO="/home/git/repos/hexo.git"
 MASTER_DEPLOY_DIR="/www/wwwroot/mcorazon.top"
-HEXO_SOURCE_DIR="/var/www/hexo-source"
-SITE_URL="http://47.121.28.192"
-DOMAIN_NAME="mcorazon.top"
+BACKUP_ROOT="/home/git/backups/hexo"
+LOG_DIR="/home/git/logs/hexo-deploy"
 WEB_USER="www-data"
 WEB_GROUP="www-data"
-LOG_DIR="/var/log/hexo-deploy"
-LOG_FILE="$LOG_DIR/deploy-$(date +%Y%m%d-%H%M%S).log"
 
-# ========== 初始化 ==========
-mkdir -p "$LOG_DIR"
+# 安全限制（防止脚本意外操作）
+MAX_BACKUPS=5                    # 最多保留5个备份
+MIN_DISK_SPACE_MB=100            # 至少需要100MB磁盘空间
+DEPLOY_TIMEOUT=300               # 部署超时时间（秒）
 
-# 清屏并显示横幅
-clear
-echo -e "${BLUE}"
-echo "=========================================================================="
-echo "  _   _  _____  _   _  ____   ____   _____  _      _____  _   _  _____"
-echo " | | | ||  ___|| \\ | |/ ___| / ___| | ____|| |    | ____|| \\ | ||  ___|"
-echo " | |_| || |__  |  \\| |\\___ \\| |     |  _|  | |    |  _|  |  \\| || |__"
-echo " |  _  ||  __| | . \` | ___) | |___  | |___ | |___ | |___ | |\\  ||  __|"
-echo " |_| |_||_|    |_|\\_||____/ \\____| |_____||_____||_____||_| \\_||_|"
-echo "=========================================================================="
-echo -e "${NC}"
-echo -e "${CYAN}$CLOCK 部署开始时间: $(date '+%Y-%m-%d %H:%M:%S')${NC}"
-echo -e "${CYAN}$GEAR 服务器地址: $SITE_URL${NC}"
-echo -e "${PURPLE}==========================================================================${NC}"
+# ========== 初始化安全环境 ==========
+# 设置安全选项
+set -e                           # 任何命令失败则退出
+set -u                           # 使用未定义变量则退出
+set -o pipefail                  # 管道中任何命令失败则退出
 
-# 日志函数
-log_message() {
-    local level=$1
-    local message=$2
-    local timestamp=$(date '+%H:%M:%S')
-    
-    case $level in
-        "SUCCESS")
-            echo -e "${GREEN}[$timestamp] $SUCCESS $message${NC}" ;;
-        "ERROR")
-            echo -e "${RED}[$timestamp] $ERROR $message${NC}" ;;
-        "WARN")
-            echo -e "${YELLOW}[$timestamp] $WARN $message${NC}" ;;
-        "INFO")
-            echo -e "${CYAN}[$timestamp] $INFO $message${NC}" ;;
-        "DEBUG")
-            echo -e "${PURPLE}[$timestamp] $GEAR $message${NC}" ;;
-        "STEP")
-            echo -e "${BLUE}[$timestamp] $ARROW $message${NC}" ;;
-        *)
-            echo -e "[$timestamp] $message" ;;
-    esac
-    
-    # 记录到日志文件（无颜色）
-    echo "[$timestamp] [$level] $message" >> "$LOG_FILE"
-}
+# 清空PATH，只使用绝对路径
+export PATH="/usr/bin:/bin:/usr/sbin:/sbin"
 
-handle_error() {
-    log_message "ERROR" "部署失败: $1"
-    echo -e "\n${RED}==========================================================================${NC}"
-    echo -e "${RED}   $ERROR 部署过程中出现错误！${NC}"
-    echo -e "${RED}==========================================================================${NC}"
+# 创建必要的目录（确保git用户有权限）
+mkdir -p "$BACKUP_ROOT" "$LOG_DIR" 2>/dev/null || {
+    echo "错误：无法创建必要的目录"
     exit 1
 }
 
-# ========== 主程序开始 ==========
-log_message "STEP" "开始处理 Git 推送事件"
+# 设置目录权限
+chmod 700 "$BACKUP_ROOT" "$LOG_DIR" 2>/dev/null || true
 
-# 解析推送信息
-while read oldrev newrev refname
-do
-    branch=$(echo $refname | sed 's/^refs\/heads\///')
+# 日志函数
+log() {
+    local level="$1"
+    local message="$2"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+    local log_file="$LOG_DIR/deploy.log"
     
-    echo -e "\n${BLUE}------------------------------------------------------------------${NC}"
-    echo -e "${WHITE}[+] 接收到新的推送${NC}"
-    echo -e "${BLUE}------------------------------------------------------------------${NC}"
-    echo -e "  $BRANCH ${CYAN}$branch${NC}"
-    echo -e "  [diff] 变更: ${oldrev:0:8} -> ${newrev:0:8}"
-    
-    case "$branch" in
-        "master")
-            echo -e "\n${GREEN}========== 开始部署静态网站 ==========${NC}"
-            
-            # 检查部署目录
-            if [ ! -d "$MASTER_DEPLOY_DIR" ]; then
-                log_message "WARN" "部署目录不存在，正在创建"
-                echo -e "  $FOLDER $MASTER_DEPLOY_DIR"
-                mkdir -p "$MASTER_DEPLOY_DIR" || handle_error "无法创建部署目录"
-            fi
-            
-            # 显示进度
-            log_message "STEP" "准备部署环境"
-            echo -e "  ${CYAN}|--${NC} 目标目录: $MASTER_DEPLOY_DIR"
-            
-            # 备份现有网站
-            if [ -d "$MASTER_DEPLOY_DIR" ] && [ "$(ls -A $MASTER_DEPLOY_DIR 2>/dev/null)" ]; then
-                BACKUP_DIR="/tmp/hexo-backup-$(date +%Y%m%d-%H%M%S)"
-                log_message "INFO" "正在备份现有网站"
-                cp -r "$MASTER_DEPLOY_DIR" "$BACKUP_DIR" 2>/dev/null && {
-                    BACKUP_SIZE=$(du -sh "$BACKUP_DIR" | cut -f1)
-                    echo -e "  ${CYAN}|--${NC} 备份完成: $BACKUP_SIZE 大小"
-                } || log_message "WARN" "备份失败，继续部署"
-            fi
-            
-            # 清理目录
-            log_message "STEP" "清理部署目录"
-            cd "$MASTER_DEPLOY_DIR"
-            if [ -d ".git" ]; then
-                find . -maxdepth 1 ! -name '.' ! -name '.git' -exec rm -rf {} \; 2>/dev/null || true
-            else
-                rm -rf "$MASTER_DEPLOY_DIR"/*
-            fi
-            echo -e "  ${CYAN}|--${NC} 目录清理完成"
-            
-            # 检出代码
-            log_message "STEP" "检出 master 分支"
-            echo -n "  ${CYAN}|--${NC} 正在检出 "
-            for i in {1..3}; do
-                echo -n "."
-                sleep 0.3
-            done
-            echo ""
-            
-            if git --work-tree="$MASTER_DEPLOY_DIR" --git-dir="$GIT_REPO" checkout -f master; then
-                log_message "SUCCESS" "代码检出成功"
-            else
-                handle_error "检出 master 分支失败"
-            fi
-            
-            # 设置权限
-            log_message "STEP" "设置文件权限"
-            chown -R $WEB_USER:$WEB_GROUP "$MASTER_DEPLOY_DIR" 2>/dev/null && \
-            chmod -R 755 "$MASTER_DEPLOY_DIR" 2>/dev/null && {
-                echo -e "  ${CYAN}|--${NC} 权限设置完成"
-            } || log_message "WARN" "权限设置失败，继续..."
-            
-            # 验证部署
-            log_message "STEP" "验证部署结果"
-            if [ -f "$MASTER_DEPLOY_DIR/index.html" ]; then
-                FILE_COUNT=$(find "$MASTER_DEPLOY_DIR" -type f | wc -l)
-                DIR_SIZE=$(du -sh "$MASTER_DEPLOY_DIR" | cut -f1)
-                echo -e "  ${GREEN}|--${NC} $FILE 发现 index.html"
-                echo -e "  ${GREEN}|--${NC} $FILE 文件总数: $FILE_COUNT"
-                echo -e "  ${GREEN}\`--${NC} $FOLDER 目录大小: $DIR_SIZE"
-                
-                echo -e "\n${GREEN}$ROCKET 静态网站部署完成！${NC}"
-            else
-                log_message "WARN" "未找到 index.html 文件"
-            fi
-            ;;
-            
-        "hexo")
-            echo -e "\n${PURPLE}========== 开始处理源码更新 ==========${NC}"
-            
-            if [ -n "$HEXO_SOURCE_DIR" ] && [ "$HEXO_SOURCE_DIR" != "" ]; then
-                log_message "STEP" "检出 hexo 分支源码"
-                echo -e "  ${PURPLE}|--${NC} 目标目录: $HEXO_SOURCE_DIR"
-                
-                if [ ! -d "$HEXO_SOURCE_DIR" ]; then
-                    mkdir -p "$HEXO_SOURCE_DIR"
-                    echo -e "  ${PURPLE}|--${NC} 创建源码目录"
-                fi
-                
-                if git --work-tree="$HEXO_SOURCE_DIR" --git-dir="$GIT_REPO" checkout -f hexo; then
-                    log_message "SUCCESS" "源码检出成功"
-                    
-                    # 统计信息
-                    POST_COUNT=$(find "$HEXO_SOURCE_DIR/source/_posts" -name "*.md" 2>/dev/null | wc -l || echo 0)
-                    CONFIG_FILES=$(find "$HEXO_SOURCE_DIR" -name "*config*.yml" 2>/dev/null | wc -l)
-                    
-                    echo -e "  ${PURPLE}|--${NC} $FILE 文章数量: $POST_COUNT"
-                    echo -e "  ${PURPLE}|--${NC} $GEAR 配置文件: $CONFIG_FILES"
-                    
-                    if [ $POST_COUNT -gt 0 ]; then
-                        LATEST_POST=$(find "$HEXO_SOURCE_DIR/source/_posts" -name "*.md" -printf "%T+ %p\n" 2>/dev/null | sort -r | head -1 | cut -d' ' -f2-)
-                        if [ -n "$LATEST_POST" ]; then
-                            POST_NAME=$(basename "$LATEST_POST" .md)
-                            echo -e "  ${PURPLE}\`--${NC} 最新文章: $POST_NAME"
-                        fi
-                    fi
-                    
-                    echo -e "\n${PURPLE}[*] 源码同步完成！${NC}"
-                else
-                    log_message "ERROR" "源码检出失败"
-                fi
-            else
-                log_message "INFO" "hexo 分支已更新（未配置源码检出）"
-            fi
-            
-            # 显示提交信息
-            if [ "$oldrev" != "0000000000000000000000000000000000000000" ]; then
-                COMMIT_COUNT=$(git --git-dir="$GIT_REPO" log --oneline "$oldrev..$newrev" | wc -l)
-                if [ $COMMIT_COUNT -gt 0 ]; then
-                    echo -e "\n${CYAN}[log] 本次更新包含 $COMMIT_COUNT 个提交${NC}"
-                    echo -e "${CYAN}-----------------------------------${NC}"
-                    git --git-dir="$GIT_REPO" log --oneline --abbrev-commit "$oldrev..$newrev" | head -5 | while read line; do
-                        echo -e "  ${WHITE}*${NC} $line"
-                    done
-                    if [ $COMMIT_COUNT -gt 5 ]; then
-                        echo -e "  ${WHITE}... 还有 $((COMMIT_COUNT-5)) 个提交${NC}"
-                    fi
-                fi
-            fi
-            ;;
-            
-        *)
-            echo -e "\n${YELLOW}$WARN 未知分支: $branch${NC}"
-            echo -e "  ${YELLOW}\`--${NC} 支持的部署分支：master（静态网站），hexo（源码）"
-            ;;
+    # 输出到控制台
+    case "$level" in
+        "ERROR") echo "[$timestamp] [ERROR] $message" >&2 ;;
+        "WARN") echo "[$timestamp] [WARN] $message" >&2 ;;
+        "INFO") echo "[$timestamp] [INFO] $message" ;;
+        *) echo "[$timestamp] [$level] $message" ;;
     esac
-done
-
-# ========== 部署总结 ==========
-echo -e "\n${GREEN}==========================================================================${NC}"
-echo -e "${WHITE}[+] 部署执行完成 ${NC}"
-echo -e "${GREEN}==========================================================================${NC}"
-
-# 显示分支状态
-echo -e "${CYAN}$BRANCH 仓库分支状态${NC}"
-echo -e "${CYAN}-----------------------------------${NC}"
-git --git-dir="$GIT_REPO" branch -avv | while read line; do
-    if echo "$line" | grep -q "*"; then
-        echo -e "  ${GREEN}$ARROW $line${NC}" | sed 's/\*/ /'
-    elif echo "$line" | grep -q "master"; then
-        echo -e "  ${BLUE}$FILE $line${NC}"
-    elif echo "$line" | grep -q "hexo"; then
-        echo -e "  ${PURPLE}$FOLDER $line${NC}"
-    else
-        echo -e "  ${WHITE}* $line${NC}"
-    fi
-done
-
-# 显示访问信息
-echo -e "\n${CYAN}$GLOBE 访问信息${NC}"
-echo -e "${CYAN}-----------------------------------${NC}"
-echo -e "  ${WHITE}|--${NC} 网站地址: ${BLUE}$SITE_URL${NC}"
-echo -e "  ${WHITE}|--${NC} 域名绑定: ${BLUE}$DOMAIN_NAME${NC}"
-if [ -d "$MASTER_DEPLOY_DIR" ]; then
-    DEPLOY_TIME=$(date '+%H:%M:%S')
-    echo -e "  ${WHITE}|--${NC} 部署时间: ${GREEN}$DEPLOY_TIME${NC}"
     
-    # 检查网站访问
-    if command -v curl &> /dev/null; then
-        echo -n "  ${WHITE}\`--${NC} 状态检查: "
-        HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" -m 5 "$SITE_URL" || echo "000")
-        case $HTTP_CODE in
-            200) echo -e "${GREEN}在线 (200 OK)${NC}" ;;
-            404) echo -e "${YELLOW}页面未找到 (404)${NC}" ;;
-            000) echo -e "${RED}无法访问${NC}" ;;
-            *) echo -e "${YELLOW}状态码: $HTTP_CODE${NC}" ;;
-        esac
+    # 记录到日志文件
+    echo "[$timestamp] [$level] $message" >> "$log_file"
+    
+    # 日志轮转（如果大于10MB）
+    if [ -f "$log_file" ] && [ $(stat -c%s "$log_file" 2>/dev/null || echo 0) -gt 10485760 ]; then
+        mv "$log_file" "$log_file.old" 2>/dev/null
     fi
+}
+
+# 错误处理函数
+error_exit() {
+    log "ERROR" "部署失败: $1"
+    exit 1
+}
+
+# 安全检查函数
+safety_check() {
+    # 1. 检查部署目录是否合理
+    if [ -z "$MASTER_DEPLOY_DIR" ] || [ "$MASTER_DEPLOY_DIR" = "/" ]; then
+        error_exit "部署目录配置错误"
+    fi
+    
+    # 2. 检查磁盘空间
+    local available_space
+    available_space=$(df -m "$BACKUP_ROOT" | awk 'NR==2 {print $4}' 2>/dev/null || echo 0)
+    if [ "$available_space" -lt "$MIN_DISK_SPACE_MB" ]; then
+        log "WARN" "磁盘空间不足: ${available_space}MB < ${MIN_DISK_SPACE_MB}MB"
+    fi
+    
+    # 3. 检查目录权限
+    if [ ! -w "$BACKUP_ROOT" ]; then
+        log "WARN" "备份目录不可写: $BACKUP_ROOT"
+    fi
+    
+    if [ ! -w "$LOG_DIR" ]; then
+        log "WARN" "日志目录不可写: $LOG_DIR"
+    fi
+    
+    # 4. 检查当前用户
+    local current_user
+    current_user=$(whoami)
+    if [ "$current_user" != "git" ]; then
+        log "WARN" "当前用户不是git: $current_user"
+    fi
+}
+
+# 备份当前网站
+backup_current_site() {
+    if [ ! -d "$MASTER_DEPLOY_DIR" ] || [ ! "$(ls -A "$MASTER_DEPLOY_DIR" 2>/dev/null)" ]; then
+        log "INFO" "部署目录为空，跳过备份"
+        return 0
+    fi
+    
+    local backup_file="$BACKUP_ROOT/backup-$(date +%Y%m%d-%H%M%S).tar.gz"
+    
+    # 检查磁盘空间
+    local dir_size_mb
+    dir_size_mb=$(du -sm "$MASTER_DEPLOY_DIR" 2>/dev/null | cut -f1 || echo 0)
+    local available_space
+    available_space=$(df -m "$BACKUP_ROOT" | awk 'NR==2 {print $4}' 2>/dev/null || echo 0)
+    
+    if [ "$available_space" -lt "$dir_size_mb" ]; then
+        log "WARN" "磁盘空间不足，无法备份 (需要: ${dir_size_mb}MB, 可用: ${available_space}MB)"
+        return 1
+    fi
+    
+    log "INFO" "开始备份当前网站 (大小: ${dir_size_mb}MB)"
+    
+    # 使用tar压缩备份
+    if tar -czf "$backup_file" -C "$MASTER_DEPLOY_DIR" . 2>/dev/null; then
+        local backup_size
+        backup_size=$(du -h "$backup_file" | cut -f1)
+        log "INFO" "备份完成: $backup_file (${backup_size})"
+        
+        # 清理旧备份
+        local backup_count
+        backup_count=$(ls -1 "$BACKUP_ROOT"/backup-*.tar.gz 2>/dev/null | wc -l)
+        if [ "$backup_count" -gt "$MAX_BACKUPS" ]; then
+            ls -t "$BACKUP_ROOT"/backup-*.tar.gz 2>/dev/null | tail -n +$((MAX_BACKUPS + 1)) | while read old_backup; do
+                rm -f "$old_backup"
+                log "INFO" "删除旧备份: $(basename "$old_backup")"
+            done
+        fi
+        return 0
+    else
+        log "WARN" "备份失败"
+        return 1
+    fi
+}
+
+# 安全清理部署目录
+safe_clean_deploy_dir() {
+    if [ ! -d "$MASTER_DEPLOY_DIR" ]; then
+        mkdir -p "$MASTER_DEPLOY_DIR" || error_exit "无法创建部署目录"
+        log "INFO" "创建部署目录: $MASTER_DEPLOY_DIR"
+        return 0
+    fi
+    
+    # 双重验证：确保目录看起来像网站目录
+    local file_count
+    file_count=$(find "$MASTER_DEPLOY_DIR" -maxdepth 1 -type f \( -name "*.html" -o -name "*.css" -o -name "*.js" \) | wc -l)
+    if [ "$file_count" -eq 0 ] && [ -f "$MASTER_DEPLOY_DIR/index.html" ]; then
+        file_count=1
+    fi
+    
+    if [ "$file_count" -eq 0 ] && [ "$(ls -A "$MASTER_DEPLOY_DIR" 2>/dev/null)" ]; then
+        log "WARN" "目录 $MASTER_DEPLOY_DIR 可能不是网站目录，但继续清理"
+    fi
+    
+    # 安全清理：只删除常规文件，保留.gitkeep等隐藏文件
+    log "INFO" "清理部署目录"
+    
+    cd "$MASTER_DEPLOY_DIR" || error_exit "无法进入部署目录"
+    
+    # 列出要删除的文件（用于日志）
+    local delete_count
+    delete_count=$(find . -maxdepth 1 ! -name '.' ! -name '.git*' ! -name '.*' 2>/dev/null | wc -l)
+    
+    if [ "$delete_count" -gt 0 ]; then
+        log "INFO" "将删除 $delete_count 个文件/目录"
+        
+        # 逐个删除，避免通配符问题
+        find . -maxdepth 1 ! -name '.' ! -name '.git*' ! -name '.*' -print0 2>/dev/null | while IFS= read -r -d '' item; do
+            if [ -n "$item" ] && [ "$item" != "." ]; then
+                rm -rf "$item"
+            fi
+        done
+    fi
+    
+    log "INFO" "目录清理完成"
+}
+
+# 检出静态文件
+checkout_static_files() {
+    log "INFO" "检出静态文件"
+    
+    # 使用git archive导出文件，避免检出.git目录
+    local temp_dir
+    temp_dir=$(mktemp -d)
+    
+    if git archive master | tar -x -C "$temp_dir" 2>/dev/null; then
+        # 复制文件到部署目录
+        cp -r "$temp_dir"/* "$MASTER_DEPLOY_DIR"/ 2>/dev/null || true
+        
+        # 清理临时目录
+        rm -rf "$temp_dir"
+        
+        # 验证部署结果
+        if [ -f "$MASTER_DEPLOY_DIR/index.html" ]; then
+            local file_count
+            file_count=$(find "$MASTER_DEPLOY_DIR" -type f | wc -l)
+            log "INFO" "检出成功，共 $file_count 个文件"
+            return 0
+        else
+            error_exit "检出失败：未找到index.html"
+        fi
+    else
+        rm -rf "$temp_dir"
+        error_exit "git archive失败"
+    fi
+}
+
+# 设置文件权限
+set_permissions() {
+    log "INFO" "设置文件权限"
+    
+    # 尝试使用sudo（需要在sudoers中配置）
+    if command -v sudo >/dev/null 2>&1; then
+        # 设置文件所有者
+        if sudo chown -R "$WEB_USER:$WEB_GROUP" "$MASTER_DEPLOY_DIR" 2>/dev/null; then
+            # 设置安全权限：文件640，目录750
+            sudo find "$MASTER_DEPLOY_DIR" -type f -exec chmod 640 {} \; 2>/dev/null || true
+            sudo find "$MASTER_DEPLOY_DIR" -type d -exec chmod 750 {} \; 2>/dev/null || true
+            log "INFO" "权限设置完成（使用sudo）"
+            return 0
+        fi
+    fi
+    
+    # 降级方案：尝试设置组权限
+    if chgrp -R "$WEB_GROUP" "$MASTER_DEPLOY_DIR" 2>/dev/null; then
+        # 设置组读写权限，其他用户只读
+        find "$MASTER_DEPLOY_DIR" -type f -exec chmod 664 {} \; 2>/dev/null || true
+        find "$MASTER_DEPLOY_DIR" -type d -exec chmod 775 {} \; 2>/dev/null || true
+        log "INFO" "权限设置完成（使用降级方案）"
+    else
+        log "WARN" "无法设置文件权限，可能需要手动设置"
+    fi
+}
+
+# 验证部署结果
+verify_deployment() {
+    log "INFO" "验证部署结果"
+    
+    if [ ! -f "$MASTER_DEPLOY_DIR/index.html" ]; then
+        error_exit "部署失败：未找到index.html"
+    fi
+    
+    local file_count
+    file_count=$(find "$MASTER_DEPLOY_DIR" -type f | wc -l)
+    local dir_size
+    dir_size=$(du -sh "$MASTER_DEPLOY_DIR" | cut -f1)
+    
+    log "INFO" "验证通过：共 $file_count 个文件，大小 $dir_size"
+    
+    # 检查网站是否基本可访问
+    if [ -f "$MASTER_DEPLOY_DIR/index.html" ]; then
+        local first_line
+        first_line=$(head -c 100 "$MASTER_DEPLOY_DIR/index.html" 2>/dev/null | tr -d '\n' || echo "")
+        if echo "$first_line" | grep -q "<!DOCTYPE html\|<html"; then
+            log "INFO" "HTML文件格式正确"
+        fi
+    fi
+    
+    return 0
+}
+
+# ========== 主程序 ==========
+main() {
+    log "INFO" "开始处理Git推送"
+    
+    # 执行安全检查
+    safety_check
+    
+    # 读取推送信息
+    while read oldrev newrev refname; do
+        branch=${refname#refs/heads/}
+        log "INFO" "推送分支: $branch (${oldrev:0:8} -> ${newrev:0:8})"
+        
+        case "$branch" in
+            master)
+                log "INFO" "开始部署静态网站"
+                
+                # 1. 备份当前网站
+                backup_current_site
+                
+                # 2. 安全清理部署目录
+                safe_clean_deploy_dir
+                
+                # 3. 检出静态文件
+                checkout_static_files
+                
+                # 4. 设置文件权限
+                set_permissions
+                
+                # 5. 验证部署结果
+                verify_deployment
+                
+                log "INFO" "静态网站部署完成"
+                ;;
+                
+            hexo)
+                log "INFO" "hexo源码分支已更新"
+                # 这里可以添加源码同步逻辑（如果需要）
+                ;;
+                
+            *)
+                log "WARN" "忽略未知分支: $branch"
+                ;;
+        esac
+    done
+    
+    log "INFO" "所有操作完成"
+}
+
+# 设置超时，防止部署过程挂起
+timeout "$DEPLOY_TIMEOUT" bash -c "main" 2>&1 | tee -a "$LOG_DIR/deploy.log"
+
+exit_code=${PIPESTATUS[0]}
+if [ "$exit_code" -eq 124 ]; then
+    log "ERROR" "部署超时 (超过 ${DEPLOY_TIMEOUT}秒)"
+    exit 1
+elif [ "$exit_code" -ne 0 ]; then
+    log "ERROR" "部署过程异常退出 (代码: $exit_code)"
+    exit "$exit_code"
 fi
-
-# 显示日志信息
-echo -e "\n${CYAN}$FILE 日志信息${NC}"
-echo -e "${CYAN}-----------------------------------${NC}"
-echo -e "  ${WHITE}|--${NC} 本次日志: $LOG_FILE"
-echo -e "  ${WHITE}\`--${NC} 日志目录: $LOG_DIR"
-
-# 显示快速命令
-echo -e "\n${CYAN}$GEAR 常用命令${NC}"
-echo -e "${CYAN}-----------------------------------${NC}"
-echo -e "  ${WHITE}*${NC} 查看最新日志: ${GREEN}tail -f $LOG_FILE${NC}"
-echo -e "  ${WHITE}*${NC} 克隆源码分支: ${GREEN}git clone -b hexo $GIT_REPO${NC}"
-echo -e "  ${WHITE}*${NC} 手动部署网站: ${GREEN}cd $MASTER_DEPLOY_DIR && git pull${NC}"
-
-# 底部装饰
-echo -e "\n${BLUE}==========================================================================${NC}"
-echo -e "${WHITE}[*] 所有操作已完成于: $(date '+%Y-%m-%d %H:%M:%S')${NC}"
-echo -e "${BLUE}==========================================================================${NC}"
-
-# 清理旧日志
-find "$LOG_DIR" -name "*.log" -mtime +7 -delete 2>/dev/null || true
 ```
 
 ## 二、本地电脑配置
@@ -461,7 +471,8 @@ deploy:
 ```bash
 #!/bin/bash
 
-# 颜色输出
+# ========== 安全配置 ==========
+# 颜色定义
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -470,191 +481,421 @@ PURPLE='\033[0;35m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
-# 解析命令行参数
-deploy_github="n"
-for arg in "$@"; do
-    case $arg in
-        g|G)
-            deploy_github="y"
-            echo -e "${CYAN}✓ 检测到参数 g，将部署到 GitHub${NC}"
-            ;;
-        *)
-            echo -e "${YELLOW}⚠ 未知参数: $arg${NC}"
-            ;;
-    esac
-done
+# 仓库配置
+ALIYUN_REPO="git@47.121.28.192:/home/git/repos/hexo.git"
+GITHUB_REPO="git@github.com:Corazon-hacker/Corazon-hacker.github.io.git"
 
-echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}        Hexo 双平台部署脚本             ${NC}"
-echo -e "${BLUE}========================================${NC}"
+# 超时配置
+DEPLOY_TIMEOUT=600  # 10分钟
 
-# 检查是否在 Hexo 目录
-if [ ! -f "_config.yml" ]; then
-    echo -e "${RED}错误：请在 Hexo 根目录运行此脚本${NC}"
-    exit 1
-fi
+# ========== 辅助函数 ==========
+print_error() { echo -e "${RED}[错误] $1${NC}" >&2; }
+print_warn() { echo -e "${YELLOW}[警告] $1${NC}" >&2; }
+print_info() { echo -e "${CYAN}[信息] $1${NC}"; }
+print_success() { echo -e "${GREEN}[成功] $1${NC}"; }
 
-# 函数：简单快速的冲突检查
-quick_conflict_check() {
-    echo -e "${YELLOW}快速检查阿里云状态...${NC}"
+# ========== 核心函数 ==========
+# 检查命令是否存在
+check_command() {
+    if ! command -v "$1" >/dev/null 2>&1; then
+        print_error "命令未找到: $1"
+        return 1
+    fi
+    return 0
+}
+
+# 检查是否在Hexo目录
+check_hexo_dir() {
+    if [ ! -f "_config.yml" ]; then
+        print_error "不是Hexo目录"
+        print_error "请在Hexo根目录运行此脚本"
+        return 1
+    fi
+    return 0
+}
+
+# 检查Git状态
+check_git_status() {
+    if ! git rev-parse --git-dir >/dev/null 2>&1; then
+        print_error "当前目录不是Git仓库"
+        return 1
+    fi
     
-    # 只检查是否能连接到远程，不拉取内容
-    if timeout 5 git ls-remote aliyun hexo >/dev/null 2>&1; then
-        echo -e "${GREEN}✓ 可以连接到阿里云${NC}"
+    local current_branch
+    current_branch=$(git symbolic-ref --short HEAD 2>/dev/null || echo "未知")
+    if [ "$current_branch" != "hexo" ]; then
+        print_warn "当前分支不是hexo: $current_branch"
+    fi
+    
+    if [ -n "$(git status --porcelain)" ]; then
+        print_warn "发现未提交的更改:"
+        git status --short
+        
+        local choice
+        read -p "是否提交这些更改？(y/N): " choice
+        if [[ "$choice" =~ ^[Yy]$ ]]; then
+            git add .
+            git commit -m "自动提交: $(date '+%Y-%m-%d %H:%M:%S')"
+            print_success "更改已提交"
+        fi
+    fi
+    
+    return 0
+}
+
+# 检查远程连接
+check_remote_connection() {
+    local remote_name="$1"
+    local remote_url="$2"
+    
+    print_info "检查远程仓库连接: $remote_name"
+    
+    if ! git remote get-url "$remote_name" >/dev/null 2>&1; then
+        print_info "添加远程仓库: $remote_name"
+        git remote add "$remote_name" "$remote_url" || {
+            print_error "无法添加远程仓库: $remote_name"
+            return 1
+        }
+    fi
+    
+    local retry_count=0
+    while [ "$retry_count" -lt 3 ]; do
+        if git ls-remote "$remote_name" >/dev/null 2>&1; then
+            print_success "远程仓库可访问: $remote_name"
+            return 0
+        fi
+        
+        retry_count=$((retry_count + 1))
+        print_warn "连接失败，第${retry_count}次重试..."
+        sleep 2
+    done
+    
+    print_error "无法连接远程仓库: $remote_name"
+    return 1
+}
+
+# 安全推送
+safe_git_push() {
+    local remote="$1"
+    local local_branch="$2"
+    local remote_branch="$3"
+    local retry_count=0
+    
+    print_info "推送分支: $local_branch -> $remote/$remote_branch"
+    
+    while [ "$retry_count" -lt 3 ]; do
+        # 先拉取最新代码
+        git fetch "$remote" "$remote_branch" 2>/dev/null || true
+        
+        # 尝试推送
+        if git push "$remote" "$local_branch:$remote_branch" 2>/dev/null; then
+            print_success "推送成功"
+            return 0
+        fi
+        
+        retry_count=$((retry_count + 1))
+        
+        if [ "$retry_count" -lt 3 ]; then
+            print_warn "推送失败，第${retry_count}次重试..."
+            sleep 2
+        fi
+    done
+    
+    # 尝试强制推送
+    print_warn "普通推送失败，尝试强制推送"
+    if git push "$remote" "$local_branch:$remote_branch" --force 2>/dev/null; then
+        print_success "强制推送成功"
         return 0
     else
-        echo -e "${YELLOW}⚠ 无法连接到阿里云，继续执行...${NC}"
-        return 0
+        print_error "所有推送尝试都失败"
+        return 1
     fi
 }
 
-# 函数：解决阿里云推送冲突（保留你原来的逻辑）
-resolve_aliyun_conflict() {
-    echo -e "${YELLOW}检测到阿里云推送冲突，正在解决...${NC}"
+# 生成静态文件
+generate_static_files() {
+    print_info "清理旧文件..."
+    if ! hexo clean; then
+        print_error "清理失败"
+        return 1
+    fi
     
-    # 保存当前工作
-    git stash
+    print_info "生成静态文件..."
+    if ! hexo generate; then
+        print_error "生成失败"
+        return 1
+    fi
     
-    # 拉取阿里云最新代码到临时分支
-    git fetch aliyun hexo:aliyun-remote
+    if [ ! -d "public" ] || [ ! -f "public/index.html" ]; then
+        print_error "静态文件生成失败：未找到public/index.html"
+        return 1
+    fi
     
-    # 切回hexo分支，使用ours策略合并（完全保留本地）
-    git checkout hexo
-    git merge -s ours aliyun-remote -m "合并阿里云远程分支，保留本地内容"
-    
-    # 强制推送
-    git push aliyun hexo:hexo --force
-    
-    # 恢复之前的工作
-    git stash pop
-    
-    echo -e "${GREEN}✓ 冲突已解决并推送成功${NC}"
+    local file_count
+    file_count=$(find public -type f | wc -l)
+    print_success "生成完成，共 $file_count 个文件"
+    return 0
 }
 
-# 第一步：快速冲突检查
-quick_conflict_check
-
-# 第二步：同步源码到阿里云服务器
-echo -e "${YELLOW}[1/5] 同步源码到阿里云服务器...${NC}"
-
-# 同步到阿里云 hexo 分支
-echo -e "同步到阿里云服务器 (hexo分支)..."
-if git push aliyun hexo:hexo 2>/dev/null; then
-    echo -e "${GREEN}✓ 阿里云源码同步成功${NC}"
-else
-    # 推送失败，尝试解决冲突
-    echo -e "${YELLOW}检测到阿里云推送冲突，自动解决中...${NC}"
-    resolve_aliyun_conflict
-fi
-
-# 第三步：生成和部署静态文件到阿里云
-echo -e "\n${YELLOW}[2/5] 清理旧文件...${NC}"
-hexo clean
-
-echo -e "${YELLOW}[3/5] 生成静态文件...${NC}"
-hexo generate
-if [ $? -ne 0 ]; then
-    echo -e "${RED}错误：生成失败！请检查错误信息${NC}"
-    exit 1
-fi
-
-# 第四步：部署到阿里云服务器（主要）
-echo -e "${YELLOW}[4/5] 部署到阿里云服务器 (master分支)...${NC}"
-cd public
-
-# 初始化或更新阿里云仓库（用你原来的逻辑，不拉取内容）
-if [ -d ".git" ]; then
-    # 如果已有git仓库，直接使用
-    echo -e "${CYAN}public目录已有git仓库${NC}"
-else
-    echo -e "${CYAN}初始化public为git仓库...${NC}"
-    git init
-    git remote add aliyun git@47.121.28.192:/home/git/repos/hexo.git
-fi
-
-# 添加所有文件
-git add -A
-
-if git diff --cached --quiet && [ -d ".git" ]; then
-    echo -e "${YELLOW}提示：没有文件变更${NC}"
-else
-    git commit -m "更新: $(date '+%Y年%m月%d日 %H:%M')" >/dev/null 2>&1 || git commit -m "更新: $(date '+%Y年%m月%d日 %H:%M')"
+# 部署到阿里云
+deploy_to_aliyun() {
+    print_info "准备部署到阿里云..."
     
-    if git push aliyun master:master --force; then
-        echo -e "${GREEN}✓ 阿里云部署成功${NC}"
+    # 创建临时目录
+    local temp_dir
+    temp_dir=$(mktemp -d)
+    if [ ! -d "$temp_dir" ]; then
+        print_error "无法创建临时目录"
+        return 1
+    fi
+    
+    # 复制文件到临时目录
+    if ! cp -r public/* "$temp_dir"/ 2>/dev/null; then
+        rm -rf "$temp_dir"
+        print_error "复制文件失败"
+        return 1
+    fi
+    
+    # 在临时目录中初始化Git
+    cd "$temp_dir" || {
+        rm -rf "$temp_dir"
+        return 1
+    }
+    
+    git init >/dev/null 2>&1
+    git config user.email "deploy@$(hostname)"
+    git config user.name "Deploy Bot"
+    git add -A >/dev/null 2>&1
+    
+    if git diff --cached --quiet; then
+        print_warn "没有文件变更"
+        rm -rf "$temp_dir"
+        return 0
+    fi
+    
+    git commit -m "更新: $(date '+%Y年%m月%d日 %H:%M:%S')" >/dev/null 2>&1 || true
+    
+    # 添加远程仓库
+    git remote add aliyun "$ALIYUN_REPO" 2>/dev/null
+    git remote set-url aliyun "$ALIYUN_REPO" 2>/dev/null
+    
+    # 推送master分支
+    print_info "推送到阿里云master分支..."
+    if git push aliyun master:master --force 2>/dev/null; then
+        print_success "阿里云部署成功"
+        local success=true
     else
-        echo -e "${RED}✗ 阿里云部署失败${NC}"
+        print_error "阿里云部署失败"
+        local success=false
     fi
-fi
-
-cd ..
-
-# 第五步：根据参数决定是否部署到 GitHub
-if [ "$deploy_github" = "y" ] || [ "$deploy_github" = "Y" ]; then
-    echo -e "\n${CYAN}=== 开始GitHub部署流程 ===${NC}"
     
-    # 5.1 同步源码到 GitHub hexo 分支
-    echo -e "${YELLOW}[5.1/5] 同步源码到 GitHub (hexo分支)...${NC}"
-    if git push origin hexo; then
-        echo -e "${GREEN}✓ GitHub 源码同步成功${NC}"
+    # 清理临时目录
+    cd /tmp
+    rm -rf "$temp_dir"
+    
+    if [ "$success" = true ]; then
+        return 0
     else
-        echo -e "${YELLOW}⚠ GitHub 源码同步失败，继续尝试静态部署...${NC}"
+        return 1
     fi
+}
+
+# 部署到GitHub
+deploy_to_github() {
+    print_info "准备部署到GitHub..."
     
-    # 5.2 部署静态文件到 GitHub master 分支
-    echo -e "${YELLOW}[5.2/5] 部署静态文件到 GitHub (master分支)...${NC}"
-    cd public
-    
-    # 检查是否已有 GitHub 远程仓库
-    if [ ! "$(git remote get-url github 2>/dev/null)" ]; then
-        git remote add github git@github.com:Corazon-hacker/Corazon-hacker.github.io.git
-    fi
-    
-    if git push github master:master --force; then
-        echo -e "${GREEN}✓ GitHub 静态文件部署成功${NC}"
+    # 推送hexo分支
+    if safe_git_push "origin" "hexo" "hexo"; then
+        print_success "GitHub源码同步成功"
     else
-        echo -e "${YELLOW}⚠ GitHub 静态文件部署失败${NC}"
+        print_warn "GitHub源码同步失败"
     fi
     
-    cd ..
-    echo -e "${CYAN}=== GitHub部署流程完成 ===${NC}"
-else
-    echo -e "\n${YELLOW}[5/5] 跳过 GitHub 部署${NC}"
+    # 使用hexo deploy部署静态文件
+    print_info "使用hexo deploy部署静态文件到GitHub..."
+    if hexo deploy 2>/dev/null; then
+        print_success "GitHub静态文件部署成功"
+        return 0
+    else
+        print_error "GitHub静态文件部署失败"
+        return 1
+    fi
+}
+
+# 主部署流程
+main_deploy() {
+    local deploy_github="${1:-false}"
+    
+    print_info "=== 开始部署流程 ==="
+    
+    # 步骤1: 推送源码到阿里云
+    print_info "步骤1: 同步源码到阿里云"
+    if ! safe_git_push "aliyun" "hexo" "hexo"; then
+        print_error "阿里云源码同步失败"
+        return 1
+    fi
+    
+    # 步骤2: 生成静态文件
+    print_info "步骤2: 生成静态文件"
+    if ! generate_static_files; then
+        return 1
+    fi
+    
+    # 步骤3: 部署到阿里云
+    print_info "步骤3: 部署到阿里云"
+    if ! deploy_to_aliyun; then
+        print_error "阿里云部署失败"
+        return 1
+    fi
+    
+    # 步骤4: 部署到GitHub（可选）
+    if [ "$deploy_github" = true ]; then
+        print_info "步骤4: 部署到GitHub"
+        if ! deploy_to_github; then
+            print_warn "GitHub部署失败，但阿里云部署成功"
+        fi
+    else
+        print_info "步骤4: 跳过GitHub部署"
+    fi
+    
+    return 0
+}
+
+# ========== 主程序 ==========
+main() {
+    # 解析命令行参数
+    local deploy_github=false
+    local show_help=false
+    
+    for arg in "$@"; do
+        case "$arg" in
+            -g|--github|g)
+                deploy_github=true
+                print_info "检测到参数 -g，将部署到 GitHub"
+                ;;
+            -h|--help)
+                show_help=true
+                ;;
+            *)
+                print_warn "未知参数: $arg"
+                ;;
+        esac
+    done
+    
+    if [ "$show_help" = true ]; then
+        echo "用法: $0 [选项]"
+        echo "选项:"
+        echo "  -g, --github   同时部署到GitHub"
+        echo "  -h, --help     显示帮助信息"
+        echo ""
+        echo "示例:"
+        echo "  $0             只部署到阿里云"
+        echo "  $0 -g          同时部署到阿里云和GitHub"
+        return 0
+    fi
+    
+    # 显示横幅
+    echo -e "${BLUE}========================================${NC}"
+    echo -e "${BLUE}        Hexo 安全部署脚本              ${NC}"
+    echo -e "${BLUE}========================================${NC}"
+    
+    print_info "工作目录: $(pwd)"
+    
+    # 前置检查
+    print_info "执行前置检查..."
+    
+    # 检查必要命令
+    for cmd in git node npm hexo; do
+        if ! check_command "$cmd"; then
+            return 1
+        fi
+    done
+    
+    # 检查Hexo目录
+    if ! check_hexo_dir; then
+        return 1
+    fi
+    
+    # 检查Git状态
+    if ! check_git_status; then
+        return 1
+    fi
+    
+    # 检查远程仓库连接
+    if ! check_remote_connection "aliyun" "$ALIYUN_REPO"; then
+        print_error "阿里云仓库连接失败"
+        return 1
+    fi
+    
+    if [ "$deploy_github" = true ]; then
+        if ! check_remote_connection "origin" "$GITHUB_REPO"; then
+            print_warn "GitHub仓库连接失败，但继续阿里云部署"
+            deploy_github=false
+        fi
+    fi
+    
+    # 执行部署（使用timeout防止挂起）
+    local deploy_result
+    if timeout "$DEPLOY_TIMEOUT" bash -c "
+        source \"$0\"
+        if main_deploy \"$deploy_github\"; then
+            exit 0
+        else
+            exit 1
+        fi
+    "; then
+        deploy_result=0
+        echo -e "\n${GREEN}========================================${NC}"
+        echo -e "${GREEN}          部署成功完成！              ${NC}"
+        echo -e "${GREEN}========================================${NC}"
+    else
+        deploy_result=$?
+        if [ "$deploy_result" -eq 124 ]; then
+            echo -e "\n${RED}========================================${NC}"
+            echo -e "${RED}          部署超时！                   ${NC}"
+            print_error "部署过程超过 ${DEPLOY_TIMEOUT} 秒"
+            echo -e "${RED}========================================${NC}"
+        else
+            echo -e "\n${RED}========================================${NC}"
+            echo -e "${RED}          部署失败！                   ${NC}"
+            echo -e "${RED}========================================${NC}"
+        fi
+    fi
+    
+    # 显示部署状态
+    echo -e "\n${PURPLE}部署状态总结:${NC}"
+    echo -e "阿里云源码 (hexo分支): ${GREEN}已同步${NC}"
+    echo -e "阿里云网站 (master分支): ${GREEN}已部署${NC}"
+    
+    if [ "$deploy_github" = true ]; then
+        echo -e "GitHub源码 (hexo分支): ${GREEN}已同步${NC}"
+        echo -e "GitHub网站 (master分支): ${GREEN}已部署${NC}"
+    else
+        echo -e "GitHub源码 (hexo分支): ${YELLOW}未同步${NC}"
+        echo -e "GitHub网站 (master分支): ${YELLOW}未部署${NC}"
+    fi
+    
+    # 显示访问信息
+    echo -e "\n${CYAN}访问信息:${NC}"
+    echo -e "阿里云服务器: ${BLUE}http://47.121.28.192${NC}"
+    echo -e "网站路径: ${BLUE}/www/wwwroot/mcorazon.top${NC}"
+    
+    if [ "$deploy_github" = true ]; then
+        echo -e "GitHub Pages: ${BLUE}https://Corazon-hacker.github.io${NC}"
+    fi
+    
+    echo -e "\n${BLUE}使用说明:${NC}"
+    echo -e "只部署阿里云: ${GREEN}./deploy.sh${NC}"
+    echo -e "同时部署GitHub: ${GREEN}./deploy.sh -g${NC}"
+    
+    return "$deploy_result"
+}
+
+# 如果直接运行脚本，则执行main函数
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    main "$@"
+    exit $?
 fi
-
-echo -e "${GREEN}========================================${NC}"
-echo -e "${GREEN}          部署流程完成！             ${NC}"
-echo -e "${GREEN}========================================${NC}"
-echo -e "${BLUE}主要部署：${NC}"
-echo -e "阿里云服务器: ${BLUE}http://47.121.28.192${NC}"
-echo -e "服务器路径: ${BLUE}/www/wwwroot/mcorazon.top${NC}"
-
-if [ "$deploy_github" = "y" ] || [ "$deploy_github" = "Y" ]; then
-    echo -e "${BLUE}\n备用部署：${NC}"
-    echo -e "GitHub Pages: ${BLUE}https://Corazon-hacker.github.io${NC}"
-fi
-
-# 部署状态总结
-echo -e "\n${PURPLE}部署状态总结：${NC}"
-echo -e "源码分支(hexo):"
-echo -e "  - 阿里云: ${GREEN}已同步${NC}"
-if [ "$deploy_github" = "y" ] || [ "$deploy_github" = "Y" ]; then
-    echo -e "  - GitHub: ${GREEN}已同步${NC}"
-else
-    echo -e "  - GitHub: ${YELLOW}未同步${NC}"
-fi
-
-echo -e "网站分支(master):"
-echo -e "  - 阿里云: ${GREEN}已部署${NC}"
-if [ "$deploy_github" = "y" ] || [ "$deploy_github" = "Y" ]; then
-    echo -e "  - GitHub: ${GREEN}已部署${NC}"
-else
-    echo -e "  - GitHub: ${YELLOW}未部署${NC}"
-fi
-
-echo -e "\n${BLUE}使用说明：${NC}"
-echo -e "只部署阿里云: ${GREEN}./deploy.sh${NC}"
-echo -e "同时部署GitHub: ${GREEN}./deploy.sh g${NC}"
 ```
 
 这是我修改了很多次的脚本，功能比较完善、也比较安全，能够处理一些多电脑协同式面对的一些冲突问题。
