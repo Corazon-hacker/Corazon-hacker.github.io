@@ -14,70 +14,65 @@ top:
 ## 命令行样式修改
 
 ```bash
-cat > ~/install_color_ps1.sh << 'EOF'
 #!/bin/bash
-# PS1 Color Installer
+# PS1 Color Installer for Ubuntu 24 - Simplified Version
 
 # 备份原配置
 BACKUP_FILE=~/.bashrc.backup.$(date +%Y%m%d_%H%M%S)
-cp ~/.bashrc $BACKUP_FILE
-echo "已备份原配置到: $BACKUP_FILE"
+cp ~/.bashrc $BACKUP_FILE 2>/dev/null
 
-# 显示配色预览
-echo ""
-echo "请选择配色方案："
-echo "1. 经典配色 [默认]"
-echo "2. 高对比度"
-echo "3. 简约风格"
-echo "4. 多色渐变"
-echo "5. 自定义输入"
-echo ""
-read -p "请输入选择 (1-5): " choice
+# Ubuntu系统全局配置
+GLOBAL_BASHRC="/etc/bash.bashrc"
+CURRENT_USER=$(whoami)
 
-case $choice in
-    1)
-        PS1_SETTING='PS1='"'"'\[\033[01;32m\][\t\[\033[00m\] \[\033[01;33m\]\u@\h\[\033[00m\] \[\033[01;36m\]\W\[\033[00m\]]\\$ '"'"''
-        ;;
-    2)
-        PS1_SETTING='PS1='"'"'\[\033[01;31m\][\[\033[01;37m\]\t\[\033[01;31m\] \[\033[01;34m\]\u@\h\[\033[01;31m\] \[\033[01;33m\]\W\[\033[01;31m\]]\[\033[01;35m\]\\$\[\033[00m\] '"'"''
-        ;;
-    3)
-        PS1_SETTING='PS1='"'"'\[\033[01;32m\]\t\[\033[00m\] \[\033[01;34m\]\u@\h\[\033[00m\] \[\033[01;33m\]\W\[\033[00m\]\\$ '"'"''
-        ;;
-    4)
-        PS1_SETTING='PS1='"'"'\[\033[38;5;46m\][\[\033[38;5;51m\]\t\[\033[38;5;46m\] \[\033[38;5;226m\]\u@\h\[\033[38;5;46m\] \[\033[38;5;201m\]\W\[\033[38;5;46m\]]\[\033[38;5;196m\]\\$\[\033[00m\] '"'"''
-        ;;
-    5)
-        read -p "请输入自定义PS1: " custom_ps1
-        PS1_SETTING='PS1='"'"''"$custom_ps1"''"'"''
-        ;;
-    *)
-        PS1_SETTING='PS1='"'"'\[\033[01;32m\][\t\[\033[00m\] \[\033[01;33m\]\u@\h\[\033[00m\] \[\033[01;36m\]\W\[\033[00m\]]\\$ '"'"''
-        ;;
-esac
+if [ "$CURRENT_USER" = "root" ]; then
+    # 备份全局配置
+    if [ -f "$GLOBAL_BASHRC" ]; then
+        cp "$GLOBAL_BASHRC" "${GLOBAL_BASHRC}.backup.$(date +%Y%m%d_%H%M%S)" 2>/dev/null
+    fi
+fi
 
-# 清理原有PS1设置（如果有）
-sed -i '/^PS1=/d' ~/.bashrc
-sed -i '/^export PS1/d' ~/.bashrc
+# 定义颜色
+# 普通用户PS1：褐色中括号，绿色用户名，蓝色主机名，青色当前目录，白色时间
+PS1_USER='PS1='"'"'\[\033[38;5;130m\][\[\033[01;37m\]\t\[\033[38;5;130m\] \[\033[01;32m\]\u\[\033[01;34m\]@\h\[\033[38;5;130m\] \[\033[01;36m\]\W\[\033[38;5;130m\]]\[\033[00m\]\\$ '"'"''
 
-# 添加新的PS1设置
+# Root用户PS1：褐色中括号，红色用户名，蓝色主机名，青色当前目录，白色时间
+PS1_ROOT='PS1='"'"'\[\033[38;5;130m\][\[\033[01;37m\]\t\[\033[38;5;130m\] \[\033[01;31m\]\u\[\033[01;34m\]@\h\[\033[38;5;130m\] \[\033[01;36m\]\W\[\033[38;5;130m\]]\[\033[00m\]\\# '"'"''
+
+# 清理当前用户的原有PS1设置
+sed -i '/^PS1=/d' ~/.bashrc 2>/dev/null
+sed -i '/^export PS1/d' ~/.bashrc 2>/dev/null
+
+# 在当前用户的.bashrc中添加条件判断
 echo "" >> ~/.bashrc
 echo "# Colorful PS1 (installed $(date))" >> ~/.bashrc
-echo $PS1_SETTING >> ~/.bashrc
+echo 'if [ "$(id -u)" -eq 0 ]; then' >> ~/.bashrc
+echo "    $PS1_ROOT" >> ~/.bashrc
+echo "else" >> ~/.bashrc
+echo "    $PS1_USER" >> ~/.bashrc
+echo "fi" >> ~/.bashrc
 echo "export PS1" >> ~/.bashrc
 
-# 应用配置
-source ~/.bashrc
+# 如果是root用户，修改全局配置
+if [ "$CURRENT_USER" = "root" ]; then
+    # 清理全局配置中的原有PS1设置
+    sed -i '/^PS1=/d' "$GLOBAL_BASHRC" 2>/dev/null
+    sed -i '/^export PS1/d' "$GLOBAL_BASHRC" 2>/dev/null
+    
+    # 在全局配置中添加相同的条件判断
+    echo "" >> "$GLOBAL_BASHRC"
+    echo "# Colorful PS1 (installed $(date))" >> "$GLOBAL_BASHRC"
+    echo 'if [ "$(id -u)" -eq 0 ]; then' >> "$GLOBAL_BASHRC"
+    echo "    $PS1_ROOT" >> "$GLOBAL_BASHRC"
+    echo "else" >> "$GLOBAL_BASHRC"
+    echo "    $PS1_USER" >> "$GLOBAL_BASHRC"
+    echo "fi" >> "$GLOBAL_BASHRC"
+    echo "export PS1" >> "$GLOBAL_BASHRC"
+fi
 
-echo ""
-echo "✅ PS1配置已完成！"
-echo "当前提示符样式："
-echo $PS1
-EOF
-
-# 赋予执行权限并运行
-chmod +x ~/install_color_ps1.sh
-./install_color_ps1.sh
+# 应用配置并刷新bash
+source ~/.bashrc 2>/dev/null
+exec bash
 ```
 
 
