@@ -3,7 +3,7 @@ title: {{ title }}
 date: {{ date }}
 categories: 
 tags: 
-description: 声明：文章中涉及的程序(方法)可能带有攻击性，仅供安全研究与教学之用，读者将其信息做其他用途，由用户承担全部法律及连带责任，文章作者不承担任何法律及连带责任。
+description: 
 top: 
 comments: true
 ---
