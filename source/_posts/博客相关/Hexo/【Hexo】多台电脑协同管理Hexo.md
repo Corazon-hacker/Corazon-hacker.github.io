@@ -1,14 +1,13 @@
 ---
-title: 【Hexo】多台电脑同时管理Hexo
+title: 【Hexo】多台电脑协同管理Hexo
 categories:
   - 博客相关
   - Hexo
-tags:
-  - Hexo
-description: 
 comments: true
-abbrlink: 93a6b647
-date: 2026-01-11 13:50:02
+abbrlink: 543ce806
+date: 2026-02-28 14:19:48
+tags:
+description:
 top:
 ---
 
@@ -33,9 +32,9 @@ top:
 
 1. **准备远程仓库**
    - 在GitHub上创建一个新仓库，仓库名必须为：`<你的用户名>.github.io`。
-   
+
    - 创建后，在GitHub网页上手动新建一个名为 `hexo` 的分支。
-   
+
 2. **修改Hexo主配置文件 _config.yml**
 
 **用编辑器打开，至少配置以下两部分**
@@ -429,7 +428,7 @@ git push origin hexo
    - **症状**：`package.json` 不存在或命令未找到。
    - **原因**：克隆错了分支（如克隆了 `master` 分支）。
    - **解决**：使用 `git clone -b hexo <仓库地址>` 确保克隆源码分支。
-   
+
 2. **页面无样式、错乱或加载极慢**
    - **症状**：浏览器开发者工具控制台显示CDN资源（如jQuery, Fancybox）加载失败或 `MIME type` 错误。
    - **原因**：主题配置使用外部CDN，网络不佳；或主题本地资源缺失。
@@ -437,7 +436,7 @@ git push origin hexo
      - **修改主题配置**：在 `themes/你的主题/_config.yml` 中，将资源引用改为 `local` 或 `lib`。
      - **检查依赖**：确认已安装主题所需渲染器，如Next主题需 `hexo-renderer-stylus`。
      - **清理缓存**：执行 `hexo clean` 并**强制刷新浏览器**（`Ctrl + F5`）或使用无痕窗口。
-   
+
 3. **同步后新电脑内容未更新**
 
    - **症状**：执行了 `git pull`，但页面还是旧的。
@@ -476,8 +475,6 @@ npm install
 通过上述基于Git双分支的流程，你可以在任何一台配置好环境的电脑上，随时开始写作、同步进度，并保持发布渠道的统一。关键在于：**源文件同步走 `hexo` 分支，网站部署走 `master` 分支**，并在日常操作中养成“先拉后推”的习惯。
 
 希望这篇指南能帮助你和其他博主实现高效的多设备博客管理！如果你在实践中有新的发现或问题，欢迎在评论区交流。
-
-
 
 
 
