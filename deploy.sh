@@ -76,6 +76,39 @@ else
     fi
 fi
 
+# 新增：推送源码到阿里云 hexo 分支
+echo -e "${YELLOW}[新增] 推送源码到阿里云 hexo 分支...${NC}"
+
+# 确保当前在 hexo 分支（刚切换过，但以防万一）
+git checkout hexo 2>/dev/null || true
+
+# 检查并添加阿里云远程仓库（如果尚未添加）
+ALIYUN_REMOTE="aliyun"
+ALIYUN_URL="git@47.121.28.192:/home/git/repos/hexo.git"
+
+if ! git remote | grep -q "^$ALIYUN_REMOTE$"; then
+    echo -e "${YELLOW}添加阿里云远程仓库: $ALIYUN_URL${NC}"
+    git remote add "$ALIYUN_REMOTE" "$ALIYUN_URL"
+    if [ $? -eq 0 ]; then
+        echo -e "${GREEN}✓ 阿里云远程仓库添加成功${NC}"
+    else
+        echo -e "${RED}✗ 阿里云远程仓库添加失败，请手动检查${NC}"
+    fi
+fi
+
+# 推送到阿里云 hexo 分支（使用 --force 确保本地版本覆盖远程，可按需去掉 -f）
+echo -e "${YELLOW}正在推送到阿里云 hexo 分支...${NC}"
+if git push "$ALIYUN_REMOTE" hexo; then
+    echo -e "${GREEN}✓ 源码已推送到阿里云 hexo 分支${NC}"
+else
+    echo -e "${RED}✗ 推送到阿里云 hexo 分支失败${NC}"
+    echo "可能的原因："
+    echo "1. SSH 密钥未配置或未添加到阿里云服务器"
+    echo "2. 服务器仓库路径错误或权限不足"
+    echo "3. 网络连接问题"
+    echo "建议手动运行: git push $ALIYUN_REMOTE hexo"
+fi
+
 # 第二步：清理和生成
 echo -e "${YELLOW}[2/5] 清理旧文件...${NC}"
 hexo clean
@@ -88,8 +121,8 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 第三步：部署到阿里云
-echo -e "${YELLOW}[4/5] 部署到阿里云服务器...${NC}"
+# 第三步：部署到阿里云（静态文件）
+echo -e "${YELLOW}[4/5] 部署静态文件到阿里云服务器...${NC}"
 cd public
 
 # 检查是否已有 git 仓库
@@ -114,8 +147,8 @@ else
     # 提交
     git commit -m "静态文件更新: $(date '+%Y年%m月%d日 %H:%M')" >/dev/null 2>&1 || git commit -m "静态文件更新: $(date '+%Y年%m月%d日 %H:%M')"
     
-    # 推送到阿里云
-    echo -e "${YELLOW}正在推送到阿里云服务器...${NC}"
+    # 推送到阿里云（master 分支）
+    echo -e "${YELLOW}正在推送到阿里云服务器 master 分支...${NC}"
     if git push -u origin master --force; then
         echo -e "${GREEN}✓ 阿里云部署成功${NC}"
     else
@@ -166,11 +199,12 @@ echo -e "${GREEN}          双分支部署完成！           ${NC}"
 echo -e "${GREEN}========================================${NC}"
 echo -e "部署状态汇总："
 echo -e "1. ${GREEN}✓${NC} 源码已同步到 GitHub hexo 分支"
-echo -e "2. ${GREEN}✓${NC} 静态文件已部署到阿里云服务器"
+echo -e "2. ${GREEN}✓${NC} 源码已同步到阿里云 hexo 分支"
+echo -e "3. ${GREEN}✓${NC} 静态文件已部署到阿里云服务器"
 if [ "$deploy_github" = "y" ] || [ "$deploy_github" = "Y" ]; then
-    echo -e "3. ${GREEN}✓${NC} 静态文件已部署到 GitHub Pages"
+    echo -e "4. ${GREEN}✓${NC} 静态文件已部署到 GitHub Pages"
 else
-    echo -e "3. ${YELLOW}➖${NC} GitHub Pages 部署已跳过"
+    echo -e "4. ${YELLOW}➖${NC} GitHub Pages 部署已跳过"
 fi
 
 echo -e "\n访问地址："
