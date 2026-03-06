@@ -149,11 +149,7 @@ sidebar:
 # Sidebar Avatar
 avatar:
   # Replace the default image and set the url here.
-<<<<<<< HEAD
   url: /images/avatar.jpg   #/images/avatar.gif
-=======
-  url: #/images/avatar.gif
->>>>>>> a35adcee911a0713f688274a4e67f43e3ad4160f
   # If true, the avatar will be displayed in circle.
   rounded: false
   # If true, the avatar will be rotated with the cursor.
