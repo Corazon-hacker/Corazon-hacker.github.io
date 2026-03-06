@@ -3,8 +3,7 @@ title: 【Hexo】自定义newp命令及显示当前文件夹文件
 categories:
   - 博客相关
   - Hexo
-description: >-
-  声明：文章中涉及的程序(方法)可能带有攻击性，仅供安全研究与教学之用，读者将其信息做其他用途，由用户承担全部法律及连带责任，文章作者不承担任何法律及连带责任。
+description: 
 comments: true
 abbrlink: 60f39975
 date: 2025-07-23 06:17:11

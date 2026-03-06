@@ -4,9 +4,7 @@ categories:
   - 基础知识
   - 计算机网络
 tags:
-  - private
-description: >-
-  声明：文章中涉及的程序(方法)可能带有攻击性，仅供安全研究与教学之用，读者将其信息做其他用途，由用户承担全部法律及连带责任，文章作者不承担任何法律及连带责任。
+description: 
 comments: true
 abbrlink: 4c5ad660
 date: 2025-07-28 10:12:13

@@ -56,13 +56,13 @@ content
 
 + **居中引用**
 
+标签居中引用（NEXT主题）：
+
 ```
 {% centerquote %}blah blah blah{% endcenterquote %}
 ```
 
-{% centerquote %}blah blah blah{% endcenterquote %}
-
-同时HTML 居中引用的方式也比较简单：
+HTML 居中引用：
 
 ```
 <blockquote class="blockquote-center">blah blah blah</blockquote>

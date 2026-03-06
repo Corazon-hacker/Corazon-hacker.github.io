@@ -19,6 +19,8 @@ top:
 
 ## 分类折叠功能
 
+
+
 在themes\next\layout\page.swig中，找到分类页面，替换成下面的代码：
 
 ```html
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 终于做好了，肝死我了：
 
-
+这个是当同一页右边展示当前分类的文章。
 
 ### themes\next\layout\page.swig
 

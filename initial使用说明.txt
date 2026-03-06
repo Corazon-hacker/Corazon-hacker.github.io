@@ -1,0 +1,118 @@
+使用说明
+1. 保存脚本
+
+将上面的脚本保存为 initial.sh：
+bash
+
+# 保存脚本
+nano initial.sh
+# 粘贴上面的内容，然后按 Ctrl+X，按 Y，再按 Enter
+
+# 或者直接下载
+curl -o initial.sh https://gist.githubusercontent.com/your-username/your-gist-id/raw/initial.sh
+
+2. 给脚本执行权限
+bash
+
+chmod +x initial.sh
+
+3. 运行初始化脚本
+bash
+
+# 运行脚本
+./initial.sh
+
+# 或者使用bash运行
+bash initial.sh
+
+4. 脚本功能特点
+
+这个脚本提供了以下功能：
+
+    自动检测系统类型：支持macOS、Ubuntu、Debian、CentOS、Fedora、Arch等
+
+    自动安装依赖：Git、Node.js、Hexo CLI
+
+    SSH密钥管理：生成、配置、测试
+
+    博客源码克隆：支持从阿里云、GitHub或本地备份恢复
+
+    依赖安装：自动安装npm依赖包
+
+    配置检查：检查Hexo配置文件完整性
+
+    部署脚本安装：自动创建部署脚本
+
+    快捷命令创建：创建alias方便日常使用
+
+    交互式操作：每个步骤都有提示和确认
+
+5. 初始化后可用命令
+
+初始化完成后，您可以使用以下快捷命令：
+bash
+
+# 进入博客目录
+hexo-blog
+
+# 启动本地预览服务器
+hexo-start
+
+# 部署博客
+hexo-deploy
+
+# 创建新文章
+hexo-new "文章标题"
+
+# 更新博客
+hexo-update
+
+# 查看状态
+hexo-status
+
+# 查看日志
+hexo-log
+
+6. 手动配置SSH密钥
+
+如果脚本的自动SSH配置不成功，可以手动配置：
+bash
+
+# 1. 生成SSH密钥
+ssh-keygen -t ed25519 -C "2208143652@qq.com"
+
+# 2. 查看公钥
+cat ~/.ssh/id_ed25519.pub
+
+# 3. 添加到阿里云服务器
+# 登录到服务器，将公钥添加到 ~/.ssh/authorized_keys
+
+# 4. 添加到GitHub
+# 访问 https://github.com/settings/keys 添加公钥
+
+7. 故障排除
+
+如果初始化过程中出现问题：
+
+    权限问题：使用sudo运行脚本
+    bash
+
+    sudo ./initial.sh
+
+    网络问题：检查网络连接，特别是访问GitHub和npm仓库
+
+    依赖问题：手动安装缺失的软件
+    bash
+
+    # Ubuntu/Debian
+    sudo apt update && sudo apt install git nodejs npm
+
+    # CentOS/RHEL
+    sudo yum install git nodejs npm
+
+    # macOS
+    brew install git node
+
+    脚本中断：重新运行脚本，它会尝试从中断的地方继续
+
+这个脚本设计为幂等的，可以安全地多次运行。如果您有任何问题或需要修改配置，请随时告诉我！
