@@ -219,21 +219,17 @@ fi
 
 cd ..
 
-# ========== 第五步：处理 GitHub 推送（询问后） ==========
+# ========== 第五步：处理 GitHub 操作（一次询问） ==========
 echo -e "${YELLOW}[5/5] GitHub 相关操作${NC}"
 
-# 询问是否推送源码到 GitHub hexo 分支
-read -p "是否推送源码到 GitHub hexo 分支？(y/n, 默认 n): " push_github_src
-if [[ "$push_github_src" =~ ^[Yy]$ ]]; then
+read -p "是否推送源码到 GitHub hexo 分支并部署到 GitHub Pages？(y/n, 默认 n): " do_github
+
+if [[ "$do_github" =~ ^[Yy]$ ]]; then
+    # 1. 推送源码到 GitHub hexo 分支
     echo -e "${YELLOW}推送源码到 GitHub hexo 分支...${NC}"
     safe_push "origin" "hexo"
-else
-    echo -e "${YELLOW}跳过推送源码到 GitHub${NC}"
-fi
-
-# 询问是否部署静态文件到 GitHub Pages
-read -p "是否部署静态文件到 GitHub Pages？(y/n, 默认 n): " deploy_github
-if [[ "$deploy_github" =~ ^[Yy]$ ]]; then
+    
+    # 2. 部署静态文件到 GitHub Pages
     echo -e "${YELLOW}开始部署到 GitHub Pages...${NC}"
     
     # 检查部署配置
@@ -257,7 +253,7 @@ if [[ "$deploy_github" =~ ^[Yy]$ ]]; then
         echo -e "${GREEN}✓ GitHub Pages 部署成功${NC}"
     fi
 else
-    echo -e "${YELLOW}跳过 GitHub Pages 部署${NC}"
+    echo -e "${YELLOW}跳过所有 GitHub 操作${NC}"
 fi
 
 # ========== 总结信息 ==========
@@ -268,14 +264,11 @@ echo -e "部署状态汇总："
 echo -e "1. ${GREEN}✓${NC} 本地更改已提交"
 echo -e "2. ${GREEN}✓${NC} 源码已同步到阿里云 hexo 分支"
 echo -e "3. ${GREEN}✓${NC} 静态文件已部署到阿里云服务器 master 分支"
-if [[ "$push_github_src" =~ ^[Yy]$ ]]; then
+if [[ "$do_github" =~ ^[Yy]$ ]]; then
     echo -e "4. ${GREEN}✓${NC} 源码已同步到 GitHub hexo 分支"
-else
-    echo -e "4. ${YELLOW}➖${NC} GitHub 源码推送已跳过"
-fi
-if [[ "$deploy_github" =~ ^[Yy]$ ]]; then
     echo -e "5. ${GREEN}✓${NC} 静态文件已部署到 GitHub Pages"
 else
+    echo -e "4. ${YELLOW}➖${NC} GitHub 源码推送已跳过"
     echo -e "5. ${YELLOW}➖${NC} GitHub Pages 部署已跳过"
 fi
 
